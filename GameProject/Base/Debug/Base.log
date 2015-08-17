@@ -1,0 +1,18 @@
+﻿Build started 18/8/2015 12:45:07 AM.
+     1>Project "C:\Users\Aloysius Chun\Desktop\GameProject\Base\Base.vcxproj" on node 2 (build target(s)).
+       Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
+     1>InitializeBuildStatus:
+         Creating "Debug\Base.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       Link:
+         All outputs are up-to-date.
+         Base.vcxproj -> C:\Users\Aloysius Chun\Desktop\GameProject\Debug\Base.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\Base.unsuccessfulbuild".
+         Touching "Debug\Base.lastbuildstate".
+     1>Done Building Project "C:\Users\Aloysius Chun\Desktop\GameProject\Base\Base.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.04
