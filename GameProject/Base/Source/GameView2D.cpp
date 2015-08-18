@@ -157,7 +157,6 @@ void GameView2D::RenderCrosshair()
 		modelStack.Scale(windowWidth / 32, windowHeight / 25, 1);
 		modelStack.Translate(model->getPos() * 0.032f);
 		Render2DMesh(model->getCrosshairMesh(), false);
-		std::cout << model->getPos() << std::endl;
 	}
 	modelStack.PopMatrix();
 }

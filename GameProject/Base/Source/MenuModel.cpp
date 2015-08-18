@@ -58,7 +58,6 @@ void MenuModel::Update(double dt)
 	}
 	for (int count = 0; count < NUM_COMMANDS; ++count)
 		commands[count] = false;
-	std::cout << menuTimer  << " " << arrowPosition << std::endl;
 }
 
 void MenuModel::setCommands(int command)
