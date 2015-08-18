@@ -15,6 +15,7 @@ void GameView2D::Render()
 	modelStack.PushMatrix(); {
 		//RenderBackground();
 		RenderMobs();
+		RenderRearTileMap();
 		RenderTileMap();
 		RenderPlayerCharacter();
 		//RenderScore();
@@ -51,16 +52,16 @@ void GameView2D::RenderTileMap()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 
-	modelStack.Translate(0, 0, 1);
-	for (int ccount = 0; ccount < tileMap->getNumOfTilesWidth() + 1; ++ccount)
+	glDisable(GL_DEPTH);
+
+	modelStack.Translate(0, 0, 0.001f);
+	for (int ccount = 0; ccount < tileMap->getNumOfTilesWidth(); ++ccount)
 	{
 		for (int rcount = 0; rcount < tileMap->getNumOfTilesHeight(); ++rcount)
 		{
 			modelStack.PushMatrix(); {
 				modelStack.Translate(ccount, rcount, 0);
-				modelStack.Translate(0.5f, 0.5f, 0);
-
-				if (tileMap->getTile(ccount, rcount))
+				//modelStack.Translate(0.5f, 0.5f, 0);
 					RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
 			} modelStack.PopMatrix();
 		}
@@ -68,6 +69,29 @@ void GameView2D::RenderTileMap()
 }
 
 #undef tileMap
+
+#define reartileMap model->getRearTileMap()
+
+void GameView2D::RenderRearTileMap()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+
+	for (int ccount = 0; ccount < reartileMap->getNumOfTilesWidth(); ++ccount)
+	{
+		for (int rcount = 0; rcount < reartileMap->getNumOfTilesHeight(); ++rcount)
+		{
+			modelStack.PushMatrix(); {
+				modelStack.Translate(ccount, rcount, 0);
+				//modelStack.Translate(0.5f, 0.5f, 0);
+				RenderMesh(model->getTileMesh(), false, 6 * reartileMap->getTile(ccount, rcount), 6);
+			} modelStack.PopMatrix();
+		}
+	}
+
+	glEnable(GL_DEPTH);
+}
+
+#undef reartileMap
 
 #define player model->getPlayer()
 

@@ -14,6 +14,7 @@ public:
 	void Render();
 	void RenderBackground();
 	void RenderTileMap();
+	void RenderRearTileMap();
 	void RenderPlayerCharacter();
 	void RenderMobs();
 	void RenderScore();

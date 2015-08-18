@@ -117,6 +117,11 @@ TileMap* GameModel2D::getTileMap()
 	return m_tileMap;
 }
 
+TileMap* GameModel2D::getRearTileMap()
+{
+	return m_ReartileMap;
+}
+
 Mesh* GameModel2D::getTileMesh()
 {
 	return meshList[TILE];

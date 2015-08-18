@@ -34,6 +34,7 @@ protected:
 	Mesh* meshList[TOTAL_GEOMETRY];
 
 	TileMap* m_tileMap;
+	TileMap* m_ReartileMap;
 	//float m_mapOffset_x;
 	//float m_mapOffset_y;
 
@@ -55,6 +56,7 @@ public:
 
 	void getOffset(float& mapOffset_x, float& mapOffset_y);
 	TileMap* getTileMap();
+	TileMap* getRearTileMap();
 	Mesh* getTileMesh();
 	Mesh* getFloorTileMesh();
 
