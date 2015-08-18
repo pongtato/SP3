@@ -21,10 +21,10 @@ void GameModel2D::Init()
 	meshList[TEXT]->textureID[0] = LoadTGA("Image//Font.tga");
 	meshList[BACKGROUND] = MeshBuilder::GenerateQuad("background", Color());
 	meshList[BACKGROUND]->textureID[0] = LoadTGA("Image\\background.tga");
-	meshList[TILE] = MeshBuilder::GenerateText("tile", 10, 5);
-	meshList[TILE]->textureID[0] = LoadTGA("Image\\Maps\\L1.tga");
-	meshList[TILEFLOOR] = MeshBuilder::GenerateText("tile", 10, 5);
-	meshList[TILEFLOOR]->textureID[0] = LoadTGA("Image\\Maps\\L1.tga");
+	meshList[TILE] = MeshBuilder::GenerateText("tile", 12, 5);
+	meshList[TILE]->textureID[0] = LoadTGA("Image\\Maps\\World.tga");
+	meshList[TILEFLOOR] = MeshBuilder::GenerateText("tile", 12, 5);
+	meshList[TILEFLOOR]->textureID[0] = LoadTGA("Image\\Maps\\World.tga");
 	meshList[PLAYER] = MeshBuilder::GenerateText("player", 8, 16);
 	meshList[PLAYER]->textureID[0] = LoadTGA("Image//Player.tga");
 	meshList[MOBS] = MeshBuilder::GenerateText("mobs", 4, 4);

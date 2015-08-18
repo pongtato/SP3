@@ -21,6 +21,24 @@
     <Filter Include="MVC\MODEL">
       <UniqueIdentifier>{7fb68b20-8913-4474-a755-21a382181035}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MVC\MODEL\Lv2">
+      <UniqueIdentifier>{db71571c-2633-47b3-80e1-f8d3f50c3ef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MVC\MODEL\Lv3">
+      <UniqueIdentifier>{d1df898e-0c11-445d-8c9e-eb6676b3c820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MVC\MODEL\Lv4">
+      <UniqueIdentifier>{2629a75c-2d08-4f4a-9a0a-475e18c3fe7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MVC\MODEL\Menu">
+      <UniqueIdentifier>{b35da789-aef1-4ea3-a1e7-53f60febf7bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MVC\MODEL\General">
+      <UniqueIdentifier>{9e78a9ae-1079-4a44-9564-20c886f55c54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MVC\MODEL\Lv1">
+      <UniqueIdentifier>{b4a4d633-667e-49c7-9efe-3cc360da0107}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -68,18 +86,6 @@
     <ClCompile Include="Source\MouseCharacter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameModel2D.cpp">
-      <Filter>MVC\MODEL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameModelLevel1.cpp">
-      <Filter>MVC\MODEL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameModelLevel2.cpp">
-      <Filter>MVC\MODEL</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\MenuModel.cpp">
-      <Filter>MVC\MODEL</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View.cpp">
       <Filter>MVC\VIEW</Filter>
     </ClCompile>
@@ -98,11 +104,26 @@
     <ClCompile Include="Source\MenuController.cpp">
       <Filter>MVC\CONTROLLER</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Model.cpp">
-      <Filter>MVC\MODEL</Filter>
+    <ClCompile Include="Source\GameModelLevel1.cpp">
+      <Filter>MVC\MODEL\Lv1</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameModelLevel2.cpp">
+      <Filter>MVC\MODEL\Lv2</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameModelLevel3.cpp">
-      <Filter>MVC\MODEL</Filter>
+      <Filter>MVC\MODEL\Lv3</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameModelLevel4.cpp">
+      <Filter>MVC\MODEL\Lv4</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuModel.cpp">
+      <Filter>MVC\MODEL\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameModel2D.cpp">
+      <Filter>MVC\MODEL\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Model.cpp">
+      <Filter>MVC\MODEL\General</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,18 +187,6 @@
     <ClInclude Include="Source\MouseCharacter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameModelLevel2.h">
-      <Filter>MVC\MODEL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameModel2D.h">
-      <Filter>MVC\MODEL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameModelLevel1.h">
-      <Filter>MVC\MODEL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MenuModel.h">
-      <Filter>MVC\MODEL</Filter>
-    </ClInclude>
     <ClInclude Include="Source\View.h">
       <Filter>MVC\VIEW</Filter>
     </ClInclude>
@@ -196,11 +205,26 @@
     <ClInclude Include="Source\GameController2D.h">
       <Filter>MVC\CONTROLLER</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Model.h">
-      <Filter>MVC\MODEL</Filter>
+    <ClInclude Include="Source\GameModelLevel1.h">
+      <Filter>MVC\MODEL\Lv1</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameModelLevel2.h">
+      <Filter>MVC\MODEL\Lv2</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameModelLevel3.h">
-      <Filter>MVC\MODEL</Filter>
+      <Filter>MVC\MODEL\Lv3</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameModelLevel4.h">
+      <Filter>MVC\MODEL\Lv4</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MenuModel.h">
+      <Filter>MVC\MODEL\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameModel2D.h">
+      <Filter>MVC\MODEL\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Model.h">
+      <Filter>MVC\MODEL\General</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

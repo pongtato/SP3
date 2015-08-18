@@ -23,17 +23,50 @@ void MenuView::Render()
 		Render2DMesh(model->getMenuMesh(), false);
 	} modelStack.PopMatrix();
 
-	modelStack.PushMatrix(); {
-		modelStack.Translate(-120, -80 - 40 * model->getArrowPosition(), 1);
-		modelStack.Scale(40, 30, 1);
+	if ( !model->getIsSelectingLevels() )
+	{
+		modelStack.PushMatrix(); 
+		modelStack.Translate( 0.284f * windowWidth, 0.3f * windowHeight, 1);
+		modelStack.Scale(384, 33, 1);
+		Render2DMesh(model->getstartBtn(), false);
+		modelStack.PopMatrix();
 
-		Render2DMesh(model->getArrowMesh(), false);
-	} modelStack.PopMatrix();
+		modelStack.PushMatrix(); 
+		modelStack.Translate( 0.284f * windowWidth, 0.25f * windowHeight, 1);
+		modelStack.Scale(384, 33, 1);
+		Render2DMesh(model->getsettingsBtn(), false);
+		modelStack.PopMatrix();
 
-	modelStack.PushMatrix(); {
-		modelStack.Translate(50, -230, 1);
-		modelStack.Scale(340, 330, 1);
+		modelStack.PushMatrix(); 
+		modelStack.Translate( 0.284f * windowWidth, 0.2f * windowHeight, 1);
+		modelStack.Scale(384, 33, 1);
+		Render2DMesh(model->getexitBtn(), false);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		modelStack.PushMatrix(); 
+		modelStack.Translate( 0.284f * windowWidth, 0.3f * windowHeight, 1);
+		modelStack.Scale(384, 33, 1);
+		Render2DMesh(model->getLv1(), false);
+		modelStack.PopMatrix();
 
-		Render2DMesh(model->getChoiceMesh(), false);
-	} modelStack.PopMatrix();
+		modelStack.PushMatrix(); 
+		modelStack.Translate( 0.284f * windowWidth, 0.25f * windowHeight, 1);
+		modelStack.Scale(384, 33, 1);
+		Render2DMesh(model->getLv2(), false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix(); 
+		modelStack.Translate( 0.284f * windowWidth, 0.2f * windowHeight, 1);
+		modelStack.Scale(384, 33, 1);
+		Render2DMesh(model->getLv3(), false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix(); 
+		modelStack.Translate( 0.284f * windowWidth, 0.15f * windowHeight, 1);
+		modelStack.Scale(384, 33, 1);
+		Render2DMesh(model->getLv4(), false);
+		modelStack.PopMatrix();
+	}
 }

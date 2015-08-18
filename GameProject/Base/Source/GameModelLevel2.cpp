@@ -15,11 +15,11 @@ void GameModelLevel2::Init()
 
 	m_tileMap = new TileMap();
 	m_tileMap->Init(32, 32, 32, 32, 32);
-	m_tileMap->LoadMap("Image//Maps//L1_L2.csv");
+	m_tileMap->LoadMap("Image//Maps//L2_L2.csv");
 
 	m_ReartileMap = new TileMap();
 	m_ReartileMap->Init(32, 32, 32, 32, 32);
-	m_ReartileMap->LoadMap("Image//Maps//L1_L1.csv");
+	m_ReartileMap->LoadMap("Image//Maps//L2_L1.csv");
 
 	player = new PlayerCharacter(Vector3(2, 2, 0));
 }

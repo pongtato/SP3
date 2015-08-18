@@ -7,9 +7,13 @@
 #include "Model.h"
 #include "MenuModel.h"
 #include "GameModel2D.h"
+
+// Game levels
 #include "GameModelLevel1.h"
 #include "GameModelLevel2.h"
 #include "GameModelLevel3.h"
+#include "GameModelLevel4.h"
+
 #include "View.h"
 #include "MenuView.h"
 #include "GameView2D.h"
@@ -49,6 +53,9 @@ void main( void )
 			break;
 		case 2:
 			model = new GameModelLevel3();
+			break;
+		case 3:
+			model = new GameModelLevel4();
 			break;
 		}
 		view = new GameView2D(model);

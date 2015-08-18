@@ -1,31 +1,31 @@
-#include "GameModelLevel3.h"
+#include "GameModelLevel4.h"
 
-GameModelLevel3::GameModelLevel3()
+GameModelLevel4::GameModelLevel4()
 {
 }
 
-GameModelLevel3::~GameModelLevel3()
+GameModelLevel4::~GameModelLevel4()
 {
 }
 
-void GameModelLevel3::Init()
+void GameModelLevel4::Init()
 {
 	Model::Init();
 	GameModel2D::Init();
 
 	m_tileMap = new TileMap();
 	m_tileMap->Init(32, 32, 32, 32, 32);
-	m_tileMap->LoadMap("Image//Maps//L3_L2.csv");
+	m_tileMap->LoadMap("Image//Maps//L4_L2.csv");
 
 	m_ReartileMap = new TileMap();
 	m_ReartileMap->Init(32, 32, 32, 32, 32);
-	m_ReartileMap->LoadMap("Image//Maps//L3_L1.csv");
+	m_ReartileMap->LoadMap("Image//Maps//L4_L1.csv");
 
 	player = new PlayerCharacter(Vector3(2, 2, 0));
 	Character *mob = new MouseCharacter(Vector3(16, 3, 0), NULL, -1, player);
 }
 
-void GameModelLevel3::Update(double dt)
+void GameModelLevel4::Update(double dt)
 {
 	GameModel2D::Update(dt);
 }
