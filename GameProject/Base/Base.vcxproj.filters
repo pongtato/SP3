@@ -101,6 +101,9 @@
     <ClCompile Include="Source\Model.cpp">
       <Filter>MVC\MODEL</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameModelLevel3.cpp">
+      <Filter>MVC\MODEL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Geometry.h">
@@ -194,6 +197,9 @@
       <Filter>MVC\CONTROLLER</Filter>
     </ClInclude>
     <ClInclude Include="Source\Model.h">
+      <Filter>MVC\MODEL</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameModelLevel3.h">
       <Filter>MVC\MODEL</Filter>
     </ClInclude>
   </ItemGroup>

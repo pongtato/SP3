@@ -6,6 +6,8 @@
 
 class GameView2D : public View
 {
+protected:
+	View* view;
 private:
 
 public:
@@ -14,9 +16,11 @@ public:
 	void Render();
 	void RenderBackground();
 	void RenderTileMap();
+	void RenderRearTileMap();
 	void RenderPlayerCharacter();
 	void RenderMobs();
 	void RenderScore();
+	void RenderCrosshair();
 
 };
 

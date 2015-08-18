@@ -20,13 +20,20 @@ void MenuView::Render()
 	modelStack.PushMatrix(); {
 		modelStack.Scale(windowWidth, windowHeight, 1);
 
-		//Render2DMesh(model->getMenuMesh(), false);
+		Render2DMesh(model->getMenuMesh(), false);
 	} modelStack.PopMatrix();
 
 	modelStack.PushMatrix(); {
 		modelStack.Translate(-120, -80 - 40 * model->getArrowPosition(), 1);
 		modelStack.Scale(40, 30, 1);
 
-		//Render2DMesh(model->getArrowMesh(), false);
+		Render2DMesh(model->getArrowMesh(), false);
+	} modelStack.PopMatrix();
+
+	modelStack.PushMatrix(); {
+		modelStack.Translate(50, -230, 1);
+		modelStack.Scale(340, 330, 1);
+
+		Render2DMesh(model->getChoiceMesh(), false);
 	} modelStack.PopMatrix();
 }

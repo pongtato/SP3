@@ -76,9 +76,12 @@ public:
 	virtual void Init();
 	virtual void Render();
 
+
 	void RenderMesh(Mesh *mesh, bool lightEnabled, unsigned offset = 0, unsigned count = 0);
 	void Render2DMesh(Mesh *mesh, bool lightEnabled, unsigned offset = 0, unsigned count = 0);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
+
+	Vector3 GetCursorPos();
 };
 
 #endif

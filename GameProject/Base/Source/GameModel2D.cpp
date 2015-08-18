@@ -29,6 +29,8 @@ void GameModel2D::Init()
 	meshList[PLAYER]->textureID[0] = LoadTGA("Image//Player.tga");
 	meshList[MOBS] = MeshBuilder::GenerateText("mobs", 4, 4);
 	meshList[MOBS]->textureID[0] = LoadTGA("Image//mobs.tga");
+	meshList[CROSSHAIR] = MeshBuilder::GenerateQuad("Crosshair", Color());
+	meshList[CROSSHAIR]->textureID[0] = LoadTGA("Image\\Crosshair.tga");
 
 	commands = new bool[NUM_COMMANDS];
 	for (int count = 0; count < NUM_COMMANDS; ++count)
@@ -106,6 +108,11 @@ Mesh* GameModel2D::getBackgroundMesh()
 	return meshList[BACKGROUND];
 }
 
+Mesh* GameModel2D::getCrosshairMesh()
+{
+	return meshList[CROSSHAIR];
+}
+
 void GameModel2D::getOffset(float& mapOffset_x, float& mapOffset_y)
 {
 	//mapOffset_x = m_mapOffset_x;
@@ -115,6 +122,11 @@ void GameModel2D::getOffset(float& mapOffset_x, float& mapOffset_y)
 TileMap* GameModel2D::getTileMap()
 {
 	return m_tileMap;
+}
+
+TileMap* GameModel2D::getRearTileMap()
+{
+	return m_ReartileMap;
 }
 
 Mesh* GameModel2D::getTileMesh()

@@ -10,7 +10,6 @@ void Model::Init()
 
 void Model::Update(double dt)
 {
-
 }
 
 void Model::UpdateCameraPos(bool *cmds)
@@ -19,4 +18,14 @@ void Model::UpdateCameraPos(bool *cmds)
 	if (cmds[1]) camera.position.x -= 0.1;
 	if (cmds[2]) camera.position.y -= 0.1;
 	if (cmds[3]) camera.position.x += 0.1;
+}
+
+void Model::setPos(Vector3 CursorPos)
+{
+	xpos = CursorPos.x;
+	ypos = CursorPos.y;
+}
+Vector3 Model::getPos()
+{
+	return Vector3(xpos - 512, -(ypos - 400), 0);
 }

@@ -16,8 +16,10 @@ public:
 private:
 	Mesh *menuScreen;
 	Mesh *arrow;
+	Mesh *choice;
 
 	int arrowPosition;
+	bool menuTimer;
 
 public:
 	MenuModel();
@@ -28,8 +30,8 @@ public:
 	void setCommands(int command);
 	Mesh* getMenuMesh();
 	Mesh* getArrowMesh();
+	Mesh* getChoiceMesh();
 	int getArrowPosition();
-
 };
 
 #endif

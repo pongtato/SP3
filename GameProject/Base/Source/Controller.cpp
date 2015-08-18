@@ -7,6 +7,7 @@
 #include "timer.h"
 #include <map>
 
+
 //Define an error callback
 static void error_callback(int error, const char* description)
 {
@@ -82,4 +83,6 @@ void Controller::RunLoop()
 void Controller::Update()
 {
 	model->Update(m_dElapsedTime);
+	glfwGetCursorPos(view->getWindow(), &xpos, &ypos);
+	model->setPos(Vector3(xpos, ypos, 0));
 }
