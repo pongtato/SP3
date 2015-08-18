@@ -17,6 +17,7 @@ void GameView2D::Render()
 		RenderMobs();
 		RenderTileMap();
 		RenderPlayerCharacter();
+		RenderCrosshair();
 		//RenderScore();
 	} modelStack.PopMatrix();
 }
@@ -52,7 +53,7 @@ void GameView2D::RenderTileMap()
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 
 	modelStack.Translate(0, 0, 1);
-	for (int ccount = 0; ccount < tileMap->getNumOfTilesWidth() + 1; ++ccount)
+	for (int ccount = 0; ccount < tileMap->getNumOfTilesWidth(); ++ccount)
 	{
 		for (int rcount = 0; rcount < tileMap->getNumOfTilesHeight(); ++rcount)
 		{
@@ -120,3 +121,20 @@ void GameView2D::RenderScore()
 	ss << "Score: " << model->getScore();
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(0, 0, 0), 50, 100, 700);
 }
+
+#define player model->getPlayer()
+void GameView2D::RenderCrosshair()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Scale(windowWidth / 32, windowHeight / 25, 1);
+		modelStack.Translate(model->getPos() * 0.032f);
+		Render2DMesh(model->getCrosshairMesh(), false);
+		std::cout << model->getPos() << std::endl;
+	}
+	modelStack.PopMatrix();
+}
+#undef player

@@ -18,6 +18,7 @@ private:
 	Mesh *arrow;
 
 	int arrowPosition;
+	bool menuTimer;
 
 public:
 	MenuModel();
