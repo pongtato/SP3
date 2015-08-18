@@ -16,9 +16,11 @@ void MenuModel::Init()
 	Model::Init();
 
 	menuScreen = MeshBuilder::GenerateQuad("menu", Color());
-	menuScreen->textureID[0] = LoadTGA("Image//menu.tga");
+	menuScreen->textureID[0] = LoadTGA("Image//SP3_Background.tga");
 	arrow = MeshBuilder::GenerateQuad("arrow", Color());
-	arrow->textureID[0] = LoadTGA("Image//arrow.tga");
+	arrow->textureID[0] = LoadTGA("Image//TempPointer.tga");
+	choice = MeshBuilder::GenerateQuad("choice", Color());
+	choice->textureID[0] = LoadTGA("Image//MenuChoice.tga");
 
 	arrowPosition = 0;
 
@@ -53,6 +55,11 @@ Mesh* MenuModel::getMenuMesh()
 Mesh* MenuModel::getArrowMesh()
 {
 	return arrow;
+}
+
+Mesh* MenuModel::getChoiceMesh()
+{
+	return choice;
 }
 
 int MenuModel::getArrowPosition()

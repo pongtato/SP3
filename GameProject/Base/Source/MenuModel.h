@@ -16,6 +16,7 @@ public:
 private:
 	Mesh *menuScreen;
 	Mesh *arrow;
+	Mesh *choice;
 
 	int arrowPosition;
 
@@ -28,8 +29,8 @@ public:
 	void setCommands(int command);
 	Mesh* getMenuMesh();
 	Mesh* getArrowMesh();
+	Mesh* getChoiceMesh();
 	int getArrowPosition();
-
 };
 
 #endif
