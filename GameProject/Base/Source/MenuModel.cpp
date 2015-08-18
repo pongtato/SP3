@@ -23,6 +23,7 @@ void MenuModel::Init()
 	choice->textureID[0] = LoadTGA("Image//MenuChoice.tga");
 
 	arrowPosition = 0;
+	menuTimer = false;
 
 	commands = new bool[NUM_COMMANDS];
 	for (int count = 0; count < NUM_COMMANDS; ++count)
@@ -32,13 +33,32 @@ void MenuModel::Init()
 void MenuModel::Update(double dt)
 {
 	Model::Update(dt);
+	if (!menuTimer)
+	{
+		if (commands[MOVE_UP] && arrowPosition >= 0)
+		{
+			arrowPosition--;
+			menuTimer = true;
+		}
+		else if (commands[MOVE_DOWN] && arrowPosition < 2) 
+		{ 
+			arrowPosition++;
+			menuTimer = true;
+		}
+		if (commands[ENTER])
+		{
+			throw arrowPosition;
+			menuTimer = true;
+		}
+	}
 
-	if (commands[MOVE_UP]) arrowPosition = 0;
-	else if (commands[MOVE_DOWN]) arrowPosition = 1;
-	if (commands[ENTER]) throw arrowPosition;
-
+	if (!commands[ENTER] && !commands[MOVE_UP] && !commands[MOVE_DOWN])
+	{
+		menuTimer = false;
+	}
 	for (int count = 0; count < NUM_COMMANDS; ++count)
 		commands[count] = false;
+	std::cout << menuTimer  << " " << arrowPosition << std::endl;
 }
 
 void MenuModel::setCommands(int command)

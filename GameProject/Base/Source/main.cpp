@@ -9,6 +9,7 @@
 #include "GameModel2D.h"
 #include "GameModelLevel1.h"
 #include "GameModelLevel2.h"
+#include "GameModelLevel3.h"
 #include "View.h"
 #include "MenuView.h"
 #include "GameView2D.h"
@@ -31,6 +32,7 @@ void main( void )
 	view->Init();
 	model->Init();
 
+	
 	try {
 		controller->RunLoop();
 	}
@@ -44,6 +46,9 @@ void main( void )
 			break;
 		case 1:
 			model = new GameModelLevel2();
+			break;
+		case 2:
+			model = new GameModelLevel3();
 			break;
 		}
 		view = new GameView2D(model);

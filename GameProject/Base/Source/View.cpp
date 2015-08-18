@@ -31,7 +31,8 @@ bool View::createWindow(const int& window_width, const int& window_height, const
 
 	//This function makes the context of the specified window current on the calling thread. 
 	glfwMakeContextCurrent(m_window);
-
+	glfwSetCursorPos(m_window, window_width / 2, window_height / 2);
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	return true;
 }
 
@@ -281,4 +282,8 @@ void View::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float s
 	glEnable(GL_DEPTH_TEST);
 }
 
+Vector3 View::GetCursorPos()
+{
+	return Vector3(m_model->getPos());
+}
 #undef camera

@@ -21,6 +21,8 @@ public:
 
 	virtual void Init();
 	virtual void RunLoop();
+
+	double xpos, ypos;
 };
 
 #endif

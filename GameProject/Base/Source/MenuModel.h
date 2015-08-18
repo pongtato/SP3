@@ -19,6 +19,7 @@ private:
 	Mesh *choice;
 
 	int arrowPosition;
+	bool menuTimer;
 
 public:
 	MenuModel();

@@ -28,6 +28,7 @@ protected:
 		TILEFLOOR,
 		PLAYER,
 		MOBS,
+		CROSSHAIR,
 		TOTAL_GEOMETRY,
 	};
 
@@ -54,6 +55,9 @@ public:
 
 	Mesh* getBackgroundMesh();
 
+	//Crosshair
+	Mesh* getCrosshairMesh();
+
 	void getOffset(float& mapOffset_x, float& mapOffset_y);
 	TileMap* getTileMap();
 	TileMap* getRearTileMap();
@@ -67,7 +71,6 @@ public:
 	Mesh* getMobsMesh();
 
 	int getScore();
-
 };
 
 #endif

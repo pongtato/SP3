@@ -9,7 +9,6 @@ class GameController2D : public Controller
 {
 private:
 	void Update();
-
 public:
 	GameController2D(Model* model, View* view);
 	~GameController2D();
