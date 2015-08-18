@@ -17,9 +17,18 @@ private:
 	Mesh *menuScreen;
 	Mesh *arrow;
 	Mesh *choice;
+	Mesh *startBtn;
+	Mesh *settingsBtn;
+	Mesh *exitBtn;
+
+	Mesh *Lv1;
+	Mesh *Lv2;
+	Mesh *Lv3;
+	Mesh *Lv4;
 
 	int arrowPosition;
 	bool menuTimer;
+	bool SelectingLevels;
 
 public:
 	MenuModel();
@@ -31,7 +40,17 @@ public:
 	Mesh* getMenuMesh();
 	Mesh* getArrowMesh();
 	Mesh* getChoiceMesh();
+
+	Mesh* getstartBtn();
+	Mesh* getsettingsBtn();
+	Mesh* getexitBtn();
+
+	Mesh* getLv1();
+	Mesh* getLv2();
+	Mesh* getLv3();
+	Mesh* getLv4();
 	int getArrowPosition();
+	bool getIsSelectingLevels();
 };
 
 #endif
