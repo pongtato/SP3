@@ -39,6 +39,9 @@
     <Filter Include="MVC\MODEL\Lv1">
       <UniqueIdentifier>{b4a4d633-667e-49c7-9efe-3cc360da0107}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{6e400b01-c9e4-4785-98fd-d67dea15ec92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -77,15 +80,6 @@
     <ClCompile Include="Source\TileMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Character.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\PlayerCharacter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\MouseCharacter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\View.cpp">
       <Filter>MVC\VIEW</Filter>
     </ClCompile>
@@ -113,9 +107,6 @@
     <ClCompile Include="Source\GameModelLevel3.cpp">
       <Filter>MVC\MODEL\Lv3</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameModelLevel4.cpp">
-      <Filter>MVC\MODEL\Lv4</Filter>
-    </ClCompile>
     <ClCompile Include="Source\MenuModel.cpp">
       <Filter>MVC\MODEL\Menu</Filter>
     </ClCompile>
@@ -124,6 +115,21 @@
     </ClCompile>
     <ClCompile Include="Source\Model.cpp">
       <Filter>MVC\MODEL\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameModelLevel4.cpp">
+      <Filter>MVC\MODEL\Lv4</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PlayerWeapon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Character.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Character_Enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Character_Player.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,16 +181,7 @@
     <ClInclude Include="Source\TileMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Character.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PlayerCharacter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="KeyBinds.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MouseCharacter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\View.h">
@@ -214,9 +211,6 @@
     <ClInclude Include="Source\GameModelLevel3.h">
       <Filter>MVC\MODEL\Lv3</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameModelLevel4.h">
-      <Filter>MVC\MODEL\Lv4</Filter>
-    </ClInclude>
     <ClInclude Include="Source\MenuModel.h">
       <Filter>MVC\MODEL\Menu</Filter>
     </ClInclude>
@@ -225,6 +219,21 @@
     </ClInclude>
     <ClInclude Include="Source\Model.h">
       <Filter>MVC\MODEL\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameModelLevel4.h">
+      <Filter>MVC\MODEL\Lv4</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PlayerWeapon.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Character.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Character_Enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Character_Player.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
