@@ -11,7 +11,7 @@ const float m_worldWidth = 160;
 void GameModel2D::Init()
 {
 	Model::Init();
-
+	camera.Init(Vector3(20, 15, 50), Vector3(20, 15, 0), Vector3(0, 1, 0));
 	for (int count = 0; count < GEOMETRY_TYPE::TOTAL_GEOMETRY; ++count)
 	{
 		meshList[count] = new Mesh("null");
@@ -42,6 +42,7 @@ void GameModel2D::Init()
 	newPlayerPos.Set(0,0,0);
 	newExitPos.Set(0,0,0);
 	score = 0;
+	ZoomIN = false;
 	SpawnReady = false;
 	newLevel = false;
 }
@@ -75,7 +76,7 @@ void GameModel2D::Update(double dt)
 		}
 	}
 
-	Vector3 AssignVel;
+	/*Vector3 AssignVel;
 	Vector3 tempVel;
 	AssignVel.Set(camera.position.x,camera.position.y,0);
 
@@ -95,8 +96,36 @@ void GameModel2D::Update(double dt)
 		camera.target.y += tempVel.y;
 	}
 
+
+*/
+	//Camera update
+	//if ( (player->getPosition() - AssignVel).Length() > 3 && ZoomIN)
+	//{
+	//	if ( tempVel.Length() < 4)
+	//	{
+	//		tempVel += (player->getPosition() - AssignVel).Normalized() * (player->getPosition() - AssignVel).Length() * 0.5f * dt;
+	//	}
+	//}
+	Vector3 initialCam;
+	initialCam.Set(camera.position.x, camera.position.y, camera.position.z);
+	Vector3 playerPos;
+	playerPos.Set(player->getPosition().x, player->getPosition().y, 20);
+	
+	if (camera.position.Length() > 0 && ZoomIN)
+	{
+		camera.position += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 0.5f * dt;
+		camera.target += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 0.5f * dt;
+	}
+	//Camera zoom in to player
+	if (commands[ENTER] && !ZoomIN)
+	{
+		ZoomIN = true;
+	}
+
 	for (int count = 0; count < NUM_COMMANDS; ++count)
 		commands[count] = false;
+
+
 }
 
 void GameModel2D::setCommands(int command)

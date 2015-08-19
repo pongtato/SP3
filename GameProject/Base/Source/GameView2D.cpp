@@ -67,7 +67,7 @@ void GameView2D::RenderTileMap()
 
 			if ( tileMap->getTile(ccount, rcount) == model->getSpawnPointID() )
 			{
-				model->setNewPlayerPos(ccount, rcount,0);
+				model->setNewPlayerPos(ccount, rcount,-0.8f);
 			}
 			if ( tileMap->getTile(ccount, rcount) == model->getExitPointID() )
 			{

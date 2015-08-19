@@ -122,8 +122,11 @@
     <ClCompile Include="Source\GameModelLevel4.cpp">
       <Filter>MVC\MODEL\Lv4</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Character_Guard.cpp">
+    <ClCompile Include="Source\MouseCharacter.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Character_Guard.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -222,6 +225,9 @@
     </ClInclude>
     <ClInclude Include="Source\GameModelLevel4.h">
       <Filter>MVC\MODEL\Lv4</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MouseCharacter.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Character_Guard.h">
       <Filter>Header Files</Filter>

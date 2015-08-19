@@ -26,22 +26,12 @@ void GameModelLevel1::Init()
 
 void GameModelLevel1::Update(double dt)
 {
-	if (rand() % 100 < 1)
-	{
-		int pos = rand() % 2;
-		Character *mob = new Character_Guard(Vector3(1 + pos * 30, 2, 0), NULL, (pos ? -3 : 3), player);
-		GuardsList.push_back(mob);
-	}
-
 	if ( SpawnReady )
 	{
 		player->InitPos(newPlayerPos.x - 0.5f,
-			newPlayerPos.y - 0.5f,
+			newPlayerPos.y - 0.25f,
 			newPlayerPos.z);
 		SpawnReady = false;
 	}
-
-	std::cout << player->getPosition().x << "," << player->getPosition().y << std::endl;
-
 	GameModel2D::Update(dt);
 }
