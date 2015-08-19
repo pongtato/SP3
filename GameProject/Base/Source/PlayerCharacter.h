@@ -45,7 +45,7 @@ public:
 	~PlayerCharacter();
 
 	void Update(double dt, const TileMap *tileMap);
-
+	void InitPos(float x, float y ,float z);
 	void moveUp();
 	void moveDown();
 	void moveLeft();

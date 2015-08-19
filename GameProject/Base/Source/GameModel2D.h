@@ -8,6 +8,9 @@
 
 #include <vector>
 
+#define SpawnPointID 37
+#define ExitPointID  36
+
 class GameModel2D : public Model
 {
 public:
@@ -36,13 +39,24 @@ protected:
 
 	TileMap* m_tileMap;
 	TileMap* m_ReartileMap;
+
+	//Player spawn point read from text file
+	Vector3 newPlayerPos;
+	//Exit point read from text file
+	Vector3 newExitPos;
+
+
 	//float m_mapOffset_x;
 	//float m_mapOffset_y;
 
 	PlayerCharacter *player;
-	std::vector<Character *> mobsList;
+	std::vector<Character *> GuardsList;
+	std::vector<Character *> CameraList;
+	std::vector<Character *> CollectiblesList;
 
 	int score;
+	bool SpawnReady;
+	bool newLevel;
 
 public:
 
@@ -67,9 +81,18 @@ public:
 	PlayerCharacter* getPlayer();
 	Mesh* getPlayerMesh();
 
-	std::vector<Character *> getMobsList();
+	std::vector<Character *> getGuardsList();
+	std::vector<Character *> getCameraList();
+	std::vector<Character *> getCollectiblesList();
 	Mesh* getMobsMesh();
 
+	void setNewPlayerPos(float x, float y, float z);
+	void setNewExitPos(float x, float y, float z);
+	Vector3 getNewPlayerPos();
+	Vector3 getNewExitPos();
+
+	int getSpawnPointID();
+	int getExitPointID();
 	int getScore();
 };
 

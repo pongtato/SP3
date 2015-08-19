@@ -22,7 +22,7 @@ void GameModelLevel3::Init()
 	m_ReartileMap->LoadMap("Image//Maps//L3_L1.csv");
 
 	player = new PlayerCharacter(Vector3(2, 2, 0));
-	Character *mob = new MouseCharacter(Vector3(16, 3, 0), NULL, -1, player);
+	Character *mob = new Character_Guard(Vector3(16, 3, 0), NULL, -1, player);
 }
 
 void GameModelLevel3::Update(double dt)

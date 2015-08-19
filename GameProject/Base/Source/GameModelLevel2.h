@@ -3,7 +3,7 @@
 
 #include "GameModel2D.h"
 
-#include "MouseCharacter.h"
+#include "Character_Guard.h"
 
 class GameModelLevel2 : public GameModel2D
 {

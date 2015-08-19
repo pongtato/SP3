@@ -60,11 +60,19 @@ void GameView2D::RenderTileMap()
 	{
 		for (int rcount = 0; rcount < tileMap->getNumOfTilesHeight(); ++rcount)
 		{
-			modelStack.PushMatrix(); {
-				modelStack.Translate(ccount, rcount, 0);
-				//modelStack.Translate(0.5f, 0.5f, 0);
-					RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
-			} modelStack.PopMatrix();
+			modelStack.PushMatrix(); 
+			modelStack.Translate(ccount, rcount, 0);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
+			modelStack.PopMatrix();
+
+			if ( tileMap->getTile(ccount, rcount) == model->getSpawnPointID() )
+			{
+				model->setNewPlayerPos(ccount, rcount,0);
+			}
+			if ( tileMap->getTile(ccount, rcount) == model->getExitPointID() )
+			{
+				model->setNewExitPos(ccount,rcount,0);
+			}
 		}
 	}
 }
@@ -111,7 +119,7 @@ void GameView2D::RenderPlayerCharacter()
 
 #undef player
 
-#define mobsList model->getMobsList()
+#define mobsList model->getGuardsList()
 
 void GameView2D::RenderMobs()
 {

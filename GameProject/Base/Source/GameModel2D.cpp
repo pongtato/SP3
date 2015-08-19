@@ -3,7 +3,7 @@
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
 
-#include "MouseCharacter.h"
+#include "Character_Guard.h"
 
 const float m_worldHeight = 120;
 const float m_worldWidth = 160;
@@ -38,8 +38,12 @@ void GameModel2D::Init()
 
 	//m_mapOffset_x = 0;
 	//m_mapOffset_y = 0;
-
+	
+	newPlayerPos.Set(0,0,0);
+	newExitPos.Set(0,0,0);
 	score = 0;
+	SpawnReady = false;
+	newLevel = false;
 }
 
 void GameModel2D::Update(double dt)
@@ -55,7 +59,7 @@ void GameModel2D::Update(double dt)
 	//m_mapOffset_x = player->getPosition().x - (float)m_tileMap->getNumOfTilesWidth() / 2.f;
 	//m_mapOffset_x = Math::Clamp(m_mapOffset_x, 0.f, (float)(m_tileMap->getMapWidth() - m_tileMap->getNumOfTilesWidth()));
 
-	for (std::vector<Character *>::iterator it = mobsList.begin(); it != mobsList.end(); ++it)
+	for (std::vector<Character *>::iterator it = GuardsList.begin(); it != GuardsList.end(); ++it)
 	{
 		(*it)->Update(dt, m_tileMap);
 		if ((*it)->isActive())
@@ -75,18 +79,21 @@ void GameModel2D::Update(double dt)
 	Vector3 tempVel;
 	AssignVel.Set(camera.position.x,camera.position.y,0);
 
-	//Camera update
-	if ( (player->getPosition() - AssignVel).Length() > 3 )
+	if ( newLevel )
 	{
-		if ( tempVel.Length() < 4 )
+		//Camera update
+		if ( (player->getPosition() - AssignVel).Length() > 3 )
 		{
-			tempVel += (player->getPosition() - AssignVel).Normalized() * (player->getPosition() - AssignVel).Length() * 0.5f * dt;
+			if ( tempVel.Length() < 4 )
+			{
+				tempVel += (player->getPosition() - AssignVel).Normalized() * (player->getPosition() - AssignVel).Length() * 0.5f * dt;
+			}
 		}
+		camera.position.x += tempVel.x;
+		camera.position.y += tempVel.y;
+		camera.target += tempVel.x;
+		camera.target.y += tempVel.y;
 	}
-	camera.position.x += tempVel.x;
-	camera.position.y += tempVel.y;
-	camera.target += tempVel.x;
-	camera.target.y += tempVel.y;
 
 	for (int count = 0; count < NUM_COMMANDS; ++count)
 		commands[count] = false;
@@ -149,9 +156,19 @@ Mesh* GameModel2D::getPlayerMesh()
 	return meshList[PLAYER];
 }
 
-std::vector<Character *> GameModel2D::getMobsList()
+std::vector<Character *> GameModel2D::getGuardsList()
 {
-	return mobsList;
+	return GuardsList;
+}
+
+std::vector<Character *> GameModel2D::getCameraList()
+{
+	return CameraList;
+}
+
+std::vector<Character *> GameModel2D::getCollectiblesList()
+{
+	return CollectiblesList;
 }
 
 Mesh* GameModel2D::getMobsMesh()
@@ -162,4 +179,39 @@ Mesh* GameModel2D::getMobsMesh()
 int GameModel2D::getScore()
 {
 	return score;
+}
+
+int GameModel2D::getSpawnPointID()
+{
+	return SpawnPointID;
+}
+
+Vector3 GameModel2D::getNewPlayerPos()
+{
+	return newPlayerPos;
+}
+
+Vector3 GameModel2D::getNewExitPos()
+{
+	return newExitPos;
+}
+
+void GameModel2D::setNewPlayerPos(float x, float y, float z)
+{
+	if ( !newLevel )
+	{
+		newPlayerPos.Set(x,y,z);
+		SpawnReady = true;
+		newLevel = true;
+	}
+}
+
+void GameModel2D::setNewExitPos(float x, float y, float z)
+{
+	newExitPos.Set(x,y,z);
+}
+
+int GameModel2D::getExitPointID()
+{
+	return ExitPointID;
 }
