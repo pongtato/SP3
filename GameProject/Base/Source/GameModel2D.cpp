@@ -173,6 +173,23 @@ std::vector<CCharacter_Enemy*> GameModel2D::getEnemyList()
 {
 	return EnemyList;
 }
+Mesh* GameModel2D::getWeaponMesh()
+{
+	switch (m_weapon->getWeapon())
+	{
+	case 0:
+		m_weapon->setWeapon(PISTOL);
+		break;
+	case 1:
+		m_weapon->setWeapon(SHOTGUN);
+		break;
+	case 2:
+		m_weapon->setWeapon(RIFLE);
+		break;
+	}
+	return weaponList[m_weapon->getWeapon()];
+}
+
 
 std::vector<CCharacter_Enemy*> GameModel2D::getCollectiblesList()
 {

@@ -155,3 +155,8 @@ void PlayerCharacter::jump()
 		m_jumpHeight = 0;
 	}
 }
+
+void PlayerCharacter::InitPos(float x, float y ,float z)
+{
+	m_position.Set(x,y,z);
+}

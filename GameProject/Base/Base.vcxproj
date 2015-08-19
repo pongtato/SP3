@@ -20,6 +20,7 @@
     <ClCompile Include="Source\GameModelLevel1.cpp" />
     <ClCompile Include="Source\GameModelLevel2.cpp" />
     <ClCompile Include="Source\GameModelLevel3.cpp" />
+    <ClCompile Include="Source\GameModelLevel4.cpp" />
     <ClCompile Include="Source\GameView2D.cpp" />
     <ClCompile Include="Source\LoadHmap.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="Source\GameModelLevel1.h" />
     <ClInclude Include="Source\GameModelLevel2.h" />
     <ClInclude Include="Source\GameModelLevel3.h" />
+    <ClInclude Include="Source\GameModelLevel4.h" />
     <ClInclude Include="Source\GameView2D.h" />
     <ClInclude Include="Source\Geometry.h" />
     <ClInclude Include="Source\Light.h" />
