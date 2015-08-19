@@ -69,7 +69,6 @@ void main( void )
 		if (glewInit() != GLEW_OK) exit(EXIT_FAILURE);
 		view->Init();
 		model->Init();
-
 		controller->RunLoop();
 	}
 

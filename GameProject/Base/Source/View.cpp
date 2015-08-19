@@ -39,7 +39,7 @@ bool View::createWindow(const int& window_width, const int& window_height, const
 void View::Init()
 {
 	// Black background
-	glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
+	glClearColor(0.21961f, 0.21961f, 0.21961f, 0.0f);
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
