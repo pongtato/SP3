@@ -5,7 +5,7 @@
 
 void Model::Init()
 {
-	camera.Init(Vector3(0, 0, 100), Vector3(-100,-25,0), Vector3(0, 1, 0));
+	camera.Init(Vector3(0, 0, 20), Vector3(), Vector3(0, 1, 0));
 }
 
 void Model::Update(double dt)

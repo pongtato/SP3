@@ -30,8 +30,6 @@ public:
 	unsigned getNumOfTilesWidth() const;
 	unsigned getNumOfTilesHeight() const;
 
-	float GetTileSize();
-
 };
 
 #endif

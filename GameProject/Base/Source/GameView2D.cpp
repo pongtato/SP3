@@ -60,26 +60,11 @@ void GameView2D::RenderTileMap()
 	{
 		for (int rcount = 0; rcount < tileMap->getNumOfTilesHeight(); ++rcount)
 		{
-			modelStack.PushMatrix(); 
-			modelStack.Translate(ccount, rcount, 0.1f);
-
-			if ( tileMap->getTile(ccount, rcount) == model->getSpawnPointID() )
-			{
-				model->setNewPlayerPos(ccount, rcount,-0.8f);
-			}
-			else if ( tileMap->getTile(ccount, rcount) == model->getExitPointID() )
-			{
-				model->setNewExitPos(ccount,rcount,0);
-			}
-			else if ( tileMap->getTile(ccount, rcount) == model->getEnemySpawnID() )
-			{
-				model->setNewEnemy(ccount,rcount,0,1);
-			}
-			else
-			{
-				RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
-			}
-			modelStack.PopMatrix();
+			modelStack.PushMatrix(); {
+				modelStack.Translate(ccount, rcount, 0);
+				//modelStack.Translate(0.5f, 0.5f, 0);
+					RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
+			} modelStack.PopMatrix();
 		}
 	}
 }
@@ -109,20 +94,24 @@ void GameView2D::RenderRearTileMap()
 
 #undef reartileMap
 
+#define player model->getPlayer()
+
 void GameView2D::RenderPlayerCharacter()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 
 	modelStack.Translate(0, 0, 1);
 	modelStack.PushMatrix(); {
-		modelStack.Translate(CCharacter_Player::GetInstance()->getPosition());
+		modelStack.Translate(player->getPosition());
 		modelStack.Translate(0.5, 0.5, 0);
-		std::cout << model->getPlayerMesh(model->PISTOL_IDLE) << std::endl;
-		RenderMesh(model->getPlayerMesh(model->PISTOL_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+
+		RenderMesh(model->getPlayerMesh(), false, 6 * player->getSpriteState(), 6);
 	} modelStack.PopMatrix();
 }
 
-#define mobsList model->getEnemyList()
+#undef player
+
+#define mobsList model->getMobsList()
 
 void GameView2D::RenderMobs()
 {
@@ -133,13 +122,14 @@ void GameView2D::RenderMobs()
 
 	for (int count = 0; count < mobsList.size(); ++count)
 	{
-		if (mobsList[count]->getActive())
+		if (mobsList[count]->isActive())
 		{
 			modelStack.PushMatrix(); {
 				modelStack.Translate(-mapOffset_x, -mapOffset_y, 1);
 				modelStack.Translate(mobsList[count]->getPosition());
-				//modelStack.Translate(0.5, 0.5, 0);
-				RenderMesh(model->getTileMesh(), false, 6 * mobsList[count]->getSpriteID(), 6);
+				modelStack.Translate(0.5, 0.5, 0);
+
+				RenderMesh(model->getMobsMesh(), false, 6 * mobsList[count]->getSpriteState(), 6);
 			} modelStack.PopMatrix();
 		}
 	}

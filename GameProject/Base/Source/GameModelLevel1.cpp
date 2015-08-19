@@ -21,20 +21,17 @@ void GameModelLevel1::Init()
 	m_ReartileMap->Init(32, 32, 32, 32, 32);
 	m_ReartileMap->LoadMap("Image//Maps//L1_L1.csv");
 
-	CCharacter_Player::GetInstance()->Init(newPlayerPos.x - 0.5f,
-			newPlayerPos.y - 0.25f,
-			newPlayerPos.z,1,1,100,1,5);
-	m_weapon = new PlayerWeapon();
+	player = new PlayerCharacter(Vector3(2, 2, 0));
 }
 
 void GameModelLevel1::Update(double dt)
 {
-	if ( SpawnReady )
+	if (rand() % 100 < 1)
 	{
-		CCharacter_Player::GetInstance()->Init(newPlayerPos.x - 0.5f,
-			newPlayerPos.y - 0.25f,
-			newPlayerPos.z,1,1,100,1,5);
-		SpawnReady = false;
+		int pos = rand() % 2;
+		Character *mob = new MouseCharacter(Vector3(1 + pos * 30, 2, 0), NULL, (pos ? -3 : 3), player);
+		mobsList.push_back(mob);
 	}
+
 	GameModel2D::Update(dt);
 }

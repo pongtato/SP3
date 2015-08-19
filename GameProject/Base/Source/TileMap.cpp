@@ -85,8 +85,3 @@ unsigned TileMap::getNumOfTilesHeight() const
 {
 	return m_numOfTileHeight;
 }
-
-float TileMap::GetTileSize()
-{
-	return m_tileSize;
-}

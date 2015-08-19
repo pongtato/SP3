@@ -3,51 +3,34 @@
 
 #include "Mesh.h"
 #include "Vector3.h"
-#define MAX_SPEED 3
+#include "TileMap.h"
 
-class CCharacter
+class Character
 {
-public:
-	CCharacter(void);
-	~CCharacter(void);
-
-	void Init(float x, float y, float z, float scale, int newSpriteID, int newHP, int newZoneID, float newMS);
-	void setPosition(float x,float y, float z);
-	Vector3 getPosition(void);
-	void updatePosition(double dt);
-	void setVelocity(float x, float y, float z);
-	void setTarget(float x, float y , float z);
-	void setScale(float x, float y, float z);
-	void setSpriteID(int newSpriteID);
-	int getSpriteID(void);
-	void setID(int newID);
-	void setHP(int newHP);
-	int  getHP(void);
-	void Damaged(int Damage);
-	void setCurrentZone(int newZoneID);
-	int  getCurrentZone(void);
-	void setActive(bool newStatus);
-	bool getActive(void);
-	void setMoveSpeed(float newMS);
-	void addAccelerate(float x, float y, float z);
-	void UpdateVelocity(double dt);
-
-private:
-	Vector3 m_Position;
-	Vector3 m_Velocity;
-	Vector3 m_Target;
-	Vector3 m_Scale;
-	Vector3 m_InitialPos;
-	int m_SpriteID;
-	int m_ID;
-	int m_HP;
-	int m_CurrentZone;
-	bool m_Active;
-
 protected:
-	float m_MoveSpeed;
-	Vector3 m_acceleration;
+	Vector3 m_position;
+	Vector3 m_velocity;
+	Vector3 m_size;
+	Mesh* m_sprite;
+	int m_spriteState;
+	float m_spriteTime;
+
+public:
+	Character(Vector3 position = Vector3(), Mesh* sprite = NULL);
+	~Character();
+
+	virtual void Update(double dt, const TileMap *tilemap) { m_spriteTime += dt; }
+
+	const Vector3 getPosition() const;
+	const Vector3 getVelocity() const;
+	int getSpriteState();
+
+	friend bool CheckCollision(Character *first, Character *second);
+
+	virtual bool isActive() { return false; }
+	virtual void SetDead() {}
+	virtual bool isDead() { return false; }
+
 };
 
 #endif
-
