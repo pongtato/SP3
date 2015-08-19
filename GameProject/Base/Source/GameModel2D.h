@@ -17,6 +17,7 @@ public:
 		MOVE_LEFT,
 		MOVE_RIGHT,
 		JUMP,
+		ENTER,
 		NUM_COMMANDS,
 	};
 
@@ -71,6 +72,7 @@ public:
 	Mesh* getMobsMesh();
 
 	int getScore();
+	bool ZoomIN;
 };
 
 #endif
