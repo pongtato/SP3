@@ -2,6 +2,7 @@
 #define PLAYERCHARACTER_H
 
 #include "Character.h"
+#include "PlayerWeapon.h"
 
 const Vector3 SMALLSIZE(0.7f, 0.8f, 0);
 #define WALKING_NUMFRAMES 5
@@ -32,6 +33,7 @@ private:
 		FALLING,
 	};
 
+	PlayerWeapon Weapon;
 	Vector3 m_acceleration;
 	JUMP_STATE m_jumpState;
 	float m_jumpHeight;

@@ -61,7 +61,7 @@ void GameView2D::RenderTileMap()
 		for (int rcount = 0; rcount < tileMap->getNumOfTilesHeight(); ++rcount)
 		{
 			modelStack.PushMatrix(); 
-			modelStack.Translate(ccount, rcount, 0);
+			modelStack.Translate(ccount, rcount, 0.1f);
 			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
 			modelStack.PopMatrix();
 

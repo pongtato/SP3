@@ -57,6 +57,15 @@ void GameModel2D::Update(double dt)
 
 	player->Update(dt, m_tileMap);
 
+
+	//Weapon changing
+	int CurrentWeapon = m_weapon->getWeapon();
+	if (commands[PREVWEAP])CurrentWeapon--;
+	if (commands[NEXTWEAP])CurrentWeapon++;
+	m_weapon->setWeapon(CurrentWeapon);
+
+	std::cout << CurrentWeapon << std::endl;
+
 	//m_mapOffset_x = player->getPosition().x - (float)m_tileMap->getNumOfTilesWidth() / 2.f;
 	//m_mapOffset_x = Math::Clamp(m_mapOffset_x, 0.f, (float)(m_tileMap->getMapWidth() - m_tileMap->getNumOfTilesWidth()));
 
@@ -113,8 +122,8 @@ void GameModel2D::Update(double dt)
 	
 	if (camera.position.Length() > 0 && ZoomIN)
 	{
-		camera.position += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 0.5f * dt;
-		camera.target += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 0.5f * dt;
+		camera.position += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
+		camera.target += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
 	}
 	//Camera zoom in to player
 	if (commands[ENTER] && !ZoomIN)
@@ -180,9 +189,29 @@ PlayerCharacter* GameModel2D::getPlayer()
 	return player;
 }
 
+PlayerWeapon* GameModel2D::getWeapon()
+{
+	return m_weapon;
+}
 Mesh* GameModel2D::getPlayerMesh()
 {
 	return meshList[PLAYER];
+}
+Mesh* GameModel2D::getWeaponMesh()
+{
+	switch (m_weapon->getWeapon())
+	{
+	case 0:
+		m_weapon->setWeapon(PISTOL);
+		break;
+	case 1:
+		m_weapon->setWeapon(SHOTGUN);
+		break;
+	case 2:
+		m_weapon->setWeapon(RIFLE);
+		break;
+	}
+	return weaponList[m_weapon->getWeapon()];
 }
 
 std::vector<Character *> GameModel2D::getGuardsList()

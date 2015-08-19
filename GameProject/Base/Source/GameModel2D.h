@@ -5,6 +5,7 @@
 
 #include "TileMap.h"
 #include "PlayerCharacter.h"
+#include "PlayerWeapon.h"
 
 #include <vector>
 
@@ -21,6 +22,9 @@ public:
 		MOVE_RIGHT,
 		JUMP,
 		ENTER,
+		//Weapon changing
+		PREVWEAP,
+		NEXTWEAP,
 		NUM_COMMANDS,
 	};
 
@@ -35,11 +39,20 @@ protected:
 		CROSSHAIR,
 		TOTAL_GEOMETRY,
 	};
-
+	enum WEAPON_TYPE
+	{
+		PISTOL,
+		SHOTGUN,
+		RIFLE,
+		TOTAL_GUNS,
+	};
+	
 	Mesh* meshList[TOTAL_GEOMETRY];
+	Mesh* weaponList[TOTAL_GUNS];
 
 	TileMap* m_tileMap;
 	TileMap* m_ReartileMap;
+
 
 	//Player spawn point read from text file
 	Vector3 newPlayerPos;
@@ -50,10 +63,15 @@ protected:
 	//float m_mapOffset_x;
 	//float m_mapOffset_y;
 
+	//Player
 	PlayerCharacter *player;
 	std::vector<Character *> GuardsList;
 	std::vector<Character *> CameraList;
 	std::vector<Character *> CollectiblesList;
+
+	//Weapon
+	PlayerWeapon* m_weapon;
+
 
 	int score;
 	bool SpawnReady;
@@ -79,8 +97,13 @@ public:
 	Mesh* getTileMesh();
 	Mesh* getFloorTileMesh();
 
+	//Player
 	PlayerCharacter* getPlayer();
 	Mesh* getPlayerMesh();
+
+	//Weapon
+	PlayerWeapon* getWeapon();
+	Mesh* getWeaponMesh();
 
 	std::vector<Character *> getGuardsList();
 	std::vector<Character *> getCameraList();

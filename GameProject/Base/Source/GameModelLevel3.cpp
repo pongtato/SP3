@@ -23,6 +23,7 @@ void GameModelLevel3::Init()
 
 	player = new PlayerCharacter(Vector3(newPlayerPos.x, newPlayerPos.y, 0));
 	Character *mob = new Character_Guard(Vector3(16, 3, 0), NULL, -1, player);
+	m_weapon = new PlayerWeapon();
 }
 
 void GameModelLevel3::Update(double dt)

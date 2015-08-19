@@ -22,6 +22,11 @@ void GameController2D::Update()
 		model->setCommands(GameModel2D::COMMANDS::JUMP);
 	if (IsKeyPressed(VK_RETURN))
 		model->setCommands(GameModel2D::COMMANDS::ENTER);
+	//Weapon changing
+	if (IsKeyPressed('Q'))
+		model->setCommands(GameModel2D::COMMANDS::PREVWEAP);
+	if (IsKeyPressed('E'))
+		model->setCommands(GameModel2D::COMMANDS::NEXTWEAP);
 	Controller::Update();
 	
 }

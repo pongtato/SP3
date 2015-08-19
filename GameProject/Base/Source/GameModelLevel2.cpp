@@ -22,6 +22,7 @@ void GameModelLevel2::Init()
 	m_ReartileMap->LoadMap("Image//Maps//L2_L1.csv");
 
 	player = new PlayerCharacter(Vector3(newPlayerPos.x, newPlayerPos.y, 0));
+	m_weapon = new PlayerWeapon();
 }
 
 void GameModelLevel2::Update(double dt)
