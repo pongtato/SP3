@@ -144,6 +144,12 @@ void GameModel2D::Init()
 	newLevel = false;
 	BulletShoot = false;
 	AniToUpdate = PISTOL_IDLE;
+
+	for ( unsigned i = 0; i < 100; ++i)
+	{
+		GameObject * go = new GameObject(GameObject::GO_NONE);
+		m_goList.push_back(go);
+	}
 }
 
 void GameModel2D::Update(double dt)
@@ -178,6 +184,20 @@ void GameModel2D::Update(double dt)
 		
 	}
 	BulletUpdate(dt);
+
+	//Check against wall
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if ( go->active )
+		{
+			if ( checkCollision(CCharacter_Player::GetInstance()->getPosition(),CCharacter_Player::GetInstance()->getScale(),CCharacter_Player::GetInstance()->getVelocity(),go,dt) )
+			{
+				//broken collision
+				std::cout << " touche " << std::endl;
+			}
+		}
+	}
 
 	Vector3 initialCam;
 	initialCam.Set(camera.position.x, camera.position.y, camera.position.z);
@@ -293,7 +313,7 @@ void GameModel2D::BulletUpdate(double dt)
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
-		if (go->type == GameObject::GO_BULLET)
+		if (go->type == GameObject::GO_BULLET && go->active)
 		{
 			go->pos += go->vel * dt;
 		}
@@ -471,5 +491,51 @@ void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 			EnemyList[i]->setID(ID);
 			break;
 		}
+	}
+}
+
+void GameModel2D::setNewCollidable(float x, float y, float z, float scale, float normalX, float normalY, float normalZ, int newID)
+{
+	for ( unsigned i = 0; i < m_goList.size(); ++i)
+	{
+		if ( !m_goList[i]->active )
+		{
+			std::cout << " set " << std::endl;
+			m_goList[i]->active = true;
+			m_goList[i]->pos.Set(x,y,z);
+			m_goList[i]->normal.Set(normalX,normalY,normalZ);
+			m_goList[i]->ID = newID;
+			m_goList[i]->type = GameObject::GO_WALL;
+			break;
+		}
+	}
+}
+
+bool GameModel2D::checkCollision(Vector3 Pos, Vector3 scale, Vector3 Vel, GameObject* go2, double dt)
+{
+	switch(go2->type)
+	{
+	case GameObject::GO_WALL:
+		{
+			//|(w0-b1).N| < r + h / 2
+			Vector3 w0 = go2->pos;
+			Vector3 b1 = Pos + Vel * dt;
+			Vector3 N = go2->normal;
+			float r = scale.x;
+			float h = go2->scale.x;
+
+			Vector3 NP(-N.y, N.x);
+			float l = go2->scale.y;
+
+			if ( (abs((w0-b1).Dot(N))) < r + h * 0.5 && (abs((w0-b1).Dot(NP))) < r + l * 0.5)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		break;
 	}
 }

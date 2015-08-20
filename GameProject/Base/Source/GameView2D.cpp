@@ -95,6 +95,8 @@ void GameView2D::RenderTileMap()
 			}
 			else
 			{
+				// Position - Scale - Normal - ID  
+				model->setNewCollidable(ccount,rcount,0,1,0,1,0,0);
 				RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
 			}
 			modelStack.PopMatrix();

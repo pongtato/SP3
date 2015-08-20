@@ -9,6 +9,7 @@ struct GameObject
 	{
 		GO_NONE = 0,
 		GO_BULLET,
+		GO_WALL,
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;
@@ -21,6 +22,7 @@ struct GameObject
 	bool active;
 	float mass;
 	float angleOrientation;
+	int ID;
 
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_BULLET);
 	~GameObject();

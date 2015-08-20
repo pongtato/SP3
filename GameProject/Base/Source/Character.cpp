@@ -70,6 +70,10 @@ void CCharacter::setVelocity(float x, float y, float z)
 {
 	m_Velocity.Set(x,y,z);
 }
+Vector3 CCharacter::getVelocity(void)
+{
+	return m_Velocity;
+}
 void CCharacter::setTarget(float x, float y , float z)
 {
 	m_Target.Set(x,y,z);
@@ -77,6 +81,10 @@ void CCharacter::setTarget(float x, float y , float z)
 void CCharacter::setScale(float x, float y, float z)
 {
 	m_Scale.Set(x,y,z);
+}
+Vector3 CCharacter::getScale(void)
+{
+	return m_Scale;
 }
 void CCharacter::setSpriteID(int newSpriteID)
 {

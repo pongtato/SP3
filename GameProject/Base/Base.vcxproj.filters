@@ -119,13 +119,13 @@
     <ClCompile Include="Source\GameModelLevel4.cpp">
       <Filter>MVC\MODEL\Lv4</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-     <ClCompile Include="Source\Character_Enemy.cpp">
+    <ClCompile Include="Source\Character_Enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Character_Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\SoundManager.cpp">
@@ -226,13 +226,13 @@
     <ClInclude Include="Source\GameModelLevel4.h">
       <Filter>MVC\MODEL\Lv4</Filter>
     </ClInclude>
-        <ClInclude Include="Source\GameObject.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Character_Enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Character_Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\SoundManager.h">

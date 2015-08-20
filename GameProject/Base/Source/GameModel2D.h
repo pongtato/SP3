@@ -9,7 +9,6 @@
 #include "TileMap.h"
 #include "Character_Player.h"
 #include "Character_Enemy.h"
-#include "PlayerWeapon.h"
 
 #include <vector>
 
@@ -145,6 +144,11 @@ public:
 	void setNewPlayerPos(float x, float y, float z);
 	void setNewExitPos(float x, float y, float z);
 	void setNewEnemy(float x, float y, float z, int ID);
+	void setNewCollidable(float x, float y, float z, float scale, float normalX, float normalY, float normalZ, int newID);
+
+	//void checkCollision(float x, float y, float z, float scale, float VelX, float VelY, float VelZ, GameObject* go2);
+	bool checkCollision(Vector3 Pos, Vector3 scale, Vector3 Vel, GameObject* go2, double dt);
+
 	Vector3 getNewPlayerPos();
 	Vector3 getNewExitPos();
 

@@ -16,8 +16,10 @@ public:
 	Vector3 getPosition(void);
 	void updatePosition(double dt);
 	void setVelocity(float x, float y, float z);
+	Vector3 getVelocity(void);
 	void setTarget(float x, float y , float z);
 	void setScale(float x, float y, float z);
+	Vector3 getScale(void);
 	void setSpriteID(int newSpriteID);
 	int getSpriteID(void);
 	void setID(int newID);
