@@ -12,6 +12,8 @@ CCharacter_Player* CCharacter_Player::GetInstance()
 
 CCharacter_Player::CCharacter_Player(void)
 {
+	m_weaponChoice = PISTOL;
+	m_playerState = IDLE;
 }
 
 
@@ -23,9 +25,20 @@ void CCharacter_Player::setMesh(PLAYER_TYPE newMesh)
 {
 	m_playerMesh = newMesh;
 }
-void CCharacter_Player::setAmmoType(PLAYER_AMMO_TYPE newAmmoType)
+void CCharacter_Player::setAmmoType(int ammoTypeID)
 {
-	m_weaponChoice = newAmmoType;
+	switch ( ammoTypeID )
+	{
+	case 0:
+		m_weaponChoice = PISTOL;
+		break;
+	case 1:
+		m_weaponChoice = MG;
+		break;
+	case 2:
+		m_weaponChoice = SHOTGUN;
+		break;
+	}
 }
 void CCharacter_Player::setNewState(PLAYER_CURRENT_STATE newState)
 {

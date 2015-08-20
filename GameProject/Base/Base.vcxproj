@@ -14,6 +14,8 @@
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Camera3.cpp" />
     <ClCompile Include="Source\Character.cpp" />
+    <ClCompile Include="Source\Character_Enemy.cpp" />
+    <ClCompile Include="Source\Character_Player.cpp" />
     <ClCompile Include="Source\Controller.cpp" />
     <ClCompile Include="Source\GameController2D.cpp" />
     <ClCompile Include="Source\GameModel2D.cpp" />
@@ -32,8 +34,6 @@
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\Model.cpp" />
-    <ClCompile Include="Source\MouseCharacter.cpp" />
-    <ClCompile Include="Source\PlayerCharacter.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\SpriteAnimation.cpp" />
     <ClCompile Include="Source\TileMap.cpp" />
@@ -45,6 +45,8 @@
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Character.h" />
+    <ClInclude Include="Source\Character_Enemy.h" />
+    <ClInclude Include="Source\Character_Player.h" />
     <ClInclude Include="Source\Controller.h" />
     <ClInclude Include="Source\GameController2D.h" />
     <ClInclude Include="Source\GameModel2D.h" />
@@ -65,9 +67,7 @@
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\MeshBuilder.h" />
     <ClInclude Include="Source\Model.h" />
-    <ClInclude Include="Source\MouseCharacter.h" />
     <ClInclude Include="Source\Object.h" />
-    <ClInclude Include="Source\PlayerCharacter.h" />
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\SpriteAnimation.h" />
     <ClInclude Include="Source\TileMap.h" />

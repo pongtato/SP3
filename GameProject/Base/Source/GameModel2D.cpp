@@ -2,6 +2,7 @@
 
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
+#include "SpriteAnimation.h"
 
 #include "Character_Enemy.h"
 
@@ -33,8 +34,99 @@ void GameModel2D::Init()
 	meshList[CROSSHAIR]->textureID[0] = LoadTGA("Image\\Crosshair.tga");
 
 	//Player
-	meshList[PISTOL_IDLE] = MeshBuilder::GenerateText("PISTOL_IDLE", 1, 20);
+	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
 	meshList[PISTOL_IDLE]->textureID[0] = LoadTGA("Image\\Player\\PISTOL_IDLE.tga");
+	meshList[PISTOL_RELOAD] = MeshBuilder::GenerateSpriteAnimation("PISTOL_RELOAD", 4, 4);
+	meshList[PISTOL_RELOAD]->textureID[0] = LoadTGA("Image\\Player\\PISTOL_RELOAD.tga");
+	meshList[PISTOL_SHOOT] = MeshBuilder::GenerateSpriteAnimation("PISTOL_SHOOT", 2, 2);
+	meshList[PISTOL_SHOOT]->textureID[0] = LoadTGA("Image\\Player\\PISTOL_SHOOT.tga");
+
+	meshList[RIFLE_IDLE] = MeshBuilder::GenerateSpriteAnimation("RIFLE_IDLE", 5, 4);
+	meshList[RIFLE_IDLE]->textureID[0] = LoadTGA("Image\\Player\\RIFLE_IDLE.tga");
+	meshList[RIFLE_RELOAD] = MeshBuilder::GenerateSpriteAnimation("RIFLE_RELOAD", 5, 4);
+	meshList[RIFLE_RELOAD]->textureID[0] = LoadTGA("Image\\Player\\RIFLE_RELOAD.tga");
+	meshList[RIFLE_SHOOT] = MeshBuilder::GenerateSpriteAnimation("RIFLE_SHOOT", 2, 2);
+	meshList[RIFLE_SHOOT]->textureID[0] = LoadTGA("Image\\Player\\RIFLE_SHOOT.tga");
+
+	meshList[SHOTGUN_IDLE] = MeshBuilder::GenerateSpriteAnimation("SHOTGUN_IDLE", 5, 4);
+	meshList[SHOTGUN_IDLE]->textureID[0] = LoadTGA("Image\\Player\\SHOTGUN_IDLE.tga");
+	meshList[SHOTGUN_RELOAD] = MeshBuilder::GenerateSpriteAnimation("SHOTGUN_RELOAD", 5, 4);
+	meshList[SHOTGUN_RELOAD]->textureID[0] = LoadTGA("Image\\Player\\SHOTGUN_RELOAD.tga");
+	meshList[SHOTGUN_SHOOT] = MeshBuilder::GenerateSpriteAnimation("SHOTGUN_SHOOT", 2, 2);
+	meshList[SHOTGUN_SHOOT]->textureID[0] = LoadTGA("Image\\Player\\SHOTGUN_SHOOT.tga");
+
+	//Animation Init
+	SpriteAnimation *ePISTOL_IDLE = dynamic_cast<SpriteAnimation*>(meshList[PISTOL_IDLE]);
+	if(ePISTOL_IDLE)
+	{
+		ePISTOL_IDLE->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		ePISTOL_IDLE->m_anim->Set(0, 19, 0, 2.0f);
+	} 
+
+	SpriteAnimation *ePISTOL_RELOAD = dynamic_cast<SpriteAnimation*>(meshList[PISTOL_RELOAD]);
+	if(ePISTOL_RELOAD)
+	{
+		ePISTOL_RELOAD->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		ePISTOL_RELOAD->m_anim->Set(0, 14, 0, 2.0f);
+	} 
+
+	SpriteAnimation *ePISTOL_SHOOT = dynamic_cast<SpriteAnimation*>(meshList[PISTOL_SHOOT]);
+	if(ePISTOL_SHOOT)
+	{
+		ePISTOL_SHOOT->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		ePISTOL_SHOOT->m_anim->Set(0, 2, 0, 2.0f);
+	} 
+
+	SpriteAnimation *eRIFLE_IDLE = dynamic_cast<SpriteAnimation*>(meshList[RIFLE_IDLE]);
+	if(eRIFLE_IDLE)
+	{
+		eRIFLE_IDLE->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		eRIFLE_IDLE->m_anim->Set(0, 19, 0, 2.0f);
+	} 
+
+	SpriteAnimation *eRIFLE_RELOAD = dynamic_cast<SpriteAnimation*>(meshList[RIFLE_RELOAD]);
+	if(eRIFLE_RELOAD)
+	{
+		eRIFLE_RELOAD->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		eRIFLE_RELOAD->m_anim->Set(0, 19, 0, 2.0f);
+	} 
+
+	SpriteAnimation *eRIFLE_SHOOT = dynamic_cast<SpriteAnimation*>(meshList[RIFLE_SHOOT]);
+	if(eRIFLE_SHOOT)
+	{
+		eRIFLE_SHOOT->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		eRIFLE_SHOOT->m_anim->Set(0, 2, 0, 2.0f);
+	} 
+
+	SpriteAnimation *eSHOTGUN_IDLE = dynamic_cast<SpriteAnimation*>(meshList[SHOTGUN_IDLE]);
+	if(eSHOTGUN_IDLE)
+	{
+		eSHOTGUN_IDLE->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		eSHOTGUN_IDLE->m_anim->Set(0, 19, 0, 2.0f);
+	} 
+
+	SpriteAnimation *eHOTGUN_RELOAD = dynamic_cast<SpriteAnimation*>(meshList[SHOTGUN_RELOAD]);
+	if(eHOTGUN_RELOAD)
+	{
+		eHOTGUN_RELOAD->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		eHOTGUN_RELOAD->m_anim->Set(0, 19, 0, 2.0f);
+	} 
+
+	SpriteAnimation *eSHOTGUN_SHOOT = dynamic_cast<SpriteAnimation*>(meshList[SHOTGUN_SHOOT]);
+	if(eSHOTGUN_SHOOT)
+	{
+		eSHOTGUN_SHOOT->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		eSHOTGUN_SHOOT->m_anim->Set(0, 2, 0, 2.0f);
+	} 
 
 	commands = new bool[NUM_COMMANDS];
 	for (int count = 0; count < NUM_COMMANDS; ++count)
@@ -49,6 +141,7 @@ void GameModel2D::Init()
 	ZoomIN = false;
 	SpawnReady = false;
 	newLevel = false;
+	AniToUpdate = PISTOL_IDLE;
 }
 
 void GameModel2D::Update(double dt)
@@ -60,10 +153,11 @@ void GameModel2D::Update(double dt)
 
 	CCharacter_Player::GetInstance()->updatePosition(dt);
 	//Weapon changing
-	int CurrentWeapon = m_weapon->getWeapon();
+	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
 	if (commands[PREVWEAP])CurrentWeapon--;
 	if (commands[NEXTWEAP])CurrentWeapon++;
-	m_weapon->setWeapon(CurrentWeapon);
+
+	CCharacter_Player::GetInstance()->setAmmoType(CurrentWeapon);
 
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
@@ -89,6 +183,58 @@ void GameModel2D::Update(double dt)
 	for (int count = 0; count < NUM_COMMANDS; ++count)
 		commands[count] = false;
 
+		switch ( CCharacter_Player::GetInstance()->getState())
+		{
+		case 0:
+			if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
+			{
+				AniToUpdate = PISTOL_IDLE;
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
+			{
+				AniToUpdate = RIFLE_IDLE;
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
+			{
+				AniToUpdate = SHOTGUN_IDLE;
+			}
+			break;
+		case 2:
+			if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
+			{
+				AniToUpdate = PISTOL_RELOAD;
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
+			{
+				AniToUpdate = RIFLE_RELOAD;
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
+			{
+				AniToUpdate = SHOTGUN_RELOAD;
+			}
+			break;
+		case 3:
+			if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
+			{
+				AniToUpdate = PISTOL_SHOOT;
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
+			{
+				AniToUpdate = RIFLE_SHOOT;
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
+			{
+				AniToUpdate = SHOTGUN_SHOOT;
+			}
+			break;
+		}
+
+	// *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?* Animations *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?* //
+	SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[AniToUpdate]);
+	if(sa)
+	{
+		sa->Update(dt);
+	} 
 
 }
 
@@ -139,16 +285,36 @@ Mesh* GameModel2D::getFloorTileMesh()
 	return meshList[TILEFLOOR];
 }
 
-PlayerWeapon* GameModel2D::getWeapon()
-{
-	return m_weapon;
-}
 Mesh* GameModel2D::getPlayerMesh(GEOMETRY_TYPE meshToTake)
 {
 	switch (meshToTake)
 	{
 	case PISTOL_IDLE:
 		return meshList[PISTOL_IDLE];
+		break;
+	case PISTOL_RELOAD:
+		return meshList[PISTOL_RELOAD];
+		break;
+	case PISTOL_SHOOT:
+		return meshList[PISTOL_SHOOT];
+		break;
+	case RIFLE_IDLE:
+		return meshList[RIFLE_IDLE];
+		break;
+	case RIFLE_RELOAD:
+		return meshList[RIFLE_RELOAD];
+		break;
+	case RIFLE_SHOOT:
+		return meshList[RIFLE_SHOOT];
+		break;
+	case SHOTGUN_IDLE:
+		return meshList[SHOTGUN_IDLE];
+		break;
+	case SHOTGUN_RELOAD:
+		return meshList[SHOTGUN_RELOAD];
+		break;
+	case SHOTGUN_SHOOT:
+		return meshList[SHOTGUN_SHOOT];
 		break;
 	}
 }
@@ -157,23 +323,6 @@ std::vector<CCharacter_Enemy*> GameModel2D::getEnemyList()
 {
 	return EnemyList;
 }
-Mesh* GameModel2D::getWeaponMesh()
-{
-	switch (m_weapon->getWeapon())
-	{
-	case 0:
-		m_weapon->setWeapon(PISTOL);
-		break;
-	case 1:
-		m_weapon->setWeapon(SHOTGUN);
-		break;
-	case 2:
-		m_weapon->setWeapon(RIFLE);
-		break;
-	}
-	return weaponList[m_weapon->getWeapon()];
-}
-
 
 std::vector<CCharacter_Enemy*> GameModel2D::getCollectiblesList()
 {

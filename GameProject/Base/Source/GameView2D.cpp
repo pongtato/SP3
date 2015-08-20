@@ -117,9 +117,53 @@ void GameView2D::RenderPlayerCharacter()
 	modelStack.PushMatrix(); {
 		modelStack.Translate(CCharacter_Player::GetInstance()->getPosition());
 		modelStack.Translate(0.5, 0.5, 0);
-		std::cout << model->getPlayerMesh(model->PISTOL_IDLE) << std::endl;
-		RenderMesh(model->getPlayerMesh(model->PISTOL_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
-	} modelStack.PopMatrix();
+		switch ( CCharacter_Player::GetInstance()->getState())
+		{
+		case 0:
+			if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->PISTOL_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->RIFLE_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->SHOTGUN_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+			break;
+		case 2:
+			if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->PISTOL_RELOAD), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->RIFLE_RELOAD), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->SHOTGUN_RELOAD), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+			break;
+		case 3:
+			if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->PISTOL_SHOOT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->RIFLE_SHOOT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->SHOTGUN_SHOOT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+			break;
+		}
+		modelStack.PopMatrix();
+	}
 }
 
 #define mobsList model->getEnemyList()

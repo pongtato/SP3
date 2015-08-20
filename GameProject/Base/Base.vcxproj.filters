@@ -125,9 +125,6 @@
     <ClCompile Include="Source\Character_Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PlayerWeapon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Geometry.h">
@@ -227,9 +224,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Character_Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PlayerWeapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

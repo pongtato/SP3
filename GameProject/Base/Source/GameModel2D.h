@@ -44,6 +44,14 @@ public:
 
 		//Player
 		PISTOL_IDLE,
+		PISTOL_RELOAD,
+		PISTOL_SHOOT,
+		RIFLE_IDLE,
+		RIFLE_RELOAD,
+		RIFLE_SHOOT,
+		SHOTGUN_IDLE,
+		SHOTGUN_RELOAD,
+		SHOTGUN_SHOOT,
 		TOTAL_GEOMETRY,
 	};
 
@@ -78,7 +86,7 @@ protected:
 	std::vector<CCharacter_Enemy*> CollectiblesList;
 
 	//Weapon
-	PlayerWeapon* m_weapon;
+	//PlayerWeapon* m_weapon;
 
 
 	int score;
@@ -110,7 +118,6 @@ public:
 	Mesh* getPlayerMesh(GEOMETRY_TYPE meshToTake);
 
 	//Weapon
-	PlayerWeapon* getWeapon();
 	Mesh* getWeaponMesh();
 
 	std::vector<CCharacter_Enemy *> getEnemyList();
@@ -127,6 +134,7 @@ public:
 	int getExitPointID();
 	int getEnemySpawnID();
 	int getScore();
+	int AniToUpdate;
 	bool ZoomIN;
 };
 
