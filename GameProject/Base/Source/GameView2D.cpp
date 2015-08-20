@@ -117,7 +117,7 @@ void GameView2D::RenderPlayerCharacter()
 	modelStack.PushMatrix(); {
 		modelStack.Translate(CCharacter_Player::GetInstance()->getPosition());
 		modelStack.Translate(0.5, 0.5, 0);
-		std::cout << model->getPlayerMesh(model->PISTOL_IDLE) << std::endl;
+		//std::cout << model->getPlayerMesh(model->PISTOL_IDLE) << std::endl;
 		RenderMesh(model->getPlayerMesh(model->PISTOL_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 	} modelStack.PopMatrix();
 }

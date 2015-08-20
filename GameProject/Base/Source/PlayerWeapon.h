@@ -15,13 +15,25 @@ private:
 		END,
 	};
 	int WeaponState;
-
+protected:
+	int Ammo;
+	int Damage;
+	float AttackSpeed;
+	float FireCooldown;
 public:
 	PlayerWeapon();
 	~PlayerWeapon();
 
 	int getWeapon();
 	void setWeapon(int weapon_type);
+
+	void SetAmmo(int NewAmmo);
+	void UseAmmo(int Consumption);
+	void FireCooldownTick(float time);
+	void ResetCooldown(void);
+
+	int GetAmmo(void);
+	float GetCooldown(void);
 };
 
 #endif
