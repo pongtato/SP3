@@ -2,6 +2,7 @@
 #define MESH_H
 
 #include <string>
+#include "GL\glew.h"
 #include "Material.h"
 
 #define MAX_TEXTURES 2
@@ -18,7 +19,9 @@ public:
 	};
 	Mesh(const std::string &meshName);
 	~Mesh();
-	virtual void Render(unsigned offset = 0, unsigned count = 0);
+	virtual void Render();
+	//void Render(unsigned offset = 0, unsigned count = 0);
+	void Render(unsigned offset, unsigned count);
 
 	const std::string name;
 	DRAW_MODE mode;

@@ -25,6 +25,9 @@ public:
 
 	enum PLAYER_CURRENT_STATE
 	{
+		IDLE,
+		RUNNING,
+		SHOOTING,
 		FLASHED,
 		STUNNED,
 		WOUNDED,
@@ -32,7 +35,7 @@ public:
 	};
 
 	void setMesh(PLAYER_TYPE newMesh);
-	void setAmmoType(PLAYER_AMMO_TYPE newAmmoType);
+	void setAmmoType(int ammoTypeID);
 	void setNewState(PLAYER_CURRENT_STATE newState);
 
 	int getMesh(void);

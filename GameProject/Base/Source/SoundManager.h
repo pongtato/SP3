@@ -10,13 +10,44 @@ using namespace irrklang;
 
 class CSoundManager
 {
-	ISoundEngine* engine;
+	
 public:
+	ISoundEngine* engine;
+
 	CSoundManager(void);
 	~CSoundManager(void);
 
-	//sound functions here
-	bool backgroundMusic();
+	//Main Menu
+	void mainMenuBGM();
+	void ConfirmSound();
+	void SelectSound();
+
+	//Level BGMs
+	void level1BGM();
+	void level2BGM();
+	void level3BGM();
+	void level4BGM();
+
+	//Player & Enemies
+	void walkfloor();
+	void walkMetal();
+	void guardDie();
+
+	//Guns
+	void reloadSound();
+	void pistolShot();
+	void rifleShot();
+	void shotgunShot();
+
+	//Player interactions
+	void interactionSound();
+	void alarmSound();
+	void openDoorSound();
+	void closeDoorSound();
+
+
+	//Others
+	void lasers();
 };
 
 #endif

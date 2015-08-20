@@ -14,6 +14,7 @@
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Camera3.cpp" />
     <ClCompile Include="Source\Character.cpp" />
+    <ClCompile Include="Source\Character_Enemy.cpp" />
     <ClCompile Include="Source\Character_Player.cpp" />
     <ClCompile Include="Source\Controller.cpp" />
     <ClCompile Include="Source\GameController2D.cpp" />
@@ -34,8 +35,8 @@
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\Model.cpp" />
-    <ClCompile Include="Source\PlayerWeapon.cpp" />
     <ClCompile Include="Source\shader.cpp" />
+    <ClCompile Include="Source\SoundManager.cpp" />
     <ClCompile Include="Source\SpriteAnimation.cpp" />
     <ClCompile Include="Source\TileMap.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Character.h" />
+    <ClInclude Include="Source\Character_Enemy.h" />
     <ClInclude Include="Source\Character_Player.h" />
     <ClInclude Include="Source\Controller.h" />
     <ClInclude Include="Source\GameController2D.h" />
@@ -69,8 +71,8 @@
     <ClInclude Include="Source\MeshBuilder.h" />
     <ClInclude Include="Source\Model.h" />
     <ClInclude Include="Source\Object.h" />
-    <ClInclude Include="Source\PlayerWeapon.h" />
     <ClInclude Include="Source\shader.hpp" />
+    <ClInclude Include="Source\SoundManager.h" />
     <ClInclude Include="Source\SpriteAnimation.h" />
     <ClInclude Include="Source\TileMap.h" />
     <ClInclude Include="Source\Utility.h" />
@@ -120,12 +122,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_VARIADIC_MAX=10;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/Common/Source;$(SolutionDir)/glew/include;$(SolutionDir)/glfw/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/Common/Source;$(SolutionDir)/glew/include;$(SolutionDir)/glfw/include;$(SolutionDir)\irrKlang\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)/glfw/lib-msvc100;$(SolutionDir)/glew/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)/glfw/lib-msvc100;$(SolutionDir)/glew/lib;$(SolutionDir)\irrKlang\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Common.lib;winmm.lib;opengl32.lib;glu32.lib;glew32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
