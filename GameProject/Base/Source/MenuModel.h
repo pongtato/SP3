@@ -2,6 +2,7 @@
 #define MENUMODEL_H
 
 #include "Model.h"
+#include "SoundManager.h"
 
 class MenuModel : public Model
 {
@@ -51,6 +52,8 @@ public:
 	Mesh* getLv4();
 	int getArrowPosition();
 	bool getIsSelectingLevels();
+
+	CSoundManager Sound;
 };
 
 #endif
