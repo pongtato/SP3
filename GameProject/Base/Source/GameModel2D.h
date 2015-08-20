@@ -4,6 +4,7 @@
 
 #include "Model.h"
 
+#include "SoundManager.h"
 #include "TileMap.h"
 #include "Character_Player.h"
 #include "Character_Enemy.h"
@@ -134,6 +135,9 @@ public:
 	int getScore();
 	int AniToUpdate;
 	bool ZoomIN;
+
+	//sound
+	CSoundManager Sound;
 };
 
 #endif

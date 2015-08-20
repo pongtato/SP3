@@ -5,6 +5,7 @@
 
 MenuModel::MenuModel()
 {
+	Sound.mainMenuBGM();
 }
 
 MenuModel::~MenuModel()
@@ -13,6 +14,7 @@ MenuModel::~MenuModel()
 
 void MenuModel::Init()
 {
+
 	Model::Init();
 
 	menuScreen = MeshBuilder::GenerateQuad("menu", Color());
@@ -45,6 +47,7 @@ void MenuModel::Init()
 	commands = new bool[NUM_COMMANDS];
 	for (int count = 0; count < NUM_COMMANDS; ++count)
 		commands[count] = false;
+
 }
 
 void MenuModel::Update(double dt)
@@ -83,6 +86,7 @@ void MenuModel::Update(double dt)
 			Sound.ConfirmSound();
 			if ( SelectingLevels)
 			{
+				Sound.engine->stopAllSounds();
 				throw arrowPosition;
 			}
 			else if ( arrowPosition == 0 && !SelectingLevels)

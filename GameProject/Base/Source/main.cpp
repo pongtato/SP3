@@ -47,6 +47,7 @@ void main( void )
 		{
 		case 0:
 			model = new GameModelLevel1();
+			
 			break;
 		case 1:
 			model = new GameModelLevel2();
