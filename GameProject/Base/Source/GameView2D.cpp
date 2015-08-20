@@ -12,6 +12,8 @@ void GameView2D::Render()
 	//perspective.SetToOrtho(0, 32, 0, 25, -1000, 1000);
 	//projectionStack.LoadMatrix(perspective);
 
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+
 	modelStack.PushMatrix(); {
 		//RenderBackground();
 		RenderMobs();
@@ -21,6 +23,22 @@ void GameView2D::Render()
 		RenderCrosshair();
 		//RenderScore();
 	} modelStack.PopMatrix();
+
+	//Gameobjects
+	std::vector<GameObject*> tempList = model->getGameObjectList();
+	for (std::vector<GameObject *>::iterator it = tempList.begin(); it != tempList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			RenderGO(go);
+		}
+	}
+
+	for (int count = 0; count < model->getBulletShoot(); count++)
+	{
+		model->SpawnBullet();
+	}
 }
 
 void GameView2D::RenderBackground()
@@ -112,12 +130,12 @@ void GameView2D::RenderRearTileMap()
 void GameView2D::RenderPlayerCharacter()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-
+	float ANGLE = Math::RadianToDegree(atan2(model->getPos().y - CCharacter_Player::GetInstance()->getPosition().y, model->getPos().x - CCharacter_Player::GetInstance()->getPosition().x));
 	modelStack.Translate(0, 0, 1);
 	modelStack.PushMatrix(); {
 		modelStack.Translate(CCharacter_Player::GetInstance()->getPosition());
 		modelStack.Translate(0.5, 0.5, 0);
-		//std::cout << model->getPlayerMesh(model->PISTOL_IDLE) << std::endl;
+		modelStack.Rotate(ANGLE,0,0,1);
 		RenderMesh(model->getPlayerMesh(model->PISTOL_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 	} modelStack.PopMatrix();
 }
@@ -171,3 +189,20 @@ void GameView2D::RenderCrosshair()
 	modelStack.PopMatrix();
 }
 #undef player
+
+void GameView2D::RenderGO(GameObject *go)
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	switch (go->type)
+	{
+	case GameObject::GO_BULLET:
+	{
+								   modelStack.PushMatrix();
+								   modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+								   modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+								   RenderMesh(model->getBulletMesh(), false);
+								   modelStack.PopMatrix();
+	}
+		break;
+	}
+}

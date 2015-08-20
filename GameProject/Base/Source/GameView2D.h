@@ -1,4 +1,5 @@
 #ifndef GAMEVIEW2D_H
+
 #define GAMEVIEW2D_H
 
 #include "View.h"
@@ -21,6 +22,7 @@ public:
 	void RenderMobs();
 	void RenderScore();
 	void RenderCrosshair();
+	void RenderGO(GameObject *go);
 
 };
 

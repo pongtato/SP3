@@ -27,6 +27,8 @@ void GameController2D::Update()
 		model->setCommands(GameModel2D::COMMANDS::PREVWEAP);
 	if (IsKeyPressed('E'))
 		model->setCommands(GameModel2D::COMMANDS::NEXTWEAP);
+	if (glfwGetMouseButton(view->getWindow(), 0))
+		model->setCommands(GameModel2D::COMMANDS::SHOOT);
 	Controller::Update();
 	
 }

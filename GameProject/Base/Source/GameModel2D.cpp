@@ -31,6 +31,7 @@ void GameModel2D::Init()
 	meshList[MOBS]->textureID[0] = LoadTGA("Image//mobs.tga");
 	meshList[CROSSHAIR] = MeshBuilder::GenerateQuad("Crosshair", Color());
 	meshList[CROSSHAIR]->textureID[0] = LoadTGA("Image\\Crosshair.tga");
+	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0, 0),10,10,1.0f);
 
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateText("PISTOL_IDLE", 1, 20);
@@ -49,14 +50,18 @@ void GameModel2D::Init()
 	ZoomIN = false;
 	SpawnReady = false;
 	newLevel = false;
+	BulletShoot = false;
 }
 
 void GameModel2D::Update(double dt)
 {
-	if (commands[MOVE_UP]) CCharacter_Player::GetInstance()->moveUp();
-	if (commands[MOVE_DOWN]) CCharacter_Player::GetInstance()->moveDown();
-	if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
-	if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
+	if (ZoomIN)
+	{
+		if (commands[MOVE_UP]) CCharacter_Player::GetInstance()->moveUp();
+		if (commands[MOVE_DOWN]) CCharacter_Player::GetInstance()->moveDown();
+		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
+		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
+	}
 
 	CCharacter_Player::GetInstance()->updatePosition(dt);
 	//Weapon changing
@@ -65,20 +70,33 @@ void GameModel2D::Update(double dt)
 	if (commands[NEXTWEAP])CurrentWeapon++;
 	m_weapon->setWeapon(CurrentWeapon);
 
+	//Shooting (Bullet spawning)
+	if (commands[SHOOT] && !BulletShoot)
+	{
+		BulletShoot = true;
+	}
+	else if (!commands[SHOOT])
+	{
+		BulletShoot = false;
+	}
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
 		
 	}
+	BulletUpdate(dt);
 
 	Vector3 initialCam;
 	initialCam.Set(camera.position.x, camera.position.y, camera.position.z);
 	Vector3 playerPos;
 	playerPos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 20);
 	
-	if (camera.position.Length() > 0 && ZoomIN)
+	if (camera.position.Length() != 0 && ZoomIN)
 	{
-		camera.position += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
-		camera.target += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
+		if (!(playerPos - initialCam).IsZero())
+		{
+			camera.position += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
+			camera.target += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
+		}
 	}
 	//Camera zoom in to player
 	if (commands[ENTER] && !ZoomIN)
@@ -111,6 +129,69 @@ Mesh* GameModel2D::getBackgroundMesh()
 Mesh* GameModel2D::getCrosshairMesh()
 {
 	return meshList[CROSSHAIR];
+}
+
+Mesh* GameModel2D::getBulletMesh()
+{
+	return meshList[BULLET];
+}
+
+bool GameModel2D::getBulletShoot()
+{
+	return BulletShoot;
+}
+
+void GameModel2D::BulletUpdate(double dt)
+{
+
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->type == GameObject::GO_BULLET)
+		{
+			go->pos += go->vel * dt;
+		}
+	}
+}
+
+
+void GameModel2D::SpawnBullet()
+{
+
+	float ANGLE = Math::RadianToDegree(atan2(getPos().y - CCharacter_Player::GetInstance()->getPosition().y,getPos().x - CCharacter_Player::GetInstance()->getPosition().x));
+
+	GameObject* Bullet = FetchGO();
+	Bullet->type = GameObject::GO_BULLET;
+	Bullet->active = true;
+	Bullet->scale.Set(2,2,2);
+	Bullet->pos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
+	Bullet->vel.Set(100, 0, 0);
+}
+
+GameObject* GameModel2D::FetchGO()
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (!go->active)
+		{
+			go->active = true;
+			return go;
+		}
+	}
+	for (unsigned i = 0; i < 10; ++i)
+	{
+		GameObject *go = new GameObject(GameObject::GO_BULLET);
+		m_goList.push_back(go);
+	}
+	GameObject *go = m_goList.back();
+	go->active = true;
+	return go;
+}
+
+std::vector<GameObject *> GameModel2D::getGameObjectList()
+{
+	return m_goList;
 }
 
 void GameModel2D::getOffset(float& mapOffset_x, float& mapOffset_y)

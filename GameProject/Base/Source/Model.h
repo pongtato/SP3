@@ -1,6 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include "GameObject.h"
 #include "Object.h"
 #include "Camera3.h"
 

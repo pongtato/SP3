@@ -1,4 +1,5 @@
 #ifndef GAMEMODEL2D_H
+
 #define GAMEMODEL2D_H
 
 
@@ -28,6 +29,8 @@ public:
 		//Weapon changing
 		PREVWEAP,
 		NEXTWEAP,
+		//Shooting
+		SHOOT,
 		NUM_COMMANDS,
 	};
 
@@ -39,6 +42,7 @@ public:
 		PLAYER,
 		MOBS,
 		CROSSHAIR,
+		BULLET,
 
 		//Player
 		PISTOL_IDLE,
@@ -83,6 +87,9 @@ protected:
 	bool SpawnReady;
 	bool newLevel;
 
+	//GameObjects
+	std::vector<GameObject *> m_goList;
+
 public:
 
 	virtual void Init();
@@ -102,6 +109,18 @@ public:
 	TileMap* getRearTileMap();
 	Mesh* getTileMesh();
 	Mesh* getFloorTileMesh();
+
+	//Bullet
+	Mesh* getBulletMesh();
+	bool BulletShoot;
+	bool getBulletShoot();
+	void BulletUpdate(double dt);
+
+	void SpawnBullet();
+
+	//Gameobjects
+	GameObject* FetchGO();
+	std::vector<GameObject *> getGameObjectList();
 
 	//Player
 	//CCharacter_Player* getPlayer();
