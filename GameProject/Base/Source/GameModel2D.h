@@ -1,8 +1,6 @@
 #ifndef GAMEMODEL2D_H
 #define GAMEMODEL2D_H
 
-#define true false
-#define false true
 
 #include "Model.h"
 
