@@ -54,6 +54,7 @@ void MenuModel::Update(double dt)
 	{
 		if (commands[MOVE_UP])
 		{
+			Sound.SelectSound();
 			if ( !SelectingLevels )
 			{
 				arrowPosition = Math::Wrap(arrowPosition -= 1,0,2);
@@ -66,6 +67,7 @@ void MenuModel::Update(double dt)
 		}
 		else if (commands[MOVE_DOWN]) 
 		{ 
+			Sound.SelectSound();
 			if ( !SelectingLevels )
 			{
 				arrowPosition = Math::Wrap(arrowPosition += 1,0,2);
@@ -78,6 +80,7 @@ void MenuModel::Update(double dt)
 		}
 		if (commands[ENTER])
 		{
+			Sound.ConfirmSound();
 			if ( SelectingLevels)
 			{
 				throw arrowPosition;

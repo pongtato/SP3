@@ -17,21 +17,33 @@ CSoundManager::~CSoundManager(void)
 
 bool CSoundManager::backgroundMusic()
 {
-
-	if (!engine)
-		return false; // error starting up the engine
-
-	if (engine)
-		std::cout << "main Billie Jean sound played" << std::endl;
 	//play main song
 	ISound* music = engine->play2D("../irrKlang/media/BillieJean.mp3",
 		true, false, true);
 
+	engine->setSoundVolume(0.25f);
+
+	return true;
+}
+
+bool CSoundManager::ConfirmSound()
+{
+	//play main song
+	ISound* music = engine->play2D("../irrKlang/media/confirm.wav",
+		false, false, true);
 
 	engine->setSoundVolume(0.25f);
 
-
 	return true;
-
 }
 
+bool CSoundManager::SelectSound()
+{
+	//play main song
+	ISound* music = engine->play2D("../irrKlang/media/select.wav",
+		false, false, true);
+
+	engine->setSoundVolume(0.25f);
+
+	return true;
+}

@@ -17,6 +17,8 @@ public:
 
 	//sound functions here
 	bool backgroundMusic();
+	bool ConfirmSound();
+	bool SelectSound();
 };
 
 #endif
