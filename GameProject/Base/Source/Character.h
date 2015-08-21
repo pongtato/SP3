@@ -3,6 +3,7 @@
 
 #include "Mesh.h"
 #include "Vector3.h"
+#include "TileMap.h"
 #define MAX_SPEED 3
 
 class CCharacter
@@ -14,7 +15,8 @@ public:
 	void Init(float x, float y, float z, float scale, int newSpriteID, int newHP, int newZoneID, float newMS);
 	void setPosition(float x,float y, float z);
 	Vector3 getPosition(void);
-	void updatePosition(double dt);
+	void updatePosition(double dt, const TileMap *tileMap);
+	void UpdatePosition(double dt, const TileMap *tileMap);
 	void setVelocity(float x, float y, float z);
 	Vector3 getVelocity(void);
 	void setTarget(float x, float y , float z);

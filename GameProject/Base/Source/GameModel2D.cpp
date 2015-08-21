@@ -33,6 +33,7 @@ void GameModel2D::Init()
 	meshList[CROSSHAIR] = MeshBuilder::GenerateQuad("Crosshair", Color());
 	meshList[CROSSHAIR]->textureID[0] = LoadTGA("Image\\Crosshair.tga");
 	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0, 0),10,10,1.0f);
+	meshList[CUBE] = MeshBuilder::GenerateCube("Bullet", Color(1, 0, 0),1.0f);
 
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
@@ -143,6 +144,7 @@ void GameModel2D::Init()
 	SpawnReady = false;
 	newLevel = false;
 	BulletShoot = false;
+	hasReadLoc = false;
 	AniToUpdate = PISTOL_IDLE;
 
 	for ( unsigned i = 0; i < 1000; ++i)
@@ -162,7 +164,7 @@ void GameModel2D::Update(double dt)
 		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
 	}
 
-	CCharacter_Player::GetInstance()->updatePosition(dt);
+	CCharacter_Player::GetInstance()->updatePosition(dt,getTileMap());
 	//Weapon changing
 	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
 	if (commands[PREVWEAP])CurrentWeapon--;
@@ -191,10 +193,11 @@ void GameModel2D::Update(double dt)
 		GameObject *go = (GameObject *)*it;
 		if ( go->active )
 		{
-			if ( checkCollision(CCharacter_Player::GetInstance()->getPosition(),CCharacter_Player::GetInstance()->getScale(),CCharacter_Player::GetInstance()->getVelocity(),go,dt) )
-			{
-				//broken collision
-			}
+			//if ( checkCollision(CCharacter_Player::GetInstance()->getPosition(),CCharacter_Player::GetInstance()->getScale(),CCharacter_Player::GetInstance()->getVelocity(),go,dt) )
+			//{
+			//	//broken collision
+			//	std::cout << " colliding " << std::endl;
+			//}
 		}
 	}
 
@@ -490,6 +493,11 @@ int GameModel2D::getEnemySpawnID()
 	return EnemySpawnID;
 }
 
+Mesh* GameModel2D::getWallMesh()
+{
+	return meshList[CUBE];
+}
+
 void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 {
 	for ( unsigned i = 0; i < EnemyList.size(); ++i)
@@ -504,20 +512,21 @@ void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 	}
 }
 
-void GameModel2D::setNewCollidable(float x, float y, float z, float scale, float normalX, float normalY, float normalZ, int newID)
+void GameModel2D::setNewCollidable(float x, float y, float z, float scale, float normalX, float normalY, float normalZ, int newID, GameObject::GAMEOBJECT_TYPE type)
 {
-	for ( unsigned i = 0; i < m_goList.size(); ++i)
+	/*for ( unsigned i = 0; i < m_goList.size(); ++i)
 	{
 		if ( !m_goList[i]->active )
 		{
 			m_goList[i]->active = true;
 			m_goList[i]->pos.Set(x,y,z);
 			m_goList[i]->normal.Set(normalX,normalY,normalZ);
+			m_goList[i]->scale.Set(scale,scale,scale);
 			m_goList[i]->ID = newID;
-			m_goList[i]->type = GameObject::GO_WALL;
+			m_goList[i]->type = type;
 			break;
 		}
-	}
+	}*/
 }
 
 bool GameModel2D::checkCollision(Vector3 Pos, Vector3 scale, Vector3 Vel, GameObject* go2, double dt)

@@ -43,6 +43,7 @@ public:
 		MOBS,
 		CROSSHAIR,
 		BULLET,
+		CUBE,
 
 		//Player
 		PISTOL_IDLE,
@@ -100,6 +101,8 @@ protected:
 
 public:
 
+	bool hasReadLoc;
+
 	virtual void Init();
 	virtual void Update(double dt);
 
@@ -117,6 +120,7 @@ public:
 	TileMap* getRearTileMap();
 	Mesh* getTileMesh();
 	Mesh* getFloorTileMesh();
+	Mesh* getWallMesh();
 
 	//Bullet
 	Mesh* getBulletMesh();
@@ -144,7 +148,7 @@ public:
 	void setNewPlayerPos(float x, float y, float z);
 	void setNewExitPos(float x, float y, float z);
 	void setNewEnemy(float x, float y, float z, int ID);
-	void setNewCollidable(float x, float y, float z, float scale, float normalX, float normalY, float normalZ, int newID);
+	void setNewCollidable(float x, float y, float z, float scale, float normalX, float normalY, float normalZ, int newID, GameObject::GAMEOBJECT_TYPE type);
 
 	//void checkCollision(float x, float y, float z, float scale, float VelX, float VelY, float VelZ, GameObject* go2);
 	bool checkCollision(Vector3 Pos, Vector3 scale, Vector3 Vel, GameObject* go2, double dt);

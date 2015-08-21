@@ -80,30 +80,47 @@ void GameView2D::RenderTileMap()
 	{
 		for (int rcount = 0; rcount < tileMap->getNumOfTilesHeight(); ++rcount)
 		{
+
+			int test;
 			modelStack.PushMatrix(); 
 			modelStack.Translate(ccount, rcount, 0.1f);
 
 			if ( tileMap->getTile(ccount, rcount) == model->getSpawnPointID() )
 			{
-				model->setNewPlayerPos(ccount, rcount,-0.8f);
+				if ( !model->hasReadLoc )
+				{
+					model->setNewPlayerPos(ccount, rcount,-0.8f);
+				}
 			}
 			else if ( tileMap->getTile(ccount, rcount) == model->getExitPointID() )
 			{
-				model->setNewExitPos(ccount,rcount,0);
+				if ( !model->hasReadLoc )
+				{
+					model->setNewExitPos(ccount,rcount,0);
+				}
 			}
 			else if ( tileMap->getTile(ccount, rcount) == model->getEnemySpawnID() )
 			{
-				model->setNewEnemy(ccount,rcount,0,1);
+				if ( !model->hasReadLoc )
+				{
+					model->setNewEnemy(ccount,rcount,0,1);
+				}
 			}
-			else
+			else if ( tileMap->getTile(ccount, rcount) >= 0 )
 			{
+				if ( !model->hasReadLoc )
+				{
 				// Position - Scale - Normal - ID  
-				model->setNewCollidable(ccount,rcount,0,1,0,1,0,0);
+					model->setNewCollidable(ccount,rcount,0,0,0,1,0,0,GameObject::GO_WALL);
+					test += 1;
+					std::cout << test << std::endl;
+				}
 				RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
 			}
 			modelStack.PopMatrix();
 		}
 	}
+	model->hasReadLoc = true;
 }
 
 #undef tileMap
@@ -254,5 +271,16 @@ void GameView2D::RenderGO(GameObject *go)
 			modelStack.PopMatrix();
 		}
 		break;
+	/*case GameObject::GO_WALL:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			float angle = Math::RadianToDegree(atan2(go->normal.y,go->normal.x));
+			modelStack.Rotate(angle,0,0,1);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getWallMesh(), false);
+			modelStack.PopMatrix();
+		}
+		break;*/
 	}
 }
