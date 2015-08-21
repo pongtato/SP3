@@ -280,9 +280,11 @@ void View::Render2DMesh(Mesh *mesh, bool lightEnabled, unsigned offset, unsigned
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	Mtx44 perspective;
 	perspective.SetToOrtho(-windowWidth / 2, windowWidth / 2, -windowHeight / 2, windowHeight / 2, -1000, 1000);
+	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(perspective);
 
 	RenderMesh(mesh, lightEnabled, offset, count);
+	projectionStack.PopMatrix();
 }
 
 void View::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)

@@ -144,6 +144,7 @@ void GameModel2D::Init()
 	SpawnReady = false;
 	newLevel = false;
 	AniToUpdate = PISTOL_IDLE;
+
 	for ( unsigned i = 0; i < 100; ++i)
 	{
 		GameObject * go = new GameObject(GameObject::GO_NONE);
@@ -318,7 +319,8 @@ void GameModel2D::BulletUpdate(double dt)
 		GameObject *go = (GameObject *)*it;
 		if (go->type == GameObject::GO_BULLET && go->active)
 		{
-			go->pos += go->vel * dt;
+			go->pos += go->vel * 20.f * dt;
+			//std::cout << go->pos << std::endl;
 		}
 	}
 }
@@ -329,13 +331,22 @@ void GameModel2D::SpawnBullet(int WeaponDamage, Vector3 Velocity)
 
 	float ANGLE = Math::RadianToDegree(atan2(getPos().y - CCharacter_Player::GetInstance()->getPosition().y,getPos().x - CCharacter_Player::GetInstance()->getPosition().x));
 
-	GameObject* Bullet = FetchGO();
-	Bullet->type = GameObject::GO_BULLET;
-	Bullet->active = true;
-	Bullet->scale.Set(2,2,2);
-	Bullet->pos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
-	Bullet->WDamage = WeaponDamage;
-	Bullet->vel = Velocity;
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if ( !go->active )
+		{
+			std::cout << " shoot " << std::endl;
+			go->type = GameObject::GO_BULLET;
+			go->active = true;
+			go->scale.Set(0.05,0.05,0.05);
+			go->pos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, CCharacter_Player::GetInstance()->getPosition().z);
+			Vector3 tempVel;
+			tempVel = (getPos() - CCharacter_Player::GetInstance()->getPosition()).Normalized();
+			go->vel = tempVel;
+			break;
+		}
+	}
 }
 
 GameObject* GameModel2D::FetchGO()

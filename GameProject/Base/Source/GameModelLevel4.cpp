@@ -30,8 +30,8 @@ void GameModelLevel4::Update(double dt)
 {
 	if ( SpawnReady )
 	{
-		CCharacter_Player::GetInstance()->Init(newPlayerPos.x - 0.5f,
-			newPlayerPos.y - 0.25f,
+		CCharacter_Player::GetInstance()->Init(newPlayerPos.x,
+			newPlayerPos.y,
 			newPlayerPos.z,1,1,100,1,5);
 		SpawnReady = false;
 	}
