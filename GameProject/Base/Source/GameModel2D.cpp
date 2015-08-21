@@ -326,14 +326,21 @@ void GameModel2D::SpawnBullet()
 
 	float ANGLE = Math::RadianToDegree(atan2(getPos().y - CCharacter_Player::GetInstance()->getPosition().y,getPos().x - CCharacter_Player::GetInstance()->getPosition().x));
 
-	GameObject* Bullet = FetchGO();
-	Bullet->type = GameObject::GO_BULLET;
-	Bullet->active = true;
-	Bullet->scale.Set(2,2,2);
-	Bullet->pos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
-	Vector3 tempVel;
-	tempVel = (getPos() - CCharacter_Player::GetInstance()->getPosition());
-	Bullet->vel = tempVel;
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if ( !go->active )
+		{
+			go->type = GameObject::GO_BULLET;
+			go->active = true;
+			go->scale.Set(2,2,2);
+			go->pos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, CCharacter_Player::GetInstance()->getPosition().z);
+			Vector3 tempVel;
+			tempVel = (getPos() - CCharacter_Player::GetInstance()->getPosition()).Normalized();
+			go->vel = tempVel;
+			break;
+		}
+	}
 }
 
 GameObject* GameModel2D::FetchGO()
