@@ -10,6 +10,12 @@
 #include "Character_Player.h"
 #include "Character_Enemy.h"
 
+
+//Weapons
+#include "Pistol.h"
+#include "Rifle.h"
+#include "Shotgun.h"
+
 #include <vector>
 
 #define SpawnPointID 37
@@ -124,11 +130,9 @@ public:
 
 	//Bullet
 	Mesh* getBulletMesh();
-	bool BulletShoot;
-	bool getBulletShoot();
 	void BulletUpdate(double dt);
 
-	void SpawnBullet();
+	void SpawnBullet(int WeaponDamage,Vector3 Velocity);
 
 	//Gameobjects
 	GameObject* FetchGO();

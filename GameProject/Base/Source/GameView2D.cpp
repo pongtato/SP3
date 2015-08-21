@@ -36,10 +36,15 @@ void GameView2D::Render()
 	} 
 	modelStack.PopMatrix();
 
-
-	for (int count = 0; count < model->getBulletShoot(); count++)
+	//Gameobjects
+	std::vector<GameObject*> tempList = model->getGameObjectList();
+	for (std::vector<GameObject *>::iterator it = tempList.begin(); it != tempList.end(); ++it)
 	{
-		model->SpawnBullet();
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			RenderGO(go);
+		}
 	}
 }
 

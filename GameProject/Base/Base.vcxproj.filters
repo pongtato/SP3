@@ -24,6 +24,9 @@
     <Filter Include="MVC\MODEL\Lv2">
       <UniqueIdentifier>{db71571c-2633-47b3-80e1-f8d3f50c3ef8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MVC\MODEL\Lv3">
+      <UniqueIdentifier>{d1df898e-0c11-445d-8c9e-eb6676b3c820}</UniqueIdentifier>
+    </Filter>
     <Filter Include="MVC\MODEL\Lv4">
       <UniqueIdentifier>{2629a75c-2d08-4f4a-9a0a-475e18c3fe7d}</UniqueIdentifier>
     </Filter>
@@ -35,9 +38,6 @@
     </Filter>
     <Filter Include="MVC\MODEL\Lv1">
       <UniqueIdentifier>{b4a4d633-667e-49c7-9efe-3cc360da0107}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MVC\MODEL\Lv3">
-      <UniqueIdentifier>{d1df898e-0c11-445d-8c9e-eb6676b3c820}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +98,9 @@
     <ClCompile Include="Source\MenuController.cpp">
       <Filter>MVC\CONTROLLER</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameModelLevel1.cpp">
+      <Filter>MVC\MODEL\Lv1</Filter>
+    </ClCompile>
     <ClCompile Include="Source\GameModelLevel2.cpp">
       <Filter>MVC\MODEL\Lv2</Filter>
     </ClCompile>
@@ -127,9 +130,6 @@
     </ClCompile>
     <ClCompile Include="Source\SoundManager.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameModelLevel1.cpp">
-      <Filter>MVC\MODEL\Lv1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

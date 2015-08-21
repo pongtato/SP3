@@ -12,6 +12,7 @@ CCharacter_Player* CCharacter_Player::GetInstance()
 
 CCharacter_Player::CCharacter_Player(void)
 {
+	new CWeapon;
 	m_weaponChoice = PISTOL;
 	m_playerState = IDLE;
 }
@@ -73,4 +74,3 @@ void CCharacter_Player::moveRight()
 {
 	m_acceleration.x += m_MoveSpeed;
 }
-
