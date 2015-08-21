@@ -1,7 +1,7 @@
 #pragma once
-#include "PlayerWeapon.h"
+#include "Weapon.h"
 
-class CRifle : public PlayerWeapon
+class CRifle : public CWeapon
 {
 public:
 	static CRifle* GetInstance();

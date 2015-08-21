@@ -5,6 +5,7 @@
 #include "SpriteAnimation.h"
 
 #include "Character_Enemy.h"
+#include "Weapon.h"
 
 const float m_worldHeight = 120;
 const float m_worldWidth = 160;
@@ -142,9 +143,7 @@ void GameModel2D::Init()
 	ZoomIN = false;
 	SpawnReady = false;
 	newLevel = false;
-	BulletShoot = false;
 	AniToUpdate = PISTOL_IDLE;
-
 	for ( unsigned i = 0; i < 100; ++i)
 	{
 		GameObject * go = new GameObject(GameObject::GO_NONE);
@@ -171,13 +170,23 @@ void GameModel2D::Update(double dt)
 	CCharacter_Player::GetInstance()->setAmmoType(CurrentWeapon);
 
 	//Shooting (Bullet spawning)
-	if (commands[SHOOT] && !BulletShoot)
+	if (commands[SHOOT])
 	{
-		BulletShoot = true;
+		switch (CCharacter_Player::GetInstance()->getAmmoType())
+		{
+		case 0:
+			if (CPistol::GetInstance()->GetAmmo() > 0)
+			{
+				//Get Damage
+				CPistol::GetInstance()->GetDamage();
+				//spawn bullet damage(int) vel(vec3)
+				//SpawnBullet(1, );
+			}
+			break;
+		}
 	}
 	else if (!commands[SHOOT])
 	{
-		BulletShoot = false;
 	}
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
@@ -186,18 +195,18 @@ void GameModel2D::Update(double dt)
 	BulletUpdate(dt);
 
 	//Check against wall
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		GameObject *go = (GameObject *)*it;
-		if ( go->active )
-		{
-			if ( checkCollision(CCharacter_Player::GetInstance()->getPosition(),CCharacter_Player::GetInstance()->getScale(),CCharacter_Player::GetInstance()->getVelocity(),go,dt) )
-			{
-				//broken collision
-				std::cout << " touche " << std::endl;
-			}
-		}
-	}
+	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	//{
+	//	GameObject *go = (GameObject *)*it;
+	//	if ( go->active )
+	//	{
+	//		if ( checkCollision(CCharacter_Player::GetInstance()->getPosition(),CCharacter_Player::GetInstance()->getScale(),CCharacter_Player::GetInstance()->getVelocity(),go,dt) )
+	//		{
+	//			//broken collision
+	//			//std::cout << " touche " << std::endl;
+	//		}
+	//	}
+	//}
 
 	Vector3 initialCam;
 	initialCam.Set(camera.position.x, camera.position.y, camera.position.z);
@@ -301,12 +310,6 @@ Mesh* GameModel2D::getBulletMesh()
 {
 	return meshList[BULLET];
 }
-
-bool GameModel2D::getBulletShoot()
-{
-	return BulletShoot;
-}
-
 void GameModel2D::BulletUpdate(double dt)
 {
 
@@ -321,7 +324,7 @@ void GameModel2D::BulletUpdate(double dt)
 }
 
 
-void GameModel2D::SpawnBullet()
+void GameModel2D::SpawnBullet(int WeaponDamage, Vector3 Velocity)
 {
 
 	float ANGLE = Math::RadianToDegree(atan2(getPos().y - CCharacter_Player::GetInstance()->getPosition().y,getPos().x - CCharacter_Player::GetInstance()->getPosition().x));
@@ -331,7 +334,8 @@ void GameModel2D::SpawnBullet()
 	Bullet->active = true;
 	Bullet->scale.Set(2,2,2);
 	Bullet->pos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
-	Bullet->vel.Set(100, 0, 0);
+	Bullet->WDamage = WeaponDamage;
+	Bullet->vel = Velocity;
 }
 
 GameObject* GameModel2D::FetchGO()
@@ -500,13 +504,13 @@ void GameModel2D::setNewCollidable(float x, float y, float z, float scale, float
 	{
 		if ( !m_goList[i]->active )
 		{
-			std::cout << " set " << std::endl;
-			m_goList[i]->active = true;
+			//std::cout << " set " << std::endl;
+			/*m_goList[i]->active = true;
 			m_goList[i]->pos.Set(x,y,z);
 			m_goList[i]->normal.Set(normalX,normalY,normalZ);
 			m_goList[i]->ID = newID;
 			m_goList[i]->type = GameObject::GO_WALL;
-			break;
+			break;*/
 		}
 	}
 }

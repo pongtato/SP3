@@ -16,8 +16,6 @@ CShotgun::CShotgun(void)
 	//Unlimited for Shotgun
 	Ammo = 70;
 	Damage = 2;
-	AttackSpeed = 1.0f;
-	FireCooldown = 0.5f;
 }
 
 

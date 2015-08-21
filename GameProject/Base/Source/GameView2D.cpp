@@ -34,11 +34,6 @@ void GameView2D::Render()
 			RenderGO(go);
 		}
 	}
-
-	for (int count = 0; count < model->getBulletShoot(); count++)
-	{
-		model->SpawnBullet();
-	}
 }
 
 void GameView2D::RenderBackground()

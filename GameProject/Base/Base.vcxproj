@@ -35,12 +35,16 @@
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\Model.cpp" />
+    <ClCompile Include="Source\Pistol.cpp" />
+    <ClCompile Include="Source\Rifle.cpp" />
     <ClCompile Include="Source\shader.cpp" />
+    <ClCompile Include="Source\Shotgun.cpp" />
     <ClCompile Include="Source\SoundManager.cpp" />
     <ClCompile Include="Source\SpriteAnimation.cpp" />
     <ClCompile Include="Source\TileMap.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
     <ClCompile Include="Source\View.cpp" />
+    <ClCompile Include="Source\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyBinds.h" />
@@ -71,13 +75,17 @@
     <ClInclude Include="Source\MeshBuilder.h" />
     <ClInclude Include="Source\Model.h" />
     <ClInclude Include="Source\Object.h" />
+    <ClInclude Include="Source\Pistol.h" />
+    <ClInclude Include="Source\Rifle.h" />
     <ClInclude Include="Source\shader.hpp" />
+    <ClInclude Include="Source\Shotgun.h" />
     <ClInclude Include="Source\SoundManager.h" />
     <ClInclude Include="Source\SpriteAnimation.h" />
     <ClInclude Include="Source\TileMap.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\View.h" />
+    <ClInclude Include="Source\Weapon.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B172635-4E2B-46F1-A403-08F4194D00F5}</ProjectGuid>

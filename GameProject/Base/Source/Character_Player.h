@@ -1,5 +1,6 @@
 #pragma once
 #include "Character.h"
+#include "Weapon.h"
 
 class CCharacter_Player : public CCharacter
 {
@@ -34,6 +35,9 @@ public:
 		STATE_TOTAL,
 	};
 
+	CCharacter_Player(void);
+	~CCharacter_Player(void);
+
 	void setMesh(PLAYER_TYPE newMesh);
 	void setAmmoType(int ammoTypeID);
 	void setNewState(PLAYER_CURRENT_STATE newState);
@@ -43,15 +47,13 @@ public:
 	int getState(void);
 
 	static CCharacter_Player* GetInstance();
+	CWeapon* Weapon;
 
 	void moveUp();
 	void moveDown();
 	void moveLeft();
 	void moveRight();
-
 private:
-	CCharacter_Player(void);
-	~CCharacter_Player(void);
 
 	PLAYER_TYPE m_playerMesh;
 	PLAYER_AMMO_TYPE m_weaponChoice;

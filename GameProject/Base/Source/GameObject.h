@@ -23,6 +23,7 @@ struct GameObject
 	float mass;
 	float angleOrientation;
 	int ID;
+	int WDamage;
 
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_BULLET);
 	~GameObject();

@@ -16,8 +16,6 @@ CRifle::CRifle(void)
 	//Unlimited for Rifle
 	Ammo = 50;
 	Damage = 2;
-	AttackSpeed = 0.2f;
-	FireCooldown = 0.0f;
 }
 
 

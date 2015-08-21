@@ -14,13 +14,14 @@ CPistol* CPistol::GetInstance()
 CPistol::CPistol(void)
 {
 	//Unlimited for pistol
-	Ammo = -1;
+	Ammo = 10;
 	Damage = 1;
-	AttackSpeed = 1.0f;
-	FireCooldown = 0.0f;
+	FireCooldown = 1.0f;
 }
 
 
 CPistol::~CPistol(void)
 {
+
 }
+
