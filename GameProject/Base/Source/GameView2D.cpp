@@ -136,7 +136,7 @@ void GameView2D::RenderPlayerCharacter()
 	modelStack.Translate(0, 0, 1);
 	modelStack.PushMatrix(); {
 		modelStack.Translate(CCharacter_Player::GetInstance()->getPosition());
-		modelStack.Translate(0.5, 0.5, 0);
+		//modelStack.Translate(0.5, 0.5, 0);
 		modelStack.Rotate(ANGLE,0,0,1);
 		switch ( CCharacter_Player::GetInstance()->getState())
 		{

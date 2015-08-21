@@ -331,7 +331,9 @@ void GameModel2D::SpawnBullet()
 	Bullet->active = true;
 	Bullet->scale.Set(2,2,2);
 	Bullet->pos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
-	Bullet->vel.Set(100, 0, 0);
+	Vector3 tempVel;
+	tempVel = (getPos() - CCharacter_Player::GetInstance()->getPosition());
+	Bullet->vel = tempVel;
 }
 
 GameObject* GameModel2D::FetchGO()
