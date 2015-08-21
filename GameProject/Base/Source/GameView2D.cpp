@@ -14,26 +14,28 @@ void GameView2D::Render()
 
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 
-	modelStack.PushMatrix(); {
+	modelStack.PushMatrix(); 
+	{
 		//RenderBackground();
 		RenderMobs();
 		RenderRearTileMap();
 		RenderTileMap();
 		RenderPlayerCharacter();
+		//Gameobjects
+		std::vector<GameObject*> tempList = model->getGameObjectList();
+		for (std::vector<GameObject *>::iterator it = tempList.begin(); it != tempList.end(); ++it)
+		{
+			GameObject *go = (GameObject *)*it;
+			if (go->active)
+			{
+				RenderGO(go);
+			}
+		}
 		RenderCrosshair();
 		//RenderScore();
-	} modelStack.PopMatrix();
+	} 
+	modelStack.PopMatrix();
 
-	//Gameobjects
-	std::vector<GameObject*> tempList = model->getGameObjectList();
-	for (std::vector<GameObject *>::iterator it = tempList.begin(); it != tempList.end(); ++it)
-	{
-		GameObject *go = (GameObject *)*it;
-		if (go->active)
-		{
-			RenderGO(go);
-		}
-	}
 
 	for (int count = 0; count < model->getBulletShoot(); count++)
 	{
@@ -243,13 +245,14 @@ void GameView2D::RenderGO(GameObject *go)
 	switch (go->type)
 	{
 	case GameObject::GO_BULLET:
-	{
-								   modelStack.PushMatrix();
-								   modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-								   modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-								   RenderMesh(model->getBulletMesh(), false);
-								   modelStack.PopMatrix();
-	}
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getBulletMesh(), false);
+			//RenderMeshSprite(model->getPlayerMesh(model->PISTOL_SHOOT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			modelStack.PopMatrix();
+		}
 		break;
 	}
 }

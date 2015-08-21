@@ -98,9 +98,6 @@
     <ClCompile Include="Source\MenuController.cpp">
       <Filter>MVC\CONTROLLER</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameModelLevel1.cpp">
-      <Filter>MVC\MODEL\Lv1</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameModelLevel2.cpp">
       <Filter>MVC\MODEL\Lv2</Filter>
     </ClCompile>
@@ -130,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="Source\SoundManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameModelLevel1.cpp">
+      <Filter>MVC\MODEL\Lv1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -145,7 +145,7 @@ void GameModel2D::Init()
 	BulletShoot = false;
 	AniToUpdate = PISTOL_IDLE;
 
-	for ( unsigned i = 0; i < 100; ++i)
+	for ( unsigned i = 0; i < 1000; ++i)
 	{
 		GameObject * go = new GameObject(GameObject::GO_NONE);
 		m_goList.push_back(go);
@@ -194,7 +194,6 @@ void GameModel2D::Update(double dt)
 			if ( checkCollision(CCharacter_Player::GetInstance()->getPosition(),CCharacter_Player::GetInstance()->getScale(),CCharacter_Player::GetInstance()->getVelocity(),go,dt) )
 			{
 				//broken collision
-				std::cout << " touche " << std::endl;
 			}
 		}
 	}
@@ -315,7 +314,8 @@ void GameModel2D::BulletUpdate(double dt)
 		GameObject *go = (GameObject *)*it;
 		if (go->type == GameObject::GO_BULLET && go->active)
 		{
-			go->pos += go->vel * dt;
+			go->pos += go->vel * 20.f * dt;
+			//std::cout << go->pos << std::endl;
 		}
 	}
 }
@@ -331,9 +331,10 @@ void GameModel2D::SpawnBullet()
 		GameObject *go = (GameObject *)*it;
 		if ( !go->active )
 		{
+			std::cout << " shoot " << std::endl;
 			go->type = GameObject::GO_BULLET;
 			go->active = true;
-			go->scale.Set(2,2,2);
+			go->scale.Set(0.05,0.05,0.05);
 			go->pos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, CCharacter_Player::GetInstance()->getPosition().z);
 			Vector3 tempVel;
 			tempVel = (getPos() - CCharacter_Player::GetInstance()->getPosition()).Normalized();
@@ -509,7 +510,6 @@ void GameModel2D::setNewCollidable(float x, float y, float z, float scale, float
 	{
 		if ( !m_goList[i]->active )
 		{
-			std::cout << " set " << std::endl;
 			m_goList[i]->active = true;
 			m_goList[i]->pos.Set(x,y,z);
 			m_goList[i]->normal.Set(normalX,normalY,normalZ);
