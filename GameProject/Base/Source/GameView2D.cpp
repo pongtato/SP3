@@ -4,6 +4,8 @@ GameView2D::GameView2D(Model* model) : View(model)
 {
 }
 
+#define tileMap model->getTileMap()
+
 void GameView2D::Render()
 {
 	View::Render();
@@ -17,33 +19,50 @@ void GameView2D::Render()
 	modelStack.PushMatrix(); 
 	{
 		//RenderBackground();
-		RenderMobs();
+		glDisable(GL_DEPTH_TEST);
 		RenderRearTileMap();
 		RenderTileMap();
+		RenderScene();
+		RenderMobs();
+		glEnable(GL_DEPTH_TEST);
 		RenderPlayerCharacter();
 		//Gameobjects
-		std::vector<GameObject*> tempList = model->getGameObjectList();
-		for (std::vector<GameObject *>::iterator it = tempList.begin(); it != tempList.end(); ++it)
-		{
-			GameObject *go = (GameObject *)*it;
-			if (go->active)
-			{
-				RenderGO(go);
-			}
-		}
 		RenderCrosshair();
 		//RenderScore();
 	} 
 	modelStack.PopMatrix();
+}
 
-	//Gameobjects
+void GameView2D::RenderScene()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	std::vector<GameObject*> tempList = model->getGameObjectList();
 	for (std::vector<GameObject *>::iterator it = tempList.begin(); it != tempList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
 		if (go->active)
 		{
-			RenderGO(go);
+			RenderGO(go,tileMap);
+		}
+	}
+
+	std::vector<GameObject*> collectibleList = model->getCollectiblesList();
+	for (std::vector<GameObject *>::iterator it = collectibleList.begin(); it != collectibleList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			RenderGO(go,tileMap);
+		}
+	}
+
+	std::vector<GameObject*> interactionList = model->getInteractionList();
+	for (std::vector<GameObject *>::iterator it = interactionList.begin(); it != interactionList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			RenderGO(go,tileMap);
 		}
 	}
 }
@@ -72,55 +91,101 @@ void GameView2D::RenderBackground()
 	} modelStack.PopMatrix();
 }
 
-#define tileMap model->getTileMap()
-
 void GameView2D::RenderTileMap()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 
-	glDisable(GL_DEPTH);
-
-	modelStack.Translate(0, 0, 0.001f);
+	//modelStack.Translate(0, 0, 0.001f);
 	for (int ccount = 0; ccount < tileMap->getNumOfTilesWidth(); ++ccount)
 	{
 		for (int rcount = 0; rcount < tileMap->getNumOfTilesHeight(); ++rcount)
 		{
-
-			int test;
 			modelStack.PushMatrix(); 
-			modelStack.Translate(ccount, rcount, 0.1f);
+			modelStack.Translate(ccount, rcount, 0.05f);
+			int Temp = tileMap->getTile(ccount, rcount);
+			Vector3 tempPos;
+			tempPos.Set(ccount,rcount,0.1f);
+			Vector3 tempScale;
+			tempScale.Set(1,1,1);
 
-			if ( tileMap->getTile(ccount, rcount) == model->getSpawnPointID() )
+			switch ( Temp )
 			{
 				if ( !model->hasReadLoc )
+				{
+			case model->SPAWN_ID:
 				{
 					model->setNewPlayerPos(ccount, rcount,-0.8f);
 				}
-			}
-			else if ( tileMap->getTile(ccount, rcount) == model->getExitPointID() )
-			{
-				if ( !model->hasReadLoc )
+				break;
+			case model->EXIT_ID:
 				{
 					model->setNewExitPos(ccount,rcount,0);
 				}
-			}
-			else if ( tileMap->getTile(ccount, rcount) == model->getEnemySpawnID() )
-			{
-				if ( !model->hasReadLoc )
+				break;
+			case model->ENEMY_ID:
 				{
 					model->setNewEnemy(ccount,rcount,0,1);
 				}
-			}
-			else if ( tileMap->getTile(ccount, rcount) >= 0 )
-			{
-				if ( !model->hasReadLoc )
+				break;
+			case model->CAMERA_ID:
 				{
-				// Position - Scale - Normal - ID  
-					model->setNewCollidable(ccount,rcount,0,0,0,1,0,0,GameObject::GO_WALL);
-					test += 1;
-					std::cout << test << std::endl;
+					model->setNewEnemy(ccount,rcount,0,0);
 				}
-				RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
+				break;
+			case model->SAVE_ID:
+				{
+					model->setNewInteraction(tempPos,tempScale,GameObject::GO_SAVE,ccount,rcount);
+				}
+				break;
+			case model->PC_ID:
+				{
+					model->setNewInteraction(tempPos,tempScale,GameObject::GO_PC,ccount,rcount);
+				}
+				break;
+			case model->AMMO_ID:
+				{
+					model->setNewCollectible(tempPos,tempScale,GameObject::GO_AMMO,ccount,rcount);
+				}
+				break;
+			case model->LOCKPICK_ID_2:
+				{
+					model->setNewInteraction(tempPos,tempScale,GameObject::GO_LOCKPICK_2,ccount,rcount);
+				}
+				break;
+			case model->LOCKPICK_ID_1:
+				{
+					model->setNewInteraction(tempPos,tempScale,GameObject::GO_LOCKPICK_1,ccount,rcount);
+				}
+				break;
+			case model->KEYUNLOCK_ID:
+				{
+					model->setNewInteraction(tempPos,tempScale,GameObject::GO_LOCK_KEY_ID,ccount,rcount);
+				}
+				break;
+			case model->KEY_ID:
+				{
+					model->setNewCollectible(tempPos,tempScale,GameObject::GO_KEY_ID,ccount,rcount);
+				}
+				break;
+			case model->LASER_HORI_ID:
+				{
+					model->setNewCollectible(tempPos,tempScale,GameObject::GO_LASER_HORI,ccount,rcount);
+				}
+				break;
+			case model->LASER_VERTI_ID:
+				{
+					model->setNewCollectible(tempPos,tempScale,GameObject::GO_LASER_VERTI,ccount,rcount);
+				}
+				break;
+				}
+			default :
+				{
+					if ( tileMap->getTile(ccount, rcount) >= 0 )
+					{
+						RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
+					}
+				}
+
 			}
 			modelStack.PopMatrix();
 		}
@@ -147,8 +212,6 @@ void GameView2D::RenderRearTileMap()
 			} modelStack.PopMatrix();
 		}
 	}
-
-	glEnable(GL_DEPTH);
 }
 
 #undef reartileMap
@@ -211,30 +274,32 @@ void GameView2D::RenderPlayerCharacter()
 	}
 }
 
-#define mobsList model->getEnemyList()
-
 void GameView2D::RenderMobs()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-
-	float mapOffset_x, mapOffset_y;
-	model->getOffset(mapOffset_x, mapOffset_y);
-
-	for (int count = 0; count < mobsList.size(); ++count)
+	std::vector<CCharacter_Enemy*> EnemyList = model->getEnemyList();
+	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
-		if (mobsList[count]->getActive())
+		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
+		modelStack.PushMatrix();
+		modelStack.Translate(go->getPosition().x,go->getPosition().y,0.01f);
+		modelStack.Rotate(go->getRotation(),0,0,1);
+		if (go->getActive())
 		{
-			modelStack.PushMatrix(); {
-				modelStack.Translate(-mapOffset_x, -mapOffset_y, 1);
-				modelStack.Translate(mobsList[count]->getPosition());
-				//modelStack.Translate(0.5, 0.5, 0);
-				RenderMesh(model->getTileMesh(), false, 6 * mobsList[count]->getSpriteID(), 6);
-			} modelStack.PopMatrix();
+			/*switch ( go->getState())
+			{
+			case 0:
+				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT )
+				{
+					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+				}
+				break;
+			}*/
+			RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 		}
+		modelStack.PopMatrix();
 	}
 }
-
-#undef mobsList
 
 void GameView2D::RenderScore()
 {
@@ -261,7 +326,7 @@ void GameView2D::RenderCrosshair()
 }
 #undef player
 
-void GameView2D::RenderGO(GameObject *go)
+void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	switch (go->type)
@@ -272,7 +337,87 @@ void GameView2D::RenderGO(GameObject *go)
 			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 			RenderMesh(model->getBulletMesh(), false);
-			//RenderMeshSprite(model->getPlayerMesh(model->PISTOL_SHOOT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_AMMO:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_SAVE:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_PC:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+		case GameObject::GO_LOCKPICK_2:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+		case GameObject::GO_LOCKPICK_1:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+		case GameObject::GO_LOCK_KEY_ID:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_KEY_ID:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_LASER_HORI:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_LASER_VERTI:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
 			modelStack.PopMatrix();
 		}
 		break;

@@ -4,6 +4,7 @@
 
 #include "View.h"
 #include "GameModel2D.h"
+#include "TileMap.h"
 
 class GameView2D : public View
 {
@@ -22,7 +23,8 @@ public:
 	void RenderMobs();
 	void RenderScore();
 	void RenderCrosshair();
-	void RenderGO(GameObject *go);
+	void RenderGO(GameObject *go, TileMap* tileMap);
+	void RenderScene();
 
 };
 

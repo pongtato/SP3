@@ -39,6 +39,24 @@
     <Filter Include="MVC\MODEL\Lv1">
       <UniqueIdentifier>{b4a4d633-667e-49c7-9efe-3cc360da0107}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Weapons">
+      <UniqueIdentifier>{8ecb4231-7b8e-415c-8880-6529c7278247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Characters">
+      <UniqueIdentifier>{717b2217-3152-45d2-a3ed-58c28a5d1942}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Weapons\Source">
+      <UniqueIdentifier>{324148dd-b914-407e-8d1b-dc27a0b45992}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Weapons\Header">
+      <UniqueIdentifier>{4d389f8a-2af4-43df-8f82-fe40f1708a66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Characters\Header">
+      <UniqueIdentifier>{50024cbc-f213-45cd-a28a-d09b7ffb5b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Characters\Source">
+      <UniqueIdentifier>{95424a16-1a17-474a-98c5-6804cd3d3334}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -75,9 +93,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\TileMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\View.cpp">
@@ -119,17 +134,32 @@
     <ClCompile Include="Source\GameModelLevel4.cpp">
       <Filter>MVC\MODEL\Lv4</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Character_Enemy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Character_Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\SoundManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Weapon.cpp">
+      <Filter>Weapons\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Pistol.cpp">
+      <Filter>Weapons\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rifle.cpp">
+      <Filter>Weapons\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shotgun.cpp">
+      <Filter>Weapons\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Character_Player.cpp">
+      <Filter>Characters\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Character.cpp">
+      <Filter>Characters\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Character_Enemy.cpp">
+      <Filter>Characters\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,9 +211,6 @@
     <ClInclude Include="Source\TileMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Character.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="KeyBinds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -226,17 +253,32 @@
     <ClInclude Include="Source\GameModelLevel4.h">
       <Filter>MVC\MODEL\Lv4</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Character_Enemy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Character_Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\SoundManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shotgun.h">
+      <Filter>Weapons\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rifle.h">
+      <Filter>Weapons\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Pistol.h">
+      <Filter>Weapons\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Weapon.h">
+      <Filter>Weapons\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Character_Player.h">
+      <Filter>Characters\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Character_Enemy.h">
+      <Filter>Characters\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Character.h">
+      <Filter>Characters\Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
