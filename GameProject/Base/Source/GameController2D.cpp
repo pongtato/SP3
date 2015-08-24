@@ -29,6 +29,8 @@ void GameController2D::Update()
 		model->setCommands(GameModel2D::COMMANDS::NEXTWEAP);
 	if (glfwGetMouseButton(view->getWindow(), 0))
 		model->setCommands(GameModel2D::COMMANDS::SHOOT);
+	if (IsKeyPressed('R'))
+		model->setCommands(GameModel2D::COMMANDS::RELOAD);
 	Controller::Update();
 	
 }

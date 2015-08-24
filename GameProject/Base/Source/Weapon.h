@@ -13,6 +13,7 @@ public:
 	int GetAmmo(void);
 	float GetCooldown(void);
 	int GetDamage(void);
+	float GetFireCooldown(void);
 
 protected:
 	int Ammo;

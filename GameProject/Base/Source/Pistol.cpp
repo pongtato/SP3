@@ -16,7 +16,8 @@ CPistol::CPistol(void)
 	//Unlimited for pistol
 	Ammo = 10;
 	Damage = 1;
-	FireCooldown = 1.0f;
+	FireCooldown = 0.0f;
+	AttackSpeed = 1.0f;
 }
 
 

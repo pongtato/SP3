@@ -145,6 +145,8 @@ void GameModel2D::Init()
 	newLevel = false;
 	AniToUpdate = PISTOL_IDLE;
 
+	WeaponChangeCooldown = 0.5f;
+
 	for ( unsigned i = 0; i < 100; ++i)
 	{
 		GameObject * go = new GameObject(GameObject::GO_NONE);
@@ -165,10 +167,24 @@ void GameModel2D::Update(double dt)
 	CCharacter_Player::GetInstance()->updatePosition(dt);
 	//Weapon changing
 	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
-	if (commands[PREVWEAP])CurrentWeapon--;
-	if (commands[NEXTWEAP])CurrentWeapon++;
+	if (commands[PREVWEAP] && WeaponChangeCooldown < 0)
+	{
+		CurrentWeapon--; 
+		WeaponChangeCooldown = 0.5f;
+	}
+	if (commands[NEXTWEAP] && WeaponChangeCooldown < 0)
+	{
+		CurrentWeapon++;
+		WeaponChangeCooldown = 0.5f;
+	}
+	WeaponChangeCooldown -= dt;
 
 	CCharacter_Player::GetInstance()->setAmmoType(CurrentWeapon);
+
+	//Weapons firecooldown
+	CPistol::GetInstance()->FireCooldownTick(dt);
+	CShotgun::GetInstance()->FireCooldownTick(dt);
+	CRifle::GetInstance()->FireCooldownTick(dt);
 
 	//Shooting (Bullet spawning)
 	if (commands[SHOOT])
@@ -176,18 +192,72 @@ void GameModel2D::Update(double dt)
 		switch (CCharacter_Player::GetInstance()->getAmmoType())
 		{
 		case 0:
-			if (CPistol::GetInstance()->GetAmmo() > 0)
+			if (CPistol::GetInstance()->GetAmmo() > 0 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
-				//Get Damage
-				CPistol::GetInstance()->GetDamage();
-				//spawn bullet damage(int) vel(vec3)
-				//SpawnBullet(1, );
+				//Spawn Bullet
+				SpawnBullet(CPistol::GetInstance()->GetDamage(), 0.05f);
+				//Ammo decrease
+				CPistol::GetInstance()->UseAmmo(1);
+				CPistol::GetInstance()->ResetCooldown();
 			}
 			break;
+		case 1:
+			if (CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				//Spawn Bullet
+				for (int i = 0; i < 7; i++)
+				{
+					SpawnSGBullets(CShotgun::GetInstance()->GetDamage(), 0.1f);
+					std::cout << i << std::endl;
+				}
+				//Ammo decrease
+				CShotgun::GetInstance()->UseAmmo(7);
+				CShotgun::GetInstance()->ResetCooldown();
+				
+			}
+			break;
+		case 2:
+			if (CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				//Spawn Bullet
+				SpawnBullet(CRifle::GetInstance()->GetDamage(), 0.3f);
+				//Ammo decrease
+				CRifle::GetInstance()->UseAmmo(1);
+				CRifle::GetInstance()->ResetCooldown();
+			}
+			break;
+
 		}
 	}
 	else if (!commands[SHOOT])
 	{
+	}
+
+	//Reload
+	if (commands[RELOAD])
+	{
+
+		switch (CCharacter_Player::GetInstance()->getAmmoType())
+		{
+		case 0:
+			if (CPistol::GetInstance()->GetAmmo() == 0)
+			{
+				CPistol::GetInstance()->SetAmmo(10);
+			}
+			break;
+		case 1:
+			if (CShotgun::GetInstance()->GetAmmo() == 0)
+			{
+				CShotgun::GetInstance()->SetAmmo(70);
+			}
+			break;
+		case 2:
+			if (CRifle::GetInstance()->GetAmmo() == 0)
+			{
+				CRifle::GetInstance()->SetAmmo(50);
+			}
+			break;
+		}
 	}
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
@@ -326,24 +396,44 @@ void GameModel2D::BulletUpdate(double dt)
 }
 
 
-void GameModel2D::SpawnBullet(int WeaponDamage, Vector3 Velocity)
+void GameModel2D::SpawnBullet(int WeaponDamage, float Speed)
 {
-
-	float ANGLE = Math::RadianToDegree(atan2(getPos().y - CCharacter_Player::GetInstance()->getPosition().y,getPos().x - CCharacter_Player::GetInstance()->getPosition().x));
-
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
 		if ( !go->active )
 		{
-			std::cout << " shoot " << std::endl;
 			go->type = GameObject::GO_BULLET;
 			go->active = true;
 			go->scale.Set(0.05,0.05,0.05);
 			go->pos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, CCharacter_Player::GetInstance()->getPosition().z);
 			Vector3 tempVel;
 			tempVel = (getPos() - CCharacter_Player::GetInstance()->getPosition()).Normalized();
-			go->vel = tempVel;
+			go->vel = tempVel * Speed;
+			go->WDamage = WeaponDamage;
+			break;
+		}
+	}
+}
+
+void GameModel2D::SpawnSGBullets(int WeaponDamage, float Speed)
+{
+	//float ANGLE = Math::RadianToDegree(atan2(getPos().y - CCharacter_Player::GetInstance()->getPosition().y, getPos().x - CCharacter_Player::GetInstance()->getPosition().x));
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (!go->active)
+		{
+			go->type = GameObject::GO_BULLET;
+			go->active = true;
+			go->scale.Set(0.05, 0.05, 0.05);
+			go->pos.Set(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, CCharacter_Player::GetInstance()->getPosition().z);
+			Vector3 tempVel;
+			tempVel = (getPos() - CCharacter_Player::GetInstance()->getPosition()).Normalized();
+			tempVel.x = Math::RandFloatMinMax(tempVel.x - 0.2f, tempVel.x + 0.2f);
+			tempVel.y = Math::RandFloatMinMax(tempVel.y - 0.2f, tempVel.y + 0.2f);
+			go->vel = tempVel * Speed;
+			go->WDamage = WeaponDamage;
 			break;
 		}
 	}

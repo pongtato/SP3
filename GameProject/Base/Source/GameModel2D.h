@@ -37,6 +37,8 @@ public:
 		NEXTWEAP,
 		//Shooting
 		SHOOT,
+		//Reload
+		RELOAD,
 		NUM_COMMANDS,
 	};
 
@@ -70,7 +72,7 @@ protected:
 		SHOTGUN,
 		RIFLE,
 		TOTAL_GUNS,
-	};
+	}; float WeaponChangeCooldown;
 	
 	Mesh* meshList[TOTAL_GEOMETRY];
 	Mesh* weaponList[TOTAL_GUNS];
@@ -128,7 +130,8 @@ public:
 	Mesh* getBulletMesh();
 	void BulletUpdate(double dt);
 
-	void SpawnBullet(int WeaponDamage,Vector3 Velocity);
+	void SpawnBullet(int WeaponDamage,float Speed);
+	void SpawnSGBullets(int WeaponDamage, float Speed);
 
 	//Gameobjects
 	GameObject* FetchGO();

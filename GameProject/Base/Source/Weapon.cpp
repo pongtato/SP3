@@ -43,3 +43,7 @@ int CWeapon::GetDamage(void)
 {
 	return Damage;
 }
+float CWeapon::GetFireCooldown(void)
+{
+	return FireCooldown;
+}
