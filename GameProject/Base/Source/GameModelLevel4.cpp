@@ -24,6 +24,8 @@ void GameModelLevel4::Init()
 	CCharacter_Player::GetInstance()->Init(newPlayerPos.x - 0.5f,
 			newPlayerPos.y - 0.25f,
 			newPlayerPos.z,1,1,100,1,5);
+
+	getMapData();
 }
 
 void GameModelLevel4::Update(double dt)

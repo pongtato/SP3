@@ -26,6 +26,7 @@ public:
 
 	enum ENEMY_AMMO_TYPE
 	{
+		CAMERA,
 		FLASHLIGHT,
 		PISTOL,
 		MG,
@@ -42,6 +43,7 @@ public:
 		CHASING,
 		ATTACKING,
 		RUNNING,
+		SCANNING,
 		STATE_TOTAL,
 	};
 
@@ -49,18 +51,22 @@ public:
 	void setAmmoType(ENEMY_AMMO_TYPE newAmmoType);
 	void setNewState(EMEY_CURRENT_STATE newState);
 	bool detectPlayer(Vector3 playerPos);
+	void setGroupID(int newGroupID);
 
 	int getMesh(void);
 	int getAmmoType(void);
 	int getState(void);
 	float m_RotationArcMax;
 	float m_RotationArcMin;
+	int getGroupID(void);
 
 	void Strategy_Chaseplayer(Vector3 playerPos);
 	void Strategy_Return(void);
+	void Strategy_Scan(bool Direction, double dt);
 
 private:
 	ENEMY_TYPE m_enemyMesh;
 	ENEMY_AMMO_TYPE m_weaponChoice;
 	EMEY_CURRENT_STATE m_enemyState;
+	int m_GroupID;
 };
