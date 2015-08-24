@@ -53,7 +53,10 @@ bool CCharacter_Enemy::detectPlayer(Vector3 playerPos)
 		if ( tempAngle <= m_RotationArcMax && tempAngle >= m_RotationArcMin )
 		{
 			cout << " Detected at " << tempAngle << " Expected: " << m_RotationArcMax << "," << m_RotationArcMin << endl;
-			m_enemyState = CHASING;
+			if ( m_weaponChoice != CAMERA )
+			{
+				m_enemyState = CHASING;
+			}
 			return true;
 		}
 		else
@@ -81,4 +84,31 @@ void CCharacter_Enemy::Strategy_Return(void)
 {
 	Vector3 temp = getInitPosition() - getPosition();
 	setVelocity(temp.x,temp.y,0);
+}
+
+void CCharacter_Enemy::Strategy_Scan(bool Direction, double dt)
+{
+	switch (Direction)
+	{
+	case 0:
+		{
+			setRotation(getRotation() - (float)dt);
+		}
+		break;
+	case 1:
+		{
+			setRotation(getRotation() + (float)dt);
+		}
+		break;
+	}
+}
+
+void CCharacter_Enemy::setGroupID(int newGroupID)
+{
+	m_GroupID = newGroupID;
+}
+
+int CCharacter_Enemy::getGroupID(void)
+{
+	return m_GroupID;
 }
