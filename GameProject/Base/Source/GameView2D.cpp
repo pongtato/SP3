@@ -27,6 +27,7 @@ void GameView2D::Render()
 		RenderTileMap();
 		RenderScene();
 		RenderMobs();
+		RenderMobsDetection();
 		glEnable(GL_DEPTH_TEST);
 		RenderPlayerCharacter();
 		//Gameobjects
@@ -110,7 +111,7 @@ void GameView2D::RenderTileMap()
 			Vector3 tempScale;
 			tempScale.Set(1,1,1);
 			int Temp = tileMap->getTile(ccount, rcount);
-			if ( Temp <= 15 )
+			if ( Temp <= 15 || Temp >= 20 && Temp <= 23)
 			{
 				RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(ccount, rcount), 6);
 			}
@@ -201,10 +202,48 @@ void GameView2D::RenderPlayerCharacter()
 	}
 }
 
+void GameView2D::RenderMobsDetection()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	std::vector<CCharacter_Enemy*> EnemyList = model->getEnemyList();
+	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
+	{
+		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
+		modelStack.PushMatrix();
+		modelStack.Translate(go->DetectionCornerL.x,go->DetectionCornerL.y,0.01f);
+		modelStack.Rotate(go->m_RotationArcMin,0,0,1);
+		modelStack.Scale(CCharacter_Enemy::FOVdistance,0.05,0.05);
+		if (go->getActive())
+		{
+			RenderMesh(model->getWallMesh(), false);
+		}
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->DetectionCornerR.x,go->DetectionCornerR.y,0.01f);
+		modelStack.Rotate(go->m_RotationArcMax,0,0,1);
+		modelStack.Scale(CCharacter_Enemy::FOVdistance,0.05,0.05);
+		if (go->getActive())
+		{
+			RenderMesh(model->getWallMesh(), false);
+		}
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->DetectionCornerM.x,go->DetectionCornerM.y,0.01f);
+		modelStack.Rotate(go->getRotation() + 90.f,0,0,1);
+		float tempCalc = (float)CCharacter_Enemy::FOVArc/30.f * (float)CCharacter_Enemy::FOVdistance;
+		modelStack.Scale(tempCalc,0.05,0.05);
+		if (go->getActive())
+		{
+			RenderMesh(model->getWallMesh(), false);
+		}
+		modelStack.PopMatrix();
+	}
+}
+
 void GameView2D::RenderMobs()
 {
-	int temp = Math::RandIntMinMax(0,3);
-
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	std::vector<CCharacter_Enemy*> EnemyList = model->getEnemyList();
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
@@ -219,49 +258,49 @@ void GameView2D::RenderMobs()
 			{
 				// idle
 			case 0:
-				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT && go->getGroupID())
+				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
 				break;
 				// patrol
 			case 1:
-				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT && go->getGroupID())
+				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
 				break;
 				// chasing
 			case 2:
-				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT && go->getGroupID())
+				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
 				break;
 				// attacking
 			case 3:
-				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT && go->getGroupID())
+				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
 				break;
 				// running
 			case 4:
-				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT && go->getGroupID())
+				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
 				break;
 				// scanning
 			case 5:
-				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT && go->getGroupID())
+				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
 				break;
 			}
 
-			if ( go->getAmmoType() == CCharacter_Enemy::CAMERA && go->getGroupID())
+			if ( go->getAmmoType() == CCharacter_Enemy::CAMERA)
 			{
 				RenderMeshSprite(model->getEnemyMesh(model->ENEMY_CAMERA), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 			}

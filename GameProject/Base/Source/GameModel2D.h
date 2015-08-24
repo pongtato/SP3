@@ -4,7 +4,7 @@
 
 
 #include "Model.h"
-
+#include <ctime>
 #include "SoundManager.h"
 #include "TileMap.h"
 #include "Character_Player.h"

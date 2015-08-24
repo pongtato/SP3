@@ -170,7 +170,8 @@ void GameModel2D::Init()
 	//BulletShoot = false;
 	hasReadLoc = false;
 	AniToUpdate = PISTOL_IDLE;
-	GroupToSpawn = Math::RandIntMinMax(1,4);
+	srand (time(NULL));
+	GroupToSpawn = rand() % 3 + 0;
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -232,23 +233,28 @@ void GameModel2D::Update(double dt)
 		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
 		if ( go->getActive() )
 		{
-			if ( go->detectPlayer(CCharacter_Player::GetInstance()->getPosition()) )
+			go->detectPlayer(CCharacter_Player::GetInstance()->getPosition()); 
+			
+			switch ( go->getState() )
 			{
-				switch ( go->getState() )
+			case CCharacter_Enemy::CHASING:
 				{
-				case go->CHASING:
-					{
-						go->Strategy_Chaseplayer(CCharacter_Player::GetInstance()->getPosition());
-						break;
-					}
-				case go->RUNNING:
-					{
-						go->Strategy_Return();
-						break;
-					}
-				};
-			}
+					go->Strategy_Chaseplayer(CCharacter_Player::GetInstance()->getPosition());
+					break;
+				}
+			case CCharacter_Enemy::RUNNING:
+				{
+					go->Strategy_Return();
+					break;
+				}
+			case CCharacter_Enemy::SCANNING:
+				{
+					go->Strategy_Scan(dt);
+					break;
+				}
+			};
 
+			//Testing
 			if ( go->getAmmoType() == go->CAMERA )
 			{
 				go->setNewState(go->SCANNING);
@@ -258,20 +264,6 @@ void GameModel2D::Update(double dt)
 		}
 	}
 	BulletUpdate(dt);
-
-	//Check against wall
-	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	//{
-	//	GameObject *go = (GameObject *)*it;
-	//	if ( go->active )
-	//	{
-	//		if ( checkCollision(CCharacter_Player::GetInstance()->getPosition(),CCharacter_Player::GetInstance()->getScale(),CCharacter_Player::GetInstance()->getVelocity(),go,dt) )
-	//		{
-	//			//broken collision
-	//			//std::cout << " touche " << std::endl;
-	//		}
-	//	}
-	//}
 
 	Vector3 initialCam;
 	initialCam.Set(camera.position.x, camera.position.y, camera.position.z);
@@ -688,7 +680,8 @@ void GameModel2D::getMapData()
 				break;
 			case GameModel2D::ENEMY_ID:
 				{
-					//if ( Math::RandIntMinMax(1,4) == Temp )
+					cout << GroupToSpawn << endl;
+					if ( ccount%4 == GroupToSpawn || rcount%4 == GroupToSpawn )
 					{
 					setNewEnemy(ccount,rcount,0,1);
 					}
