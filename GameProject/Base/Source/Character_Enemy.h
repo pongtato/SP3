@@ -87,4 +87,5 @@ private:
 	bool m_RotateDirection;
 	float m_MedianRotation;
 	float m_ScanTimer;
+	Vector3 TargetPosition;
 };

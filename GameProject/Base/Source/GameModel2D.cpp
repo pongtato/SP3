@@ -20,7 +20,7 @@ void GameModel2D::Init()
 		meshList[count]->textureID[0] = 0;
 	}
 	meshList[TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[TEXT]->textureID[0] = LoadTGA("Image//Font.tga");
+	meshList[TEXT]->textureID[0] = LoadTGA("Image//calibri.tga");
 	meshList[BACKGROUND] = MeshBuilder::GenerateQuad("background", Color());
 	meshList[BACKGROUND]->textureID[0] = LoadTGA("Image\\background.tga");
 	meshList[TILE] = MeshBuilder::GenerateText("tile", 12, 5);
@@ -65,6 +65,12 @@ void GameModel2D::Init()
 	meshList[ENEMY_CAMERA] = MeshBuilder::GenerateSpriteAnimation("ENEMY_CAMERA", 1, 1);
 	meshList[ENEMY_CAMERA]->textureID[0] = LoadTGA("Image\\Enemy\\ENEMY_CAMERA.tga");
 
+	meshList[ALERT] = MeshBuilder::GenerateSpriteAnimation("ALERT", 1, 1);
+	meshList[ALERT]->textureID[0] = LoadTGA("Image\\Enemy\\ALERT.tga");
+
+	meshList[CAUTION] = MeshBuilder::GenerateSpriteAnimation("CAUTION", 1, 1);
+	meshList[CAUTION]->textureID[0] = LoadTGA("Image\\Enemy\\CAUTION.tga");
+
 	//Animation Init
 	SpriteAnimation *eENEMY_LIGHT_IDLE = dynamic_cast<SpriteAnimation*>(meshList[ENEMY_LIGHT_IDLE]);
 	if(eENEMY_LIGHT_IDLE)
@@ -72,14 +78,6 @@ void GameModel2D::Init()
 		eENEMY_LIGHT_IDLE->m_anim = new Animation();
 		//Start frame, end frame, repeat, time
 		eENEMY_LIGHT_IDLE->m_anim->Set(0, 19, 0, 2.0f);
-	} 
-
-	SpriteAnimation *eENEMY_CAMERA = dynamic_cast<SpriteAnimation*>(meshList[ENEMY_CAMERA]);
-	if(eENEMY_CAMERA)
-	{
-		eENEMY_CAMERA->m_anim = new Animation();
-		//Start frame, end frame, repeat, time
-		eENEMY_CAMERA->m_anim->Set(0, 0, 0, 2.0f);
 	} 
 
 	SpriteAnimation *ePISTOL_IDLE = dynamic_cast<SpriteAnimation*>(meshList[PISTOL_IDLE]);
@@ -362,11 +360,11 @@ void GameModel2D::Update(double dt)
 				}
 			};
 
-			//Testing
-			if ( go->getAmmoType() == go->CAMERA )
-			{
-				go->setNewState(go->SCANNING);
-			}
+			////Testing
+			//if ( go->getAmmoType() == go->CAMERA )
+			//{
+			//	go->setNewState(go->SCANNING);
+			//}
 
 			go->Update(dt,getTileMap());
 		}
@@ -448,6 +446,12 @@ void GameModel2D::Update(double dt)
 		sa->Update(dt);
 	} 
 
+	FPS = (float)(1.f / dt);
+}
+
+float GameModel2D::getFPS()
+{
+	return FPS;
 }
 
 void GameModel2D::setCommands(int command)
@@ -623,6 +627,12 @@ Mesh* GameModel2D::getEnemyMesh(GEOMETRY_TYPE meshToTake)
 {
 	switch (meshToTake)
 	{
+	case ALERT:
+		return meshList[ALERT];
+		break;
+	case CAUTION:
+		return meshList[CAUTION];
+		break;
 	case ENEMY_CAMERA:
 		return meshList[ENEMY_CAMERA];
 		break;
@@ -706,12 +716,13 @@ void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 			{
 			case 0:
 				EnemyList[i]->setAmmoType(CCharacter_Enemy::CAMERA);
+				EnemyList[i]->setNewState(CCharacter_Enemy::SCANNING);
 				break;
 			case 1:
 				EnemyList[i]->setAmmoType(CCharacter_Enemy::FLASHLIGHT);
+				EnemyList[i]->setNewState(CCharacter_Enemy::IDLE);
 				break;
 			};
-			EnemyList[i]->setNewState(CCharacter_Enemy::IDLE);
 			break;
 		}
 	}
@@ -813,7 +824,6 @@ void GameModel2D::getMapData()
 				break;
 			case GameModel2D::ENEMY_ID:
 				{
-					cout << GroupToSpawn << endl;
 					if ( ccount%4 == GroupToSpawn || rcount%4 == GroupToSpawn )
 					{
 					setNewEnemy(ccount,rcount,0,1);

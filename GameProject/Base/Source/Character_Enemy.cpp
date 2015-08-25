@@ -51,7 +51,7 @@ bool CCharacter_Enemy::detectPlayer(Vector3 playerPos)
 	DetectionCornerM = (getPosition() + (CornerRVel * (float)FOVdistance)) + (DetectionCornerL - DetectionCornerR) ;
 
 	// check if within range
-	if ( (playerPos - getPosition()).Length() < FOVdistance )
+	if ( (playerPos - getPosition()).Length() <= FOVdistance )
 	{
 		//Check if within arc
 		float tempAngle = Math::RadianToDegree(atan2f(playerPos.y - getPosition().y,playerPos.x - getPosition().x));
@@ -64,9 +64,10 @@ bool CCharacter_Enemy::detectPlayer(Vector3 playerPos)
 		if ( tempAngle <= m_RotationArcMax && tempAngle >= m_RotationArcMin )
 		{
 			cout << " Detected at " << tempAngle << " Expected: " << m_RotationArcMax << "," << m_RotationArcMin << endl;
-			if ( m_weaponChoice != CAMERA )
+			//if ( m_weaponChoice != CAMERA )
 			{
 				m_enemyState = CHASING;
+				TargetPosition = playerPos;
 			}
 			return true;
 		}
@@ -81,23 +82,37 @@ bool CCharacter_Enemy::detectPlayer(Vector3 playerPos)
 
 void CCharacter_Enemy::Strategy_Chaseplayer(Vector3 playerPos)
 {
-	if (detectPlayer(playerPos))
+	Vector3 temp = TargetPosition - getPosition();
+
+	if (temp.Length() > 1.f)
 	{
-		Vector3 temp = playerPos - getPosition();
-		setVelocity(temp.x,temp.y,0);
+		if ( m_weaponChoice != CAMERA )
+		{
+			if ( (playerPos - getPosition()).Length() > 1.5f )
+			{
+				setVelocity(temp.x,temp.y,0);
+			}
+		}
 		setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
 
 		if ( getRotation() <= 0 )
 		{
 			setRotation(getRotation() + 360);
-		}
-		
+		}	
 	}
-	else
+	else if ( m_weaponChoice != CAMERA )
 	{
 		m_ScanTimer = ScanDuration;
 		setRotateDirection(playerPos);
 		setNewState(SCANNING);
+	}
+
+	if ( m_weaponChoice == CAMERA )
+	{
+		if ( !detectPlayer(playerPos) )
+		{
+			setNewState(SCANNING);
+		}
 	}
 }
 
@@ -105,6 +120,17 @@ void CCharacter_Enemy::Strategy_Return(void)
 {
 	Vector3 temp = getInitPosition() - getPosition();
 	setVelocity(temp.x,temp.y,0);
+	setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
+	
+	if ( temp.Length() < 0.5f )
+	{
+		setRotation(getRotation() - 180);
+	}
+
+	if ( getRotation() <= 0 )
+	{
+		setRotation(getRotation() + 360);
+	}
 }
 
 void CCharacter_Enemy::Strategy_Scan(double dt)
@@ -146,7 +172,7 @@ void CCharacter_Enemy::Strategy_Scan(double dt)
 	{
 		m_ScanTimer -= (float)dt;
 	}
-	else
+	else if ( m_weaponChoice != CAMERA )
 	{
 		setNewState(RUNNING);
 	}

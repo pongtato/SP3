@@ -61,6 +61,8 @@ public:
 		SHOTGUN_SHOOT,
 
 		//Enemy
+		ALERT,
+		CAUTION,
 		ENEMY_LIGHT_IDLE,
 		ENEMY_CAMERA,
 		TOTAL_GEOMETRY,
@@ -125,6 +127,7 @@ protected:
 	bool SpawnReady;
 	bool newLevel;
 	int GroupToSpawn;
+	float FPS;
 
 	//GameObjects
 	std::vector<GameObject *> m_goList;
@@ -139,9 +142,7 @@ public:
 	void setCommands(int command);
 
 	Mesh* getTextMesh();
-
 	Mesh* getBackgroundMesh();
-
 	//Crosshair
 	Mesh* getCrosshairMesh();
 
@@ -196,6 +197,7 @@ public:
 	int getCDTimer();
 	int AniToUpdate;
 	bool ZoomIN;
+	float getFPS();
 
 	//sound
 	CSoundManager Sound;

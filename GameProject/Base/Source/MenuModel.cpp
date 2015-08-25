@@ -87,6 +87,7 @@ void MenuModel::Update(double dt)
 			if ( SelectingLevels)
 			{
 				Sound.engine->stopAllSounds();
+				Sound.ConfirmSound();
 				throw arrowPosition;
 			}
 			else if ( arrowPosition == 0 && !SelectingLevels)

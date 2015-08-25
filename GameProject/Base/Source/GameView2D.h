@@ -22,8 +22,8 @@ public:
 	void RenderPlayerCharacter();
 	void RenderMobs();
 	void RenderMobsDetection();
-	void RenderScore();
 	void RenderCountDownTimer();
+	void RenderUI();
 	void RenderCrosshair();
 	void RenderGO(GameObject *go, TileMap* tileMap);
 	void RenderScene();

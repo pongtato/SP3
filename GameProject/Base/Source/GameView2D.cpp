@@ -32,8 +32,8 @@ void GameView2D::Render()
 		RenderPlayerCharacter();
 		//Gameobjects
 		RenderCrosshair();
-		//RenderScore();
 		RenderCountDownTimer();
+		RenderUI();
 	} 
 	modelStack.PopMatrix();
 }
@@ -296,7 +296,7 @@ void GameView2D::RenderMobs()
 			case 5:
 				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
 				{
-					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );				
 				}
 				break;
 			}
@@ -307,16 +307,38 @@ void GameView2D::RenderMobs()
 			}
 		}
 		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->getPosition().x,go->getPosition().y + (model->getTileMap()->GetTileSize()/model->getTileMap()->GetTileSize()),0.01f);
+		if (go->getActive())
+		{
+			switch ( go->getState())
+			{
+				// chasing
+			case 2:
+				{
+					RenderMeshSprite(model->getEnemyMesh(model->ALERT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+				}
+				break;
+				// scanning
+			case 5:
+				{
+					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+				}
+				break;
+			};
+		}
+		modelStack.PopMatrix();
 	}
 }
 
-void GameView2D::RenderScore()
+void GameView2D::RenderUI()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 
 	std::ostringstream ss;
-	ss << "Score: " << model->getScore();
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(0, 0, 0), 50, 100, 700);
+	ss << "FPS: " << model->getFPS();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 0, 0.5), 30, 10, 770);
 }
 
 void GameView2D::RenderCountDownTimer()
