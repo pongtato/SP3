@@ -4,7 +4,7 @@
 
 
 #include "Model.h"
-
+#include <ctime>
 #include "SoundManager.h"
 #include "TileMap.h"
 #include "Character_Player.h"
@@ -62,6 +62,7 @@ public:
 
 		//Enemy
 		ENEMY_LIGHT_IDLE,
+		ENEMY_CAMERA,
 		TOTAL_GEOMETRY,
 	};
 
@@ -121,6 +122,7 @@ protected:
 	int score;
 	bool SpawnReady;
 	bool newLevel;
+	int GroupToSpawn;
 
 	//GameObjects
 	std::vector<GameObject *> m_goList;
@@ -181,6 +183,7 @@ public:
 	void setNewEnemy(float x, float y, float z, int ID);
 	void setNewCollectible(Vector3 Pos,Vector3 Scale,GameObject::GAMEOBJECT_TYPE type, int spriteCol, int spriteRow);
 	void setNewInteraction(Vector3 Pos,Vector3 Scale,GameObject::GAMEOBJECT_TYPE type, int spriteCol, int spriteRow);
+	void getMapData();
 
 	//void checkCollision(float x, float y, float z, float scale, float VelX, float VelY, float VelZ, GameObject* go2);
 	bool checkCollision(Vector3 Pos, Vector3 scale, Vector3 Vel, GameObject* go2, double dt);

@@ -3,6 +3,7 @@
 
 CCharacter_Enemy::CCharacter_Enemy(void)
 {
+	m_ScanTimer = (float)ScanDuration;
 }
 
 
@@ -37,11 +38,21 @@ int CCharacter_Enemy::getState()
 
 bool CCharacter_Enemy::detectPlayer(Vector3 playerPos)
 {
+	m_RotationArcMax = getRotation() + FOVArc;
+	m_RotationArcMin = getRotation() - FOVArc;
+
+	Vector3 CornerLVel;
+	Vector3 CornerRVel;
+	CornerLVel.Set(cosf(Math::DegreeToRadian(m_RotationArcMin)),sinf(Math::DegreeToRadian(m_RotationArcMin)),getPosition().z);
+	CornerRVel.Set(cosf(Math::DegreeToRadian(m_RotationArcMax)),sinf(Math::DegreeToRadian(m_RotationArcMax)),getPosition().z);
+
+	DetectionCornerL = getPosition() + (CornerLVel * ((float)FOVdistance/2.f) );
+	DetectionCornerR = getPosition() + (CornerRVel * ((float)FOVdistance/2.f) );
+	DetectionCornerM = (getPosition() + (CornerRVel * (float)FOVdistance)) + (DetectionCornerL - DetectionCornerR) ;
+
 	// check if within range
 	if ( (playerPos - getPosition()).Length() < FOVdistance )
 	{
-		m_RotationArcMax = getRotation() + FOVArc;
-		m_RotationArcMin = getRotation() - FOVArc;
 		//Check if within arc
 		float tempAngle = Math::RadianToDegree(atan2f(playerPos.y - getPosition().y,playerPos.x - getPosition().x));
 		
@@ -53,7 +64,10 @@ bool CCharacter_Enemy::detectPlayer(Vector3 playerPos)
 		if ( tempAngle <= m_RotationArcMax && tempAngle >= m_RotationArcMin )
 		{
 			cout << " Detected at " << tempAngle << " Expected: " << m_RotationArcMax << "," << m_RotationArcMin << endl;
-			m_enemyState = CHASING;
+			if ( m_weaponChoice != CAMERA )
+			{
+				m_enemyState = CHASING;
+			}
 			return true;
 		}
 		else
@@ -62,18 +76,28 @@ bool CCharacter_Enemy::detectPlayer(Vector3 playerPos)
 			return false;
 		}
 	}
+	return false;
 }
 
 void CCharacter_Enemy::Strategy_Chaseplayer(Vector3 playerPos)
 {
-	if ( (getInitPosition() - getPosition()).Length() < ChaseDistance )
+	if (detectPlayer(playerPos))
 	{
 		Vector3 temp = playerPos - getPosition();
 		setVelocity(temp.x,temp.y,0);
+		setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
+
+		if ( getRotation() <= 0 )
+		{
+			setRotation(getRotation() + 360);
+		}
+		
 	}
 	else
 	{
-		setNewState(RUNNING);
+		m_ScanTimer = ScanDuration;
+		setRotateDirection(playerPos);
+		setNewState(SCANNING);
 	}
 }
 
@@ -81,4 +105,72 @@ void CCharacter_Enemy::Strategy_Return(void)
 {
 	Vector3 temp = getInitPosition() - getPosition();
 	setVelocity(temp.x,temp.y,0);
+}
+
+void CCharacter_Enemy::Strategy_Scan(double dt)
+{
+	if ( getRotation() >= 360 )
+	{
+		setRotation(0);
+	}
+	else if (  getRotation() <= 0 )
+	{
+		setRotation(360);
+	}
+
+	switch (m_RotateDirection)
+	{
+	case 0:
+		{
+			setRotation(getRotation() - (float)dt * ScanSpeed);
+		}
+		break;
+	case 1:
+		{
+			setRotation(getRotation() + (float)dt * ScanSpeed);
+		}
+		break;
+	}
+
+	if ( getRotation() > (m_MedianRotation + ScanArc) )
+	{
+		m_RotateDirection = false;
+	}
+
+	if ( getRotation() < (m_MedianRotation - ScanArc) )
+	{
+		m_RotateDirection = true;
+	}
+
+	if ( m_ScanTimer > 0.0f )
+	{
+		m_ScanTimer -= (float)dt;
+	}
+	else
+	{
+		setNewState(RUNNING);
+	}
+}
+
+void CCharacter_Enemy::setGroupID(int newGroupID)
+{
+	m_GroupID = newGroupID;
+}
+
+int CCharacter_Enemy::getGroupID(void)
+{
+	return m_GroupID;
+}
+
+void CCharacter_Enemy::setRotateDirection(Vector3 playerPos)
+{
+	if ( (playerPos - DetectionCornerL).Length() < (playerPos - DetectionCornerR).Length() )
+	{
+		m_RotateDirection = false;
+	}
+	else 
+	{
+		m_RotateDirection = true;
+	}
+	m_MedianRotation = getRotation();
 }

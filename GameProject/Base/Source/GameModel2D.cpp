@@ -62,6 +62,9 @@ void GameModel2D::Init()
 	meshList[ENEMY_LIGHT_IDLE] = MeshBuilder::GenerateSpriteAnimation("ENEMY_IDLE", 1, 20);
 	meshList[ENEMY_LIGHT_IDLE]->textureID[0] = LoadTGA("Image\\Enemy\\ENEMY_IDLE.tga");
 
+	meshList[ENEMY_CAMERA] = MeshBuilder::GenerateSpriteAnimation("ENEMY_CAMERA", 1, 1);
+	meshList[ENEMY_CAMERA]->textureID[0] = LoadTGA("Image\\Enemy\\ENEMY_CAMERA.tga");
+
 	//Animation Init
 	SpriteAnimation *eENEMY_LIGHT_IDLE = dynamic_cast<SpriteAnimation*>(meshList[ENEMY_LIGHT_IDLE]);
 	if(eENEMY_LIGHT_IDLE)
@@ -71,6 +74,13 @@ void GameModel2D::Init()
 		eENEMY_LIGHT_IDLE->m_anim->Set(0, 19, 0, 2.0f);
 	} 
 
+	SpriteAnimation *eENEMY_CAMERA = dynamic_cast<SpriteAnimation*>(meshList[ENEMY_CAMERA]);
+	if(eENEMY_CAMERA)
+	{
+		eENEMY_CAMERA->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		eENEMY_CAMERA->m_anim->Set(0, 0, 0, 2.0f);
+	} 
 
 	SpriteAnimation *ePISTOL_IDLE = dynamic_cast<SpriteAnimation*>(meshList[PISTOL_IDLE]);
 	if(ePISTOL_IDLE)
@@ -160,6 +170,8 @@ void GameModel2D::Init()
 	//BulletShoot = false;
 	hasReadLoc = false;
 	AniToUpdate = PISTOL_IDLE;
+	srand (time(NULL));
+	GroupToSpawn = rand() % 3 + 0;
 
 	WeaponChangeCooldown = 0.5f;
 
@@ -317,41 +329,37 @@ void GameModel2D::Update(double dt)
 		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
 		if ( go->getActive() )
 		{
-			if ( go->detectPlayer(CCharacter_Player::GetInstance()->getPosition()) )
+			go->detectPlayer(CCharacter_Player::GetInstance()->getPosition()); 
+			
+			switch ( go->getState() )
 			{
-				switch ( go->getState() )
+			case CCharacter_Enemy::CHASING:
 				{
-				case go->CHASING:
-					{
-						go->Strategy_Chaseplayer(CCharacter_Player::GetInstance()->getPosition());
-						break;
-					}
-				case go->RUNNING:
-					{
-						go->Strategy_Return();
-						break;
-					}
-				};
+					go->Strategy_Chaseplayer(CCharacter_Player::GetInstance()->getPosition());
+					break;
+				}
+			case CCharacter_Enemy::RUNNING:
+				{
+					go->Strategy_Return();
+					break;
+				}
+			case CCharacter_Enemy::SCANNING:
+				{
+					go->Strategy_Scan(dt);
+					break;
+				}
+			};
+
+			//Testing
+			if ( go->getAmmoType() == go->CAMERA )
+			{
+				go->setNewState(go->SCANNING);
 			}
 
 			go->Update(dt,getTileMap());
 		}
 	}
 	BulletUpdate(dt);
-
-	//Check against wall
-	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	//{
-	//	GameObject *go = (GameObject *)*it;
-	//	if ( go->active )
-	//	{
-	//		if ( checkCollision(CCharacter_Player::GetInstance()->getPosition(),CCharacter_Player::GetInstance()->getScale(),CCharacter_Player::GetInstance()->getVelocity(),go,dt) )
-	//		{
-	//			//broken collision
-	//			//std::cout << " touche " << std::endl;
-	//		}
-	//	}
-	//}
 
 	Vector3 initialCam;
 	initialCam.Set(camera.position.x, camera.position.y, camera.position.z);
@@ -603,6 +611,9 @@ Mesh* GameModel2D::getEnemyMesh(GEOMETRY_TYPE meshToTake)
 {
 	switch (meshToTake)
 	{
+	case ENEMY_CAMERA:
+		return meshList[ENEMY_CAMERA];
+		break;
 	case ENEMY_LIGHT_IDLE:
 		return meshList[ENEMY_LIGHT_IDLE];
 		break;
@@ -668,7 +679,7 @@ void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 {
 	for ( unsigned i = 0; i < EnemyList.size(); ++i)
 	{
-		if ( !EnemyList[i]->getActive() )
+		if ( !EnemyList[i]->getActive())
 		{
 			EnemyList[i]->setActive(true);
 			EnemyList[i]->setPosition(x,y,z);
@@ -676,6 +687,9 @@ void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 			EnemyList[i]->setRotation(180);
 			switch ( ID )
 			{
+			case 0:
+				EnemyList[i]->setAmmoType(CCharacter_Enemy::CAMERA);
+				break;
 			case 1:
 				EnemyList[i]->setAmmoType(CCharacter_Enemy::FLASHLIGHT);
 				break;
@@ -754,3 +768,91 @@ bool GameModel2D::checkCollision(Vector3 Pos, Vector3 scale, Vector3 Vel, GameOb
 		break;
 	}
 }
+
+void GameModel2D::getMapData()
+{
+	for (int ccount = 0; ccount < getTileMap()->getNumOfTilesWidth(); ++ccount)
+	{
+		for (int rcount = 0; rcount < getTileMap()->getNumOfTilesHeight(); ++rcount)
+		{
+			Vector3 tempPos;
+			tempPos.Set(ccount,rcount,0.1f);
+
+			Vector3 tempScale;
+			tempScale.Set(1,1,1);
+			int Temp = getTileMap()->getTile(ccount, rcount);
+
+			switch ( Temp )
+			{
+			case GameModel2D::SPAWN_ID:
+				{
+					setNewPlayerPos(ccount, rcount,-0.8f);
+				}
+				break;
+			case GameModel2D::EXIT_ID:
+				{
+					setNewExitPos(ccount,rcount,0);
+				}
+				break;
+			case GameModel2D::ENEMY_ID:
+				{
+					cout << GroupToSpawn << endl;
+					if ( ccount%4 == GroupToSpawn || rcount%4 == GroupToSpawn )
+					{
+					setNewEnemy(ccount,rcount,0,1);
+					}
+				}
+				break;
+			case GameModel2D::CAMERA_ID:
+				{
+					setNewEnemy(ccount,rcount,0,0);
+				}
+				break;
+			case GameModel2D::SAVE_ID:
+				{
+					setNewInteraction(tempPos,tempScale,GameObject::GO_SAVE,ccount,rcount);
+				}
+				break;
+			case GameModel2D::PC_ID:
+				{
+					setNewInteraction(tempPos,tempScale,GameObject::GO_PC,ccount,rcount);
+				}
+				break;
+			case GameModel2D::AMMO_ID:
+				{
+					setNewCollectible(tempPos,tempScale,GameObject::GO_AMMO,ccount,rcount);
+				}
+				break;
+			case GameModel2D::LOCKPICK_ID_2:
+				{
+					setNewInteraction(tempPos,tempScale,GameObject::GO_LOCKPICK_2,ccount,rcount);
+				}
+				break;
+			case GameModel2D::LOCKPICK_ID_1:
+				{
+					setNewInteraction(tempPos,tempScale,GameObject::GO_LOCKPICK_1,ccount,rcount);
+				}
+				break;
+			case GameModel2D::KEYUNLOCK_ID:
+				{
+					setNewInteraction(tempPos,tempScale,GameObject::GO_LOCK_KEY_ID,ccount,rcount);
+				}
+				break;
+			case GameModel2D::KEY_ID:
+				{
+					setNewCollectible(tempPos,tempScale,GameObject::GO_KEY_ID,ccount,rcount);
+				}
+				break;
+			case GameModel2D::LASER_HORI_ID:
+				{
+					setNewCollectible(tempPos,tempScale,GameObject::GO_LASER_HORI,ccount,rcount);
+				}
+				break;
+			case GameModel2D::LASER_VERTI_ID:
+				{
+					setNewCollectible(tempPos,tempScale,GameObject::GO_LASER_VERTI,ccount,rcount);
+				}
+				break;
+			}
+		}
+	}
