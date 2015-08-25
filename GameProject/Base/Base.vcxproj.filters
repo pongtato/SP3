@@ -161,6 +161,15 @@
     <ClCompile Include="Source\Character_Enemy.cpp">
       <Filter>Characters\Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Pathfinding_Node.cpp">
+      <Filter>Characters\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Pathfinding_Grid.cpp">
+      <Filter>Characters\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Pathfinding.cpp">
+      <Filter>Characters\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Geometry.h">
@@ -278,6 +287,15 @@
       <Filter>Characters\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Character.h">
+      <Filter>Characters\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Pathfinding_Node.h">
+      <Filter>Characters\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Pathfinding_Grid.h">
+      <Filter>Characters\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Pathfinding.h">
       <Filter>Characters\Header</Filter>
     </ClInclude>
   </ItemGroup>

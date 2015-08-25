@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "TileMap.h"
 #include "MyMath.h"
+#include "Pathfinding.h"
 
 using namespace std;
 
@@ -52,6 +53,7 @@ public:
 		ATTACKING,
 		RUNNING,
 		SCANNING,
+		TRACKING,
 		STATE_TOTAL,
 	};
 
@@ -71,13 +73,19 @@ public:
 	void Strategy_Chaseplayer(Vector3 playerPos);
 	void Strategy_Return(void);
 	void Strategy_Scan(double dt);
+	void Strategy_Stalk(Vector3 playerPos,TileMap* tileMap);
 
 	Vector3 DetectionCornerL;
 	Vector3 DetectionCornerR;
 	Vector3 DetectionCornerM;
 
 	void setRotateDirection(Vector3 playerPos);
+	CPathfinding* PATHFIND;
 
+	void UpdateEnemyPosition(double dt);
+
+	TileMap* pathfind_tilemap;
+	void CreateGrid(void);
 
 private:
 	ENEMY_TYPE m_enemyMesh;
@@ -88,4 +96,6 @@ private:
 	float m_MedianRotation;
 	float m_ScanTimer;
 	Vector3 TargetPosition;
+	vector<CPathfinding_Node*> PathFound;
+	int m_CurrentNode;
 };
