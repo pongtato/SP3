@@ -20,6 +20,8 @@ public:
 		ScanSpeed		= 50,
 		ScanArc			= 45,
 		ScanDuration	= 5,
+		MovementDelay	= 2,
+		MoveSpeed       = 10,
 		VARIABLES_TOTAL,
 	};
 
@@ -86,6 +88,8 @@ public:
 
 	TileMap* pathfind_tilemap;
 	void CreateGrid(void);
+	float MoveDelay;
+	vector<CPathfinding_Node*> PathFound;
 
 private:
 	ENEMY_TYPE m_enemyMesh;
@@ -96,6 +100,5 @@ private:
 	float m_MedianRotation;
 	float m_ScanTimer;
 	Vector3 TargetPosition;
-	vector<CPathfinding_Node*> PathFound;
 	int m_CurrentNode;
 };

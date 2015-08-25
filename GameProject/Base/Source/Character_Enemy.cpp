@@ -7,6 +7,7 @@ CCharacter_Enemy::CCharacter_Enemy(void)
 	PATHFIND = new CPathfinding;
 	pathfind_tilemap = new TileMap;
 	m_CurrentNode = 0;
+	MoveDelay = MovementDelay;
 }
 
 
@@ -86,7 +87,7 @@ bool CCharacter_Enemy::detectPlayer(Vector3 playerPos)
 
 void CCharacter_Enemy::Strategy_Chaseplayer(Vector3 playerPos)
 {
-	Vector3 temp = TargetPosition - getPosition();
+	Vector3 temp = (TargetPosition - getPosition()).Normalized() * MoveSpeed;
 
 	if (temp.Length() > 1.f)
 	{
@@ -122,7 +123,7 @@ void CCharacter_Enemy::Strategy_Chaseplayer(Vector3 playerPos)
 
 void CCharacter_Enemy::Strategy_Return(void)
 {
-	Vector3 temp = getInitPosition() - getPosition();
+	Vector3 temp = (getInitPosition() - getPosition()).Normalized() * MoveSpeed;
 	setVelocity(temp.x,temp.y,0);
 	setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
 	
@@ -207,18 +208,29 @@ void CCharacter_Enemy::setRotateDirection(Vector3 playerPos)
 
 void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
 {
-	PathFound = PATHFIND->FindPath(getPosition(),playerPos,tileMap);
-	
-	if ( PathFound.size() > 0 )
+	if (TargetPosition != playerPos )
 	{
-		if ( (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Length() > 0.5f )
+		m_CurrentNode = 0;
+		PathFound = PATHFIND->FindPath(getPosition(),playerPos,tileMap);
+		TargetPosition = playerPos;
+	}
+
+	if ( !PATHFIND->hasFound )
+	{
+		if ( PathFound.size() > 0 )
 		{
-			Vector3 temp = PathFound[m_CurrentNode]->m_WorldPosition - getPosition();
+			//setPosition(ceil(PathFound[m_CurrentNode]->m_WorldPosition.x),ceil(PathFound[m_CurrentNode]->m_WorldPosition.y),getPosition().z);
+			Vector3 temp = (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Normalized() * MoveSpeed;
 			setVelocity(temp.x,temp.y,0);
-		}
-		else if ( (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Length() < 0.5f )
-		{
-			m_CurrentNode++;
+
+			if ( (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Length() < 0.1f )
+			{
+				//setPosition(ceil(PathFound[m_CurrentNode]->m_WorldPosition.x),ceil(PathFound[m_CurrentNode]->m_WorldPosition.y),getPosition().z);
+				if ( m_CurrentNode < PathFound.size() - 2 )
+				{
+					m_CurrentNode++;
+				}
+			}
 		}
 	}
 }

@@ -302,7 +302,7 @@ void GameView2D::RenderMobs()
 			case 6:
 				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
 				{
-					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );				
+					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );			
 				}
 				break;
 			}
@@ -335,6 +335,17 @@ void GameView2D::RenderMobs()
 			};
 		}
 		modelStack.PopMatrix();
+
+		for ( int i = 0; i < go->PathFound.size(); ++i )
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->PathFound[i]->m_WorldPosition.x,go->PathFound[i]->m_WorldPosition.y,0.01f);
+			if (go->getActive())
+			{
+				//RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );		
+			}
+			modelStack.PopMatrix();
+		}
 	}
 }
 

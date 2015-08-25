@@ -234,7 +234,7 @@ void GameModel2D::Update(double dt)
 	CPistol::GetInstance()->FireCooldownTick(dt);
 	CShotgun::GetInstance()->FireCooldownTick(dt);
 	CRifle::GetInstance()->FireCooldownTick(dt);
-	EPistol::GetInstance()->FireCooldownTick(dt);
+	CPistol::GetInstance()->FireCooldownTick(dt);
 
 	//Shooting (Bullet spawning)
 	if (commands[SHOOT])
@@ -378,12 +378,12 @@ void GameModel2D::Update(double dt)
 					if (go->getAmmoType() != 0)
 					{
 						//Enemy Shooting (EBullet spawning)
-						if (EPistol::GetInstance()->GetFireCooldown() <= 0.0f)
+						if (CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 						{
 							//Spawn bullet
 							SpawnEnemyBullet(go->getPosition());
 							//Reset fire cooldown
-							EPistol::GetInstance()->ResetCooldown();
+							CPistol::GetInstance()->ResetCooldown();
 						}
 					}
 					break;
@@ -405,11 +405,11 @@ void GameModel2D::Update(double dt)
 				}
 			};
 
-			////Testing
-			//if ( go->getAmmoType() == go->CAMERA )
-			//{
+			//Testing
+			if ( go->getAmmoType() != go->CAMERA )
+			{
 				go->setNewState(go->TRACKING);
-			//}
+			}
 
 			go->UpdateEnemyPosition(dt);
 			//go->Update(dt,getTileMap());

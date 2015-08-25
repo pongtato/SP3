@@ -3,6 +3,7 @@
 
 CPathfinding::CPathfinding(void)
 {
+	hasFound = false;
 }
 
 

@@ -17,5 +17,6 @@ public:
 	int getDistance(CPathfinding_Node* nodeA,CPathfinding_Node* nodeB);
 	vector<CPathfinding_Node*> RetracePath(CPathfinding_Node* startNode, CPathfinding_Node* endNode);
 	void Init(TileMap* tileMap);
+	bool hasFound;
 };
 
