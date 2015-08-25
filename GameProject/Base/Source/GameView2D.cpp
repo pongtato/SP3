@@ -299,6 +299,12 @@ void GameView2D::RenderMobs()
 					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );				
 				}
 				break;
+			case 6:
+				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
+				{
+					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );				
+				}
+				break;
 			}
 
 			if ( go->getAmmoType() == CCharacter_Enemy::CAMERA)

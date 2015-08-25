@@ -4,11 +4,15 @@
 CCharacter_Enemy::CCharacter_Enemy(void)
 {
 	m_ScanTimer = (float)ScanDuration;
+	PATHFIND = new CPathfinding;
+	pathfind_tilemap = new TileMap;
+	m_CurrentNode = 0;
 }
 
 
 CCharacter_Enemy::~CCharacter_Enemy(void)
 {
+	delete PATHFIND;
 }
 
 void CCharacter_Enemy::setMesh(ENEMY_TYPE newMesh)
@@ -199,4 +203,34 @@ void CCharacter_Enemy::setRotateDirection(Vector3 playerPos)
 		m_RotateDirection = true;
 	}
 	m_MedianRotation = getRotation();
+}
+
+void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
+{
+	PathFound = PATHFIND->FindPath(getPosition(),playerPos,tileMap);
+	
+	if ( PathFound.size() > 0 )
+	{
+		if ( (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Length() > 0.5f )
+		{
+			Vector3 temp = PathFound[m_CurrentNode]->m_WorldPosition - getPosition();
+			setVelocity(temp.x,temp.y,0);
+		}
+		else if ( (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Length() < 0.5f )
+		{
+			m_CurrentNode++;
+		}
+	}
+}
+
+void CCharacter_Enemy::UpdateEnemyPosition(double dt)
+{
+	Vector3 tempPos = getPosition();
+	tempPos += getVelocity() * (float)dt;
+	setPosition(tempPos.x,tempPos.y,getPosition().z);
+}
+
+void CCharacter_Enemy::CreateGrid(void)
+{
+	PATHFIND->Init(pathfind_tilemap);
 }

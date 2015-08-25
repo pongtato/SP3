@@ -398,15 +398,21 @@ void GameModel2D::Update(double dt)
 					go->Strategy_Scan(dt);
 					break;
 				}
+			case CCharacter_Enemy::TRACKING:
+				{
+					go->Strategy_Stalk(CCharacter_Player::GetInstance()->getPosition(),getAITileMap());
+					break;
+				}
 			};
 
 			////Testing
 			//if ( go->getAmmoType() == go->CAMERA )
 			//{
-			//	go->setNewState(go->SCANNING);
+				go->setNewState(go->TRACKING);
 			//}
 
-			go->Update(dt,getTileMap());
+			go->UpdateEnemyPosition(dt);
+			//go->Update(dt,getTileMap());
 		}
 	}
 	BulletUpdate(dt);
@@ -673,6 +679,11 @@ TileMap* GameModel2D::getRearTileMap()
 	return m_ReartileMap;
 }
 
+TileMap* GameModel2D::getAITileMap()
+{
+	return m_AItilemap;
+}
+
 Mesh* GameModel2D::getTileMesh()
 {
 	return meshList[TILE];
@@ -806,6 +817,8 @@ void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 			EnemyList[i]->setPosition(x,y,z);
 			EnemyList[i]->setID(ID);
 			EnemyList[i]->setRotation(180);
+			EnemyList[i]->pathfind_tilemap = getAITileMap();
+			EnemyList[i]->CreateGrid();
 			switch ( ID )
 			{
 			case 0:

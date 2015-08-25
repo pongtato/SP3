@@ -103,6 +103,7 @@ protected:
 
 	TileMap* m_tileMap;
 	TileMap* m_ReartileMap;
+	TileMap* m_AItilemap;
 
 
 	//Player spawn point read from text file
@@ -154,6 +155,7 @@ public:
 	void getOffset(float& mapOffset_x, float& mapOffset_y);
 	TileMap* getTileMap();
 	TileMap* getRearTileMap();
+	TileMap* getAITileMap();
 	Mesh* getTileMesh();
 	Mesh* getFloorTileMesh();
 	Mesh* getWallMesh();

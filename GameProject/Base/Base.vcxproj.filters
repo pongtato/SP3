@@ -163,6 +163,14 @@
     </ClCompile>
     <ClCompile Include="Source\EnemyPistol.cpp">
       <Filter>Weapons\Source</Filter>
+    <ClCompile Include="Source\Pathfinding_Node.cpp">
+      <Filter>Characters\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Pathfinding_Grid.cpp">
+      <Filter>Characters\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Pathfinding.cpp">
+      <Filter>Characters\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +293,14 @@
     </ClInclude>
     <ClInclude Include="Source\EnemyPistol.h">
       <Filter>Weapons\Header</Filter>
+    <ClInclude Include="Source\Pathfinding_Node.h">
+      <Filter>Characters\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Pathfinding_Grid.h">
+      <Filter>Characters\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Pathfinding.h">
+      <Filter>Characters\Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
