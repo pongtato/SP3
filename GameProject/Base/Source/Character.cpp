@@ -14,6 +14,7 @@ CCharacter::CCharacter(void)
 	 m_CurrentZone  = 0;
 	 m_Active		= false;
 	 m_MoveSpeed	= 0;
+	 m_Rotation		= 0;
 }
 
 
@@ -35,6 +36,10 @@ void CCharacter::Init(float x, float y, float z, float scale, int newSpriteID, i
 void CCharacter::setPosition(float x,float y, float z)
 {
 	m_Position.Set(x,y,z);
+	if ( m_InitialPos.IsZero() )
+	{
+		m_InitialPos = m_Position;
+	}
 }
 Vector3 CCharacter::getPosition(void)
 {
@@ -60,11 +65,41 @@ void CCharacter::UpdateVelocity(double dt)
 	m_Velocity.y = Math::Clamp<float>(m_Velocity.y, -MAX_SPEED, MAX_SPEED);
 }
 
-void CCharacter::updatePosition(double dt)
+void CCharacter::Update(double dt, const TileMap *tileMap)
 {
 	UpdateVelocity(dt);
-	m_Position += m_Velocity * dt;
+	UpdatePosition(dt,tileMap);
+	//m_Position += m_Velocity * dt;
 	m_acceleration.Set(0, 0, 0);
+}
+Vector3 m_size;
+void CCharacter::UpdatePosition(double dt, const TileMap *tileMap)
+{
+	Vector3 position = m_Position;
+	position.x += m_Velocity.x * dt;
+	if (m_Velocity.x < 0)
+		position.x = floor(position.x);
+	else if (m_Velocity.x > 0)
+		position.x = ceil(position.x);
+	if (tileMap->getTile(position.x, floor(position.y)) >= 0 && tileMap->getTile(position.x, floor(position.y)) <= 15 || tileMap->getTile(position.x, ceil(position.y)) >= 0 && tileMap->getTile(position.x, ceil(position.y)) <= 15)
+	{
+		m_Position.x = position.x + (m_Velocity.x < -0.0f ? 1 : -1);
+		m_Velocity.x = 0;
+	}
+
+	position = m_Position;
+	position.y += m_Velocity.y * dt;
+	if (m_Velocity.y < 0)
+		position.y = floor(position.y);
+	else if (m_Velocity.y > 0)
+		position.y = ceil(position.y);
+	if (tileMap->getTile(floor(position.x), position.y) >= 0 && tileMap->getTile(floor(position.x), position.y) <= 15  || tileMap->getTile(ceil(position.x), position.y) >= 0 && tileMap->getTile(ceil(position.x), position.y) <= 15)
+	{
+		m_Position.y = position.y + (m_Velocity.y < -0.0f ? 1 : -1);
+		m_Velocity.y = 0;
+	}
+
+	m_Position += m_Velocity * dt;
 }
 void CCharacter::setVelocity(float x, float y, float z)
 {
@@ -135,4 +170,19 @@ void CCharacter::addAccelerate(float x, float y, float z)
 	m_acceleration.x += x;
 	m_acceleration.y += y;
 	m_acceleration.z += z;
+}
+
+void CCharacter::setRotation(float newRot)
+{
+	m_Rotation = newRot;
+}
+
+float CCharacter::getRotation(void)
+{
+	return m_Rotation;
+}
+
+Vector3 CCharacter::getInitPosition(void)
+{
+	return m_InitialPos;
 }

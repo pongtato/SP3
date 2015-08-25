@@ -10,6 +10,15 @@ struct GameObject
 		GO_NONE = 0,
 		GO_BULLET,
 		GO_WALL,
+		GO_SAVE,
+		GO_PC,
+		GO_AMMO,
+		GO_LOCKPICK_2,
+		GO_LOCKPICK_1,
+		GO_LOCK_KEY_ID,
+		GO_KEY_ID,
+		GO_LASER_HORI,
+		GO_LASER_VERTI,
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;
@@ -24,6 +33,8 @@ struct GameObject
 	float angleOrientation;
 	int ID;
 	int WDamage;
+	int SpriteRow;
+	int SpriteColumn;
 
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_BULLET);
 	~GameObject();

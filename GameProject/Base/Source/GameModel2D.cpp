@@ -34,6 +34,7 @@ void GameModel2D::Init()
 	meshList[CROSSHAIR] = MeshBuilder::GenerateQuad("Crosshair", Color());
 	meshList[CROSSHAIR]->textureID[0] = LoadTGA("Image\\Crosshair.tga");
 	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0, 0),10,10,1.0f);
+	meshList[CUBE] = MeshBuilder::GenerateCube("Bullet", Color(1, 0, 0),1.0f);
 
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
@@ -57,7 +58,20 @@ void GameModel2D::Init()
 	meshList[SHOTGUN_SHOOT] = MeshBuilder::GenerateSpriteAnimation("SHOTGUN_SHOOT", 2, 2);
 	meshList[SHOTGUN_SHOOT]->textureID[0] = LoadTGA("Image\\Player\\SHOTGUN_SHOOT.tga");
 
+	//Enemy
+	meshList[ENEMY_LIGHT_IDLE] = MeshBuilder::GenerateSpriteAnimation("ENEMY_IDLE", 1, 20);
+	meshList[ENEMY_LIGHT_IDLE]->textureID[0] = LoadTGA("Image\\Enemy\\ENEMY_IDLE.tga");
+
 	//Animation Init
+	SpriteAnimation *eENEMY_LIGHT_IDLE = dynamic_cast<SpriteAnimation*>(meshList[ENEMY_LIGHT_IDLE]);
+	if(eENEMY_LIGHT_IDLE)
+	{
+		eENEMY_LIGHT_IDLE->m_anim = new Animation();
+		//Start frame, end frame, repeat, time
+		eENEMY_LIGHT_IDLE->m_anim->Set(0, 19, 0, 2.0f);
+	} 
+
+
 	SpriteAnimation *ePISTOL_IDLE = dynamic_cast<SpriteAnimation*>(meshList[PISTOL_IDLE]);
 	if(ePISTOL_IDLE)
 	{
@@ -143,14 +157,25 @@ void GameModel2D::Init()
 	ZoomIN = false;
 	SpawnReady = false;
 	newLevel = false;
+	//BulletShoot = false;
+	hasReadLoc = false;
 	AniToUpdate = PISTOL_IDLE;
 
 	WeaponChangeCooldown = 0.5f;
 
-	for ( unsigned i = 0; i < 100; ++i)
+	for ( unsigned i = 0; i < 1000; ++i)
 	{
 		GameObject * go = new GameObject(GameObject::GO_NONE);
 		m_goList.push_back(go);
+	}
+	for ( unsigned i = 0; i < 100; ++i)
+	{
+		GameObject * collectibles = new GameObject(GameObject::GO_NONE);
+		CollectiblesList.push_back(collectibles);
+		GameObject * interact = new GameObject(GameObject::GO_NONE);
+		InteractionList.push_back(interact);
+		CCharacter_Enemy * enemy = new CCharacter_Enemy();
+		EnemyList.push_back(enemy);
 	}
 }
 
@@ -164,7 +189,7 @@ void GameModel2D::Update(double dt)
 		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
 	}
 
-	CCharacter_Player::GetInstance()->updatePosition(dt);
+	CCharacter_Player::GetInstance()->Update(dt,getTileMap());
 	//Weapon changing
 	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
 	if (commands[PREVWEAP] && WeaponChangeCooldown < 0)
@@ -195,7 +220,7 @@ void GameModel2D::Update(double dt)
 			if (CPistol::GetInstance()->GetAmmo() > 0 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
 				//Spawn Bullet
-				SpawnBullet(CPistol::GetInstance()->GetDamage(), 0.05f);
+				SpawnBullet(CPistol::GetInstance()->GetDamage(), 0.5f);
 				//Ammo decrease
 				CPistol::GetInstance()->UseAmmo(1);
 				CPistol::GetInstance()->ResetCooldown();
@@ -207,7 +232,7 @@ void GameModel2D::Update(double dt)
 				//Spawn Bullet
 				for (int i = 0; i < 7; i++)
 				{
-					SpawnSGBullets(CShotgun::GetInstance()->GetDamage(), 0.1f);
+					SpawnSGBullets(CShotgun::GetInstance()->GetDamage(), 1.0f);
 					std::cout << i << std::endl;
 				}
 				//Ammo decrease
@@ -220,7 +245,7 @@ void GameModel2D::Update(double dt)
 			if (CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
 				//Spawn Bullet
-				SpawnBullet(CRifle::GetInstance()->GetDamage(), 0.3f);
+				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
 				//Ammo decrease
 				CRifle::GetInstance()->UseAmmo(1);
 				CRifle::GetInstance()->ResetCooldown();
@@ -259,9 +284,58 @@ void GameModel2D::Update(double dt)
 			break;
 		}
 	}
+
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active && go->type == GameObject::GO_BULLET)
+		{
+			for (unsigned i = 0; i < EnemyList.size(); ++i)
+			{
+				if (EnemyList[i]->getActive())
+				{
+					if (go->pos.x < EnemyList[i]->getPosition().x + 0.5f && go->pos.x > EnemyList[i]->getPosition().x - 0.5f && go->pos.y < EnemyList[i]->getPosition().y + 0.5f && go->pos.y > EnemyList[i]->getPosition().y - 0.5f)
+					{
+						go->active = false;
+						EnemyList[i]->setActive(false);
+					}
+				}
+
+			}
+			if (getTileMap()->getTile(go->pos.x, floor(go->pos.y)) >= 0 && getTileMap()->getTile(go->pos.x, floor(go->pos.y)) <= 15 || getTileMap()->getTile(go->pos.x, ceil(go->pos.y)) >= 0 && getTileMap()->getTile(go->pos.x, ceil(go->pos.y)) <= 15)
+			{
+				go->active = false;
+			}
+		}
+	}
+
+
+	
+
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
-		
+		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
+		if ( go->getActive() )
+		{
+			if ( go->detectPlayer(CCharacter_Player::GetInstance()->getPosition()) )
+			{
+				switch ( go->getState() )
+				{
+				case go->CHASING:
+					{
+						go->Strategy_Chaseplayer(CCharacter_Player::GetInstance()->getPosition());
+						break;
+					}
+				case go->RUNNING:
+					{
+						go->Strategy_Return();
+						break;
+					}
+				};
+			}
+
+			go->Update(dt,getTileMap());
+		}
 	}
 	BulletUpdate(dt);
 
@@ -525,14 +599,29 @@ Mesh* GameModel2D::getPlayerMesh(GEOMETRY_TYPE meshToTake)
 	}
 }
 
+Mesh* GameModel2D::getEnemyMesh(GEOMETRY_TYPE meshToTake)
+{
+	switch (meshToTake)
+	{
+	case ENEMY_LIGHT_IDLE:
+		return meshList[ENEMY_LIGHT_IDLE];
+		break;
+	}
+}
+
 std::vector<CCharacter_Enemy*> GameModel2D::getEnemyList()
 {
 	return EnemyList;
 }
 
-std::vector<CCharacter_Enemy*> GameModel2D::getCollectiblesList()
+std::vector<GameObject*> GameModel2D::getCollectiblesList()
 {
 	return CollectiblesList;
+}
+
+std::vector<GameObject*> GameModel2D::getInteractionList()
+{
+	return InteractionList;
 }
 
 Mesh* GameModel2D::getMobsMesh()
@@ -543,11 +632,6 @@ Mesh* GameModel2D::getMobsMesh()
 int GameModel2D::getScore()
 {
 	return score;
-}
-
-int GameModel2D::getSpawnPointID()
-{
-	return SpawnPointID;
 }
 
 Vector3 GameModel2D::getNewPlayerPos()
@@ -575,14 +659,9 @@ void GameModel2D::setNewExitPos(float x, float y, float z)
 	newExitPos.Set(x,y,z);
 }
 
-int GameModel2D::getExitPointID()
+Mesh* GameModel2D::getWallMesh()
 {
-	return ExitPointID;
-}
-
-int GameModel2D::getEnemySpawnID()
-{
-	return EnemySpawnID;
+	return meshList[CUBE];
 }
 
 void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
@@ -594,24 +673,55 @@ void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 			EnemyList[i]->setActive(true);
 			EnemyList[i]->setPosition(x,y,z);
 			EnemyList[i]->setID(ID);
+			EnemyList[i]->setRotation(180);
+			switch ( ID )
+			{
+			case 1:
+				EnemyList[i]->setAmmoType(CCharacter_Enemy::FLASHLIGHT);
+				break;
+			};
+			EnemyList[i]->setNewState(CCharacter_Enemy::IDLE);
 			break;
 		}
 	}
 }
 
-void GameModel2D::setNewCollidable(float x, float y, float z, float scale, float normalX, float normalY, float normalZ, int newID)
+void GameModel2D::setNewCollectible(Vector3 Pos,Vector3 Scale,GameObject::GAMEOBJECT_TYPE type,int spriteCol, int spriteRow)
 {
-	for ( unsigned i = 0; i < m_goList.size(); ++i)
+	for (std::vector<GameObject *>::iterator it = CollectiblesList.begin(); it != CollectiblesList.end(); ++it)
 	{
-		if ( !m_goList[i]->active )
+		GameObject *go = (GameObject *)*it;
 		{
-			//std::cout << " set " << std::endl;
-			/*m_goList[i]->active = true;
-			m_goList[i]->pos.Set(x,y,z);
-			m_goList[i]->normal.Set(normalX,normalY,normalZ);
-			m_goList[i]->ID = newID;
-			m_goList[i]->type = GameObject::GO_WALL;
-			break;*/
+			if ( !go->active )
+			{
+				go->active = true;
+				go->pos = Pos;
+				go->scale = Scale;
+				go->type = type;
+				go->SpriteRow = spriteRow;
+				go->SpriteColumn = spriteCol;
+				break;
+			}
+		}
+	}
+}
+
+void GameModel2D::setNewInteraction(Vector3 Pos,Vector3 Scale,GameObject::GAMEOBJECT_TYPE type,int spriteCol, int spriteRow)
+{
+	for (std::vector<GameObject *>::iterator it = InteractionList.begin(); it != InteractionList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		{
+			if ( !go->active )
+			{
+				go->active = true;
+				go->pos = Pos;
+				go->scale = Scale;
+				go->type = type;
+				go->SpriteRow = spriteRow;
+				go->SpriteColumn = spriteCol;
+				break;
+			}
 		}
 	}
 }

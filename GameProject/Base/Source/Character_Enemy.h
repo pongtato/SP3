@@ -1,5 +1,12 @@
 #pragma once
 #include "Character.h"
+#include "TileMap.h"
+#include "MyMath.h"
+
+using namespace std;
+#define FOVdistance			2
+#define FOVArc				45
+#define ChaseDistance		5
 
 class CCharacter_Enemy : public CCharacter
 {
@@ -19,6 +26,7 @@ public:
 
 	enum ENEMY_AMMO_TYPE
 	{
+		FLASHLIGHT,
 		PISTOL,
 		MG,
 		SHOTGUN,
@@ -40,10 +48,16 @@ public:
 	void setMesh(ENEMY_TYPE newMesh);
 	void setAmmoType(ENEMY_AMMO_TYPE newAmmoType);
 	void setNewState(EMEY_CURRENT_STATE newState);
+	bool detectPlayer(Vector3 playerPos);
 
 	int getMesh(void);
 	int getAmmoType(void);
 	int getState(void);
+	float m_RotationArcMax;
+	float m_RotationArcMin;
+
+	void Strategy_Chaseplayer(Vector3 playerPos);
+	void Strategy_Return(void);
 
 private:
 	ENEMY_TYPE m_enemyMesh;
