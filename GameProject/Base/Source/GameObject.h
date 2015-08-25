@@ -9,6 +9,7 @@ struct GameObject
 	{
 		GO_NONE = 0,
 		GO_BULLET,
+		GO_EBULLET,
 		GO_WALL,
 		GO_SAVE,
 		GO_PC,

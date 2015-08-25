@@ -380,6 +380,15 @@ void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 			modelStack.PopMatrix();
 		}
 		break;
+	case GameObject::GO_EBULLET:
+	{
+								   modelStack.PushMatrix();
+								   modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+								   modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+								   RenderMesh(model->getEBulletMesh(), false);
+								   modelStack.PopMatrix();
+	}
+		break;
 	case GameObject::GO_AMMO:
 		{
 			modelStack.PushMatrix();

@@ -15,6 +15,8 @@
 #include "Pistol.h"
 #include "Rifle.h"
 #include "Shotgun.h"
+//Enemy Weapons
+#include "EnemyPistol.h"
 
 #include <vector>
 
@@ -47,6 +49,7 @@ public:
 		MOBS,
 		CROSSHAIR,
 		BULLET,
+		EBULLET,
 		CUBE,
 
 		//Player
@@ -129,6 +132,8 @@ protected:
 	int GroupToSpawn;
 	float FPS;
 
+	int KEYCOUNT;
+
 	//GameObjects
 	std::vector<GameObject *> m_goList;
 
@@ -155,10 +160,12 @@ public:
 
 	//Bullet
 	Mesh* getBulletMesh();
+	Mesh* getEBulletMesh();
 	void BulletUpdate(double dt);
 
 	void SpawnBullet(int WeaponDamage,float Speed);
 	void SpawnSGBullets(int WeaponDamage, float Speed);
+	void SpawnEnemyBullet(Vector3 EnemyPos);
 
 	//Gameobjects
 	GameObject* FetchGO();

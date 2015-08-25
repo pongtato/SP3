@@ -34,6 +34,7 @@ void GameModel2D::Init()
 	meshList[CROSSHAIR] = MeshBuilder::GenerateQuad("Crosshair", Color());
 	meshList[CROSSHAIR]->textureID[0] = LoadTGA("Image\\Crosshair.tga");
 	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0, 0),10,10,1.0f);
+	meshList[EBULLET] = MeshBuilder::GenerateSphere("EnemyBullet", Color(0, 0, 1), 10, 10, 1.0f);
 	meshList[CUBE] = MeshBuilder::GenerateCube("Bullet", Color(1, 0, 0),1.0f);
 
 	//Player
@@ -175,6 +176,8 @@ void GameModel2D::Init()
 
 	WeaponChangeCooldown = 0.5f;
 
+	KEYCOUNT = 0;
+
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
 		GameObject * go = new GameObject(GameObject::GO_NONE);
@@ -193,12 +196,11 @@ void GameModel2D::Init()
 
 void GameModel2D::Update(double dt)
 {
-	float fps = (1 /dt);
-
+	float fps = (1 / dt);
 	//countdown timer
 	CDTimerLimit += 1;
 
-	if(CDTimerLimit > fps)
+	if (CDTimerLimit > fps)
 	{
 		CDTimerLimit = 0;
 		CDTimer -= 1;
@@ -211,12 +213,12 @@ void GameModel2D::Update(double dt)
 		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
 	}
 
-	CCharacter_Player::GetInstance()->Update(dt,getTileMap());
+	CCharacter_Player::GetInstance()->Update(dt, getTileMap());
 	//Weapon changing
 	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
 	if (commands[PREVWEAP] && WeaponChangeCooldown < 0)
 	{
-		CurrentWeapon--; 
+		CurrentWeapon--;
 		WeaponChangeCooldown = 0.5f;
 	}
 	if (commands[NEXTWEAP] && WeaponChangeCooldown < 0)
@@ -232,6 +234,7 @@ void GameModel2D::Update(double dt)
 	CPistol::GetInstance()->FireCooldownTick(dt);
 	CShotgun::GetInstance()->FireCooldownTick(dt);
 	CRifle::GetInstance()->FireCooldownTick(dt);
+	EPistol::GetInstance()->FireCooldownTick(dt);
 
 	//Shooting (Bullet spawning)
 	if (commands[SHOOT])
@@ -249,6 +252,16 @@ void GameModel2D::Update(double dt)
 			}
 			break;
 		case 1:
+			if (CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				//Spawn Bullet
+				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
+				//Ammo decrease
+				CRifle::GetInstance()->UseAmmo(1);
+				CRifle::GetInstance()->ResetCooldown();
+			}
+			break;
+		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
 				//Spawn Bullet
@@ -260,20 +273,9 @@ void GameModel2D::Update(double dt)
 				//Ammo decrease
 				CShotgun::GetInstance()->UseAmmo(7);
 				CShotgun::GetInstance()->ResetCooldown();
-				
-			}
-			break;
-		case 2:
-			if (CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
-			{
-				//Spawn Bullet
-				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
-				//Ammo decrease
-				CRifle::GetInstance()->UseAmmo(1);
-				CRifle::GetInstance()->ResetCooldown();
-			}
-			break;
 
+			}
+			break;
 		}
 	}
 	else if (!commands[SHOOT])
@@ -310,7 +312,7 @@ void GameModel2D::Update(double dt)
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
-		if (go->active && go->type == GameObject::GO_BULLET)
+		if (go->active && go->type == GameObject::GO_BULLET) //Player Bullet
 		{
 			for (unsigned i = 0; i < EnemyList.size(); ++i)
 			{
@@ -324,6 +326,23 @@ void GameModel2D::Update(double dt)
 				}
 
 			}
+		}
+		if (go->active && go->type == GameObject::GO_EBULLET) //Enemy Bullet
+		{
+			for (unsigned i = 0; i < EnemyList.size(); ++i)
+			{
+				if (EnemyList[i]->getActive())
+				{
+					if (go->pos.x < CCharacter_Player::GetInstance()->getPosition().x + 0.5f && go->pos.x > CCharacter_Player::GetInstance()->getPosition().x - 0.5f && go->pos.y < CCharacter_Player::GetInstance()->getPosition().y + 0.5f && go->pos.y > CCharacter_Player::GetInstance()->getPosition().y - 0.5f)
+					{
+						go->active = false;
+					}
+				}
+
+			}
+		}
+		if (go->active && (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_EBULLET))
+		{
 			if (getTileMap()->getTile(go->pos.x, floor(go->pos.y)) >= 0 && getTileMap()->getTile(go->pos.x, floor(go->pos.y)) <= 15 || getTileMap()->getTile(go->pos.x, ceil(go->pos.y)) >= 0 && getTileMap()->getTile(go->pos.x, ceil(go->pos.y)) <= 15)
 			{
 				go->active = false;
@@ -331,8 +350,18 @@ void GameModel2D::Update(double dt)
 		}
 	}
 
-
-	
+	for (int i = 0; i < CollectiblesList.size(); i++)
+	{
+		if (CollectiblesList[i]->type == GameObject::GO_KEY_ID && CollectiblesList[i]->active)
+		{
+			if((CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
+			{
+				CollectiblesList[i]->active = false;
+				KEYCOUNT++;
+				break;
+			}
+		}
+	}
 
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
@@ -346,6 +375,17 @@ void GameModel2D::Update(double dt)
 			case CCharacter_Enemy::CHASING:
 				{
 					go->Strategy_Chaseplayer(CCharacter_Player::GetInstance()->getPosition());
+					if (go->getAmmoType() != 0)
+					{
+						//Enemy Shooting (EBullet spawning)
+						if (EPistol::GetInstance()->GetFireCooldown() <= 0.0f)
+						{
+							//Spawn bullet
+							SpawnEnemyBullet(go->getPosition());
+							//Reset fire cooldown
+							EPistol::GetInstance()->ResetCooldown();
+						}
+					}
 					break;
 				}
 			case CCharacter_Enemy::RUNNING:
@@ -370,6 +410,33 @@ void GameModel2D::Update(double dt)
 		}
 	}
 	BulletUpdate(dt);
+
+	//Enemy AI Flocking
+	for (unsigned i = 0; i < EnemyList.size(); ++i)
+	{
+		if (EnemyList[i]->getActive())
+		{
+			/*
+			if (CCharacter_Player::GetInstance()->getPosition().x < EnemyList[i]->getPosition().x + 0.5f &&
+				CCharacter_Player::GetInstance()->getPosition().x  > EnemyList[i]->getPosition().x - 0.5f &&
+				CCharacter_Player::GetInstance()->getPosition().y  < EnemyList[i]->getPosition().y + 0.5f &&
+				CCharacter_Player::GetInstance()->getPosition().y > EnemyList[i]->getPosition().y - 0.5f)
+			{
+					EnemyList[i]->setPosition(EnemyList[i]->getPosition().x + 0.1f, EnemyList[i]->getPosition().y + 0.1f, 0);
+			}*/
+			for (unsigned j = i; j < EnemyList.size() - j; j++)
+			{
+				if (EnemyList[j]->getPosition().x < EnemyList[j + 1]->getPosition().x + 0.5f &&
+					EnemyList[j]->getPosition().x > EnemyList[j + 1]->getPosition().x - 0.5f &&
+					EnemyList[j]->getPosition().y < EnemyList[j + 1]->getPosition().y + 0.5f &&
+					EnemyList[j]->getPosition().y > EnemyList[j + 1]->getPosition().y - 0.5f)
+				{
+					EnemyList[j]->setPosition(EnemyList[j]->getPosition().x + 0.1f, EnemyList[j]->getPosition().y + 0.1f, 0);
+					EnemyList[j + 1]->setPosition(EnemyList[j + 1]->getPosition().x - 0.1f, EnemyList[j + 1]->getPosition().y - 0.1f, 0);
+				}
+			}
+		}
+	}
 
 	Vector3 initialCam;
 	initialCam.Set(camera.position.x, camera.position.y, camera.position.z);
@@ -479,13 +546,19 @@ Mesh* GameModel2D::getBulletMesh()
 {
 	return meshList[BULLET];
 }
+
+Mesh* GameModel2D::getEBulletMesh()
+{
+	return meshList[EBULLET];
+}
+
 void GameModel2D::BulletUpdate(double dt)
 {
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
-		if (go->type == GameObject::GO_BULLET && go->active)
+		if ((go->type == GameObject::GO_BULLET || go->type == GameObject::GO_EBULLET) && go->active)
 		{
 			go->pos += go->vel * 20.f * dt;
 			//std::cout << go->pos << std::endl;
@@ -536,6 +609,27 @@ void GameModel2D::SpawnSGBullets(int WeaponDamage, float Speed)
 		}
 	}
 }
+
+void GameModel2D::SpawnEnemyBullet(Vector3 EnemyPos)
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (!go->active)
+		{
+			go->type = GameObject::GO_EBULLET;
+			go->active = true;
+			go->scale.Set(0.05, 0.05, 0.05);
+			go->pos = EnemyPos;
+			Vector3 tempVel;
+			tempVel = (CCharacter_Player::GetInstance()->getPosition() - EnemyPos).Normalized();
+			go->vel = tempVel * 0.1f;
+			break;
+
+		}
+	}
+}
+
 
 GameObject* GameModel2D::FetchGO()
 {
