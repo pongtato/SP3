@@ -33,6 +33,7 @@ void GameView2D::Render()
 		//Gameobjects
 		RenderCrosshair();
 		//RenderScore();
+		RenderCountDownTimer();
 	} 
 	modelStack.PopMatrix();
 }
@@ -316,6 +317,15 @@ void GameView2D::RenderScore()
 	std::ostringstream ss;
 	ss << "Score: " << model->getScore();
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(0, 0, 0), 50, 100, 700);
+}
+
+void GameView2D::RenderCountDownTimer()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+
+	std::ostringstream ss;
+	ss << "Time Left: " << model->getCDTimer();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, 150, 725);
 }
 
 #define player model->getPlayer()

@@ -164,6 +164,8 @@ void GameModel2D::Init()
 	newPlayerPos.Set(0,0,0);
 	newExitPos.Set(0,0,0);
 	score = 0;
+	CDTimer = 60;
+	CDTimerLimit = 0;
 	ZoomIN = false;
 	SpawnReady = false;
 	newLevel = false;
@@ -193,6 +195,16 @@ void GameModel2D::Init()
 
 void GameModel2D::Update(double dt)
 {
+	float fps = (1 /dt);
+
+	//countdown timer
+	CDTimerLimit += 1;
+
+	if(CDTimerLimit > fps)
+	{
+		CDTimerLimit = 0;
+		CDTimer -= 1;
+	}
 	if (ZoomIN)
 	{
 		if (commands[MOVE_UP]) CCharacter_Player::GetInstance()->moveUp();
@@ -645,6 +657,11 @@ int GameModel2D::getScore()
 	return score;
 }
 
+int GameModel2D::getCDTimer()
+{
+	return CDTimer;
+}
+
 Vector3 GameModel2D::getNewPlayerPos()
 {
 	return newPlayerPos;
@@ -856,3 +873,4 @@ void GameModel2D::getMapData()
 			}
 		}
 	}
+}

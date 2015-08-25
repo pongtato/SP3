@@ -120,6 +120,8 @@ protected:
 
 
 	int score;
+	int CDTimer;
+	int CDTimerLimit;
 	bool SpawnReady;
 	bool newLevel;
 	int GroupToSpawn;
@@ -191,6 +193,7 @@ public:
 	Vector3 getNewPlayerPos();
 	Vector3 getNewExitPos();
 	int getScore();
+	int getCDTimer();
 	int AniToUpdate;
 	bool ZoomIN;
 
