@@ -377,6 +377,48 @@ void GameModel2D::Update(double dt)
 			}
 		}
 	}
+	
+
+	if (KEYCOUNT > 0)
+	{
+		for (int i = 0; i < InteractionList.size(); i++)
+		{
+			if (InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID && InteractionList[i]->active)
+			{
+				//Lock collision
+				Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+				Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+				position.x += velocity.x * dt;
+				if (velocity.x < 0)
+					position.x = floor(position.x);
+				else if (velocity.x > 0)
+					position.x = ceil(position.x);
+				if (getTileMap()->getTile(position.x, floor(position.y)) == 43 && getTileMap()->getTile(position.x, floor(position.y)) == 43 || getTileMap()->getTile(position.x, ceil(position.y)) == 43 && getTileMap()->getTile(position.x, ceil(position.y)) == 43)
+				{
+					CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+					velocity.x = 0;
+				}
+				position = CCharacter_Player::GetInstance()->getPosition();
+				position.y += velocity.y * dt;
+				if (velocity.y < 0)
+					position.y = floor(position.y);
+				else if (velocity.y > 0)
+					position.y = ceil(position.y);
+				if (getTileMap()->getTile(floor(position.x), position.y) == 43 && getTileMap()->getTile(floor(position.x), position.y) == 43 || getTileMap()->getTile(ceil(position.x), position.y) == 43 && getTileMap()->getTile(ceil(position.x), position.y) == 43)
+				{
+					CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+					velocity.y = 0;
+				}
+				position += velocity * dt;
+				if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 2)
+				{
+					InteractionList[i]->active = false;
+					KEYCOUNT--;
+					break;
+				}
+			}
+		}
+	}
 
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
@@ -437,14 +479,6 @@ void GameModel2D::Update(double dt)
 	{
 		if (EnemyList[i]->getActive())
 		{
-			/*
-			if (CCharacter_Player::GetInstance()->getPosition().x < EnemyList[i]->getPosition().x + 0.5f &&
-				CCharacter_Player::GetInstance()->getPosition().x  > EnemyList[i]->getPosition().x - 0.5f &&
-				CCharacter_Player::GetInstance()->getPosition().y  < EnemyList[i]->getPosition().y + 0.5f &&
-				CCharacter_Player::GetInstance()->getPosition().y > EnemyList[i]->getPosition().y - 0.5f)
-			{
-					EnemyList[i]->setPosition(EnemyList[i]->getPosition().x + 0.1f, EnemyList[i]->getPosition().y + 0.1f, 0);
-			}*/
 			for (unsigned j = i; j < EnemyList.size() - j; j++)
 			{
 				if (EnemyList[j]->getPosition().x < EnemyList[j + 1]->getPosition().x + 0.5f &&

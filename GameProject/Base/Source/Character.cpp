@@ -86,7 +86,6 @@ void CCharacter::UpdatePosition(double dt, const TileMap *tileMap)
 		m_Position.x = position.x + (m_Velocity.x < -0.0f ? 1 : -1);
 		m_Velocity.x = 0;
 	}
-
 	position = m_Position;
 	position.y += m_Velocity.y * dt;
 	if (m_Velocity.y < 0)
