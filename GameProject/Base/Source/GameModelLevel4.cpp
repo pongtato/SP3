@@ -30,6 +30,7 @@ void GameModelLevel4::Init()
 			newPlayerPos.z,1,1,100,1,5);
 
 	getMapData();
+	m_CurrentLevel = 4;
 }
 
 void GameModelLevel4::Update(double dt)

@@ -455,6 +455,7 @@ void GameModel2D::Update(double dt)
 
 		if (InteractionList[i]->type == GameObject::GO_EXIT && InteractionList[i]->active)
 		{
+
 			//Lock collision
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
 			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
