@@ -15,6 +15,7 @@ CCharacter_Player::CCharacter_Player(void)
 	new CWeapon;
 	m_weaponChoice = PISTOL;
 	m_playerState = IDLE;
+	walkLimit = 0;
 }
 
 
@@ -60,17 +61,45 @@ int CCharacter_Player::getState()
 
 void CCharacter_Player::moveUp()
 {
+	//walkSound
+	walkLimit += 1;
+	if (walkLimit > 20)
+	{
+		walkLimit = 0;
+		Sound.walkfloor();
+	}
 	m_acceleration.y += m_MoveSpeed;
 }
 void CCharacter_Player::moveDown()
 {
+	//walkSound
+	walkLimit += 1;
+	if (walkLimit > 20)
+	{
+		walkLimit = 0;
+		Sound.walkfloor();
+	}
 	m_acceleration.y -= m_MoveSpeed;
 }
 void CCharacter_Player::moveLeft()
 {
+	//walkSound
+	walkLimit += 1;
+	if (walkLimit > 20)
+	{
+		walkLimit = 0;
+		Sound.walkfloor();
+	}
 	m_acceleration.x -= m_MoveSpeed;
 }
 void CCharacter_Player::moveRight()
 {
+	//walkSound
+	walkLimit += 1;
+	if (walkLimit > 20)
+	{
+		walkLimit = 0;
+		Sound.walkfloor();
+	}
 	m_acceleration.x += m_MoveSpeed;
 }
