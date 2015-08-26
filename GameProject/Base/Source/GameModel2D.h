@@ -54,6 +54,12 @@ public:
 		TEXT_PROMPT,
 		HEALTH,
 		HEALTH_BAR,
+		SHOTGUN_ICON,
+		PISTOL_ICON,
+		RIFLE_ICON,
+		SHOTGUN_AMMO,
+		PISTOL_AMMO,
+		RIFLE_AMMO,
 
 		//Player
 		PISTOL_IDLE,
@@ -199,6 +205,16 @@ public:
 	//Health Bar
 	Mesh* getHealth();
 	Mesh* getHealthBar();
+
+	//Weapon Icons
+	Mesh* getShottyIcon();
+	Mesh* getPistolIcon();
+	Mesh* getRifleIcon();
+
+	//Ammo Types
+	Mesh* getShottyShell();
+	Mesh* getPistolBullets();
+	Mesh* getRifleBullets();
 
 	void setNewPlayerPos(float x, float y, float z);
 	void setNewExitPos(float x, float y, float z);
