@@ -62,6 +62,12 @@ void GameView2D::Render()
 			RenderHelpText();
 			break;
 		}
+		//if (model->getLockPick())
+		//{
+			RenderLockBall();
+			RenderLockBar();
+			RenderLockPick();
+		//}
 	} 
 	modelStack.PopMatrix();
 }
@@ -370,7 +376,7 @@ void GameView2D::RenderMobs()
 			modelStack.Translate(go->PathFound[i]->m_WorldPosition.x,go->PathFound[i]->m_WorldPosition.y,0.01f);
 			if (go->getActive())
 			{
-				//RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );		
+				RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );		
 			}
 			modelStack.PopMatrix();
 		}
@@ -652,6 +658,47 @@ void GameView2D::RenderRifleAmmo()
 		modelStack.Translate(windowWidth / 2.3, -(windowHeight / 2.9), 2);
 		modelStack.Scale(windowWidth / 350, windowHeight / 260, 1);
 		Render2DMesh(model->getRifleBullets(), false);
+	}
+	modelStack.PopMatrix();
+}
+void GameView2D::RenderLockPick()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Scale(windowWidth / 4, windowHeight / 3, 1);
+		modelStack.Translate(1, 0, 0);
+		Render2DMesh(model->getLockPickBG(), false);
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderLockBar()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Scale(windowWidth / 32, windowHeight / 32, 1);
+		modelStack.Translate(4.8f, 0, 0);
+		Render2DMesh(model->getLockPickBar(), false);
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderLockBall()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Scale(windowWidth / 128, windowHeight / 100, 1);
+		modelStack.Translate(19, model->getLockPickY(), 0);
+		Render2DMesh(model->getLockPickBall(), false);
 	}
 	modelStack.PopMatrix();
 }

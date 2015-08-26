@@ -36,6 +36,9 @@ public:
 	void RenderShottyAmmo();
 	void RenderPistolAmmo();
 	void RenderRifleAmmo();
+	void RenderLockPick();
+	void RenderLockBar();
+	void RenderLockBall();
 };
 
 #endif
