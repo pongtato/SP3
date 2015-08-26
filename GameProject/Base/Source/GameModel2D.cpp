@@ -254,26 +254,42 @@ void GameModel2D::Update(double dt)
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() > 0 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				//pistol fire sound
+				Sound.pistolShot();
 				//Spawn Bullet
 				SpawnBullet(CPistol::GetInstance()->GetDamage(), 0.5f);
 				//Ammo decrease
 				CPistol::GetInstance()->UseAmmo(1);
 				CPistol::GetInstance()->ResetCooldown();
 			}
+			else if(CPistol::GetInstance()->GetAmmo() < 1 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				Sound.emptyClip();
+				CPistol::GetInstance()->ResetCooldown();
+			}
 			break;
 		case 1:
 			if (CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				//rifle fire sound
+				Sound.rifleShot();
 				//Spawn Bullet
 				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
 				//Ammo decrease
 				CRifle::GetInstance()->UseAmmo(1);
 				CRifle::GetInstance()->ResetCooldown();
 			}
+			else if(CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				Sound.emptyClip();
+				CRifle::GetInstance()->ResetCooldown();
+			}
 			break;
 		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				//shotgun sound
+				Sound.shotgunShot();
 				//Spawn Bullet
 				for (int i = 0; i < 7; i++)
 				{
@@ -285,6 +301,11 @@ void GameModel2D::Update(double dt)
 				CShotgun::GetInstance()->ResetCooldown();
 
 			}
+			else if(CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				Sound.emptyClip();
+				CShotgun::GetInstance()->ResetCooldown();
+			}
 			break;
 		}
 	}
@@ -295,24 +316,31 @@ void GameModel2D::Update(double dt)
 	//Reload
 	if (commands[RELOAD])
 	{
+		
 
 		switch (CCharacter_Player::GetInstance()->getAmmoType())
 		{
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() == 0)
 			{
+				//reload sound
+				Sound.reloadSound();
 				CPistol::GetInstance()->SetAmmo(10);
 			}
 			break;
 		case 1:
 			if (CShotgun::GetInstance()->GetAmmo() == 0)
 			{
+				//reload sound
+				Sound.reloadSound();
 				CShotgun::GetInstance()->SetAmmo(70);
 			}
 			break;
 		case 2:
 			if (CRifle::GetInstance()->GetAmmo() == 0)
 			{
+				//reload sound
+				Sound.reloadSound();
 				CRifle::GetInstance()->SetAmmo(50);
 			}
 			break;
@@ -377,48 +405,53 @@ void GameModel2D::Update(double dt)
 			}
 		}
 	}
-	
 
-	if (KEYCOUNT > 0)
+
+
+	for (int i = 0; i < InteractionList.size(); i++)
 	{
-		for (int i = 0; i < InteractionList.size(); i++)
+		if (InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID && InteractionList[i]->active)
 		{
-			if (InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID && InteractionList[i]->active)
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+			if (getTileMap()->getTile(position.x, floor(position.y)) == 43 && getTileMap()->getTile(position.x, floor(position.y)) == 43 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f || 
+				getTileMap()->getTile(position.x, ceil(position.y)) == 43 && getTileMap()->getTile(position.x, ceil(position.y)) == 43 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
-				//Lock collision
-				Vector3 position = CCharacter_Player::GetInstance()->getPosition();
-				Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
-				position.x += velocity.x * dt;
-				if (velocity.x < 0)
-					position.x = floor(position.x);
-				else if (velocity.x > 0)
-					position.x = ceil(position.x);
-				if (getTileMap()->getTile(position.x, floor(position.y)) == 43 && getTileMap()->getTile(position.x, floor(position.y)) == 43 || getTileMap()->getTile(position.x, ceil(position.y)) == 43 && getTileMap()->getTile(position.x, ceil(position.y)) == 43)
-				{
-					CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
-					velocity.x = 0;
-				}
-				position = CCharacter_Player::GetInstance()->getPosition();
-				position.y += velocity.y * dt;
-				if (velocity.y < 0)
-					position.y = floor(position.y);
-				else if (velocity.y > 0)
-					position.y = ceil(position.y);
-				if (getTileMap()->getTile(floor(position.x), position.y) == 43 && getTileMap()->getTile(floor(position.x), position.y) == 43 || getTileMap()->getTile(ceil(position.x), position.y) == 43 && getTileMap()->getTile(ceil(position.x), position.y) == 43)
-				{
-					CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
-					velocity.y = 0;
-				}
-				position += velocity * dt;
-				if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 2)
-				{
-					InteractionList[i]->active = false;
-					KEYCOUNT--;
-					break;
-				}
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+				velocity.x = 0;
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+			position.y += velocity.y * dt;
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+			if (getTileMap()->getTile(floor(position.x), position.y) == 43 && getTileMap()->getTile(floor(position.x), position.y) == 43 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f || 
+				getTileMap()->getTile(ceil(position.x), position.y) == 43 && getTileMap()->getTile(ceil(position.x), position.y) == 43 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				velocity.y = 0;
+			}
+			position += velocity * dt;
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 2 && KEYCOUNT > 0)
+			{
+				InteractionList[i]->active = false;
+				KEYCOUNT--;
+				break;
 			}
 		}
 	}
+
 
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
