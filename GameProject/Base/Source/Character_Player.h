@@ -1,6 +1,7 @@
 #pragma once
 #include "Character.h"
 #include "Weapon.h"
+#include "SoundManager.h"
 
 class CCharacter_Player : public CCharacter
 {
@@ -60,5 +61,9 @@ private:
 	PLAYER_CURRENT_STATE m_playerState;
 
 	static CCharacter_Player* mInstance;
+
+	//for sound
+	CSoundManager Sound;
+	int walkLimit;
 };
 

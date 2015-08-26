@@ -46,7 +46,7 @@ void CSoundManager::level1BGM()
 	ISound* music = engine->play2D("../irrKlang/media/Level1BGM.mp3",
 		true, false, true);
 
-	//engine->setSoundVolume(0.25f);
+	engine->setSoundVolume(0.5f);
 }
 void CSoundManager::level2BGM()
 {
@@ -54,7 +54,7 @@ void CSoundManager::level2BGM()
 	ISound* music = engine->play2D("../irrKlang/media/Level2BGM.mp3",
 		true, false, true);
 
-	//engine->setSoundVolume(0.25f);
+	//engine->setSoundVolume(0.5f);
 
 }
 void CSoundManager::level3BGM()
@@ -71,7 +71,7 @@ void CSoundManager::level4BGM()
 	ISound* music = engine->play2D("../irrKlang/media/Level4BGM.mp3",
 		true, false, true);
 
-	//engine->setSoundVolume(0.25f);
+	//engine->setSoundVolume(0.5f);
 }
 
 //Player & Enemies
@@ -79,18 +79,27 @@ void CSoundManager::walkfloor()
 {
 	//player walking on the floor/concrete
 	ISound* music = engine->play2D("../irrKlang/media/walkOnConcrete.wav",
-		true, false, true);
+		false, false, false);
 
-	engine->setSoundVolume(0.4f);
+	//engine->setSoundVolume(0.4f);
 }
 void CSoundManager::walkMetal()
 {
 	//player walking on metal
 	ISound* music = engine->play2D("../irrKlang/media/walkOnMetal.wav",
+		false, false, true);
+
+	//engine->setSoundVolume(0.4f);
+}
+void CSoundManager::guardAlert()
+{
+	//player alerted the alarm
+	ISound* music = engine->play2D("../irrKlang/media/alert.mp3",
 		true, false, true);
 
 	engine->setSoundVolume(0.4f);
 }
+
 void CSoundManager::guardDie()
 {
 	//when the guards die
@@ -104,7 +113,7 @@ void CSoundManager::guardDie()
 void CSoundManager::reloadSound()
 {
 	//reloading gun
-	ISound* music = engine->play2D("../irrKlang/media/reloadGun.wav",
+	ISound* music = engine->play2D("../irrKlang/media/reloadGun.mp3",
 		false, false, true);
 
 	engine->setSoundVolume(0.4f);
@@ -120,7 +129,7 @@ void CSoundManager::pistolShot()
 void CSoundManager::rifleShot()
 {
 	//firing a rifle
-	ISound* music = engine->play2D("../irrKlang/media/rifleShot.wav",
+	ISound* music = engine->play2D("../irrKlang/media/rifleShot.mp3",
 		false, false, true);
 
 	engine->setSoundVolume(0.4f);

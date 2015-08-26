@@ -279,7 +279,7 @@ void GameModel2D::Update(double dt)
 				CRifle::GetInstance()->UseAmmo(1);
 				CRifle::GetInstance()->ResetCooldown();
 			}
-			else if(CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
+			else if(CRifle::GetInstance()->GetAmmo() < 1 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
 				Sound.emptyClip();
 				CRifle::GetInstance()->ResetCooldown();
@@ -301,7 +301,7 @@ void GameModel2D::Update(double dt)
 				CShotgun::GetInstance()->ResetCooldown();
 
 			}
-			else if(CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
+			else if(CShotgun::GetInstance()->GetAmmo() < 1 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
 				Sound.emptyClip();
 				CShotgun::GetInstance()->ResetCooldown();
