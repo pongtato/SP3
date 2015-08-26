@@ -35,42 +35,13 @@ void GameView2D::Render()
 		RenderCountDownTimer();
 		RenderUI();
 		//RenderScore();
-		RenderHealth();
-		RenderHBar();
-		switch (CCharacter_Player::GetInstance()->getAmmoType())
-		{
-		case 0:
-			RenderPistolIcon();
-			RenderPistolAmmo();
-			break;
-
-		case 1:
-			RenderRifleIcon();
-			RenderRifleAmmo();
-			break;
-
-		case 2:
-			RenderShottyIcon();
-			RenderShottyAmmo();
-
-			break;
-		}
-		
+		//RenderHealth();
+		//RenderHBar();
 		switch (model->m_CurrentLevel)
 		{
 		case 1:
-			RenderHelpText();
+			//RenderHelpText();
 			break;
-		}
-		if (model->getLockPick())
-		{
-			RenderLockBall();
-			RenderLockBar();
-			RenderLockPick();
-		}
-		if (!model->getLockPick())
-		{
-			
 		}
 	} 
 	modelStack.PopMatrix();
@@ -399,11 +370,10 @@ void GameView2D::RenderUI()
 void GameView2D::RenderCountDownTimer()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+
 	std::ostringstream ss;
 	ss << "Time Left: " << model->getCDTimer();
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 0, 0), 40, windowWidth / 150, windowHeight / 10);
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, 150, 725);
 }
 
 #define player model->getPlayer()
@@ -547,8 +517,8 @@ void GameView2D::RenderHelpText()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth / 3, windowHeight / 2.7, 1);
 		modelStack.Scale(windowWidth / 50, windowHeight / 65, 1);
+		modelStack.Translate(17, 26, 1);
 		Render2DMesh(model->getTextPrompt(), false);
 	}
 	modelStack.PopMatrix();
@@ -561,8 +531,8 @@ void GameView2D::RenderHealth()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(-(windowWidth / 3), windowHeight / 2.5, 1);
-		modelStack.Scale(windowWidth / 68, windowHeight / 110, 1);
+		modelStack.Scale(windowWidth / 60, windowHeight / 75, 1);
+		modelStack.Translate(-20, 34, 1);
 		Render2DMesh(model->getHealth(), false);
 	}
 	modelStack.PopMatrix();
@@ -575,134 +545,9 @@ void GameView2D::RenderHBar()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(-(windowWidth / 3.62), windowHeight / 2.53, 2);
-		modelStack.Scale(windowWidth / 135, windowHeight / 375, 1);
+		modelStack.Translate(-273, 301, 2);
+		modelStack.Scale(8.1, 1.6, 1);
 		Render2DMesh(model->getHealthBar(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderShottyIcon()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(windowWidth / 3, -(windowHeight / 3), 1);
-		modelStack.Scale(windowWidth / 150, windowHeight / 160, 1);
-		Render2DMesh(model->getShottyIcon(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderPistolIcon()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(windowWidth / 3, -(windowHeight / 3), 1);
-		modelStack.Scale(windowWidth / 150, windowHeight / 160, 1);
-		Render2DMesh(model->getPistolIcon(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderRifleIcon()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(windowWidth / 3, -(windowHeight / 3), 1);
-		modelStack.Scale(windowWidth / 150, windowHeight / 160, 1);
-		Render2DMesh(model->getRifleIcon(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderShottyAmmo()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(windowWidth / 2.3, -(windowHeight / 2.85), 2);
-		modelStack.Scale(windowWidth / 350, windowHeight / 360, 1);
-		Render2DMesh(model->getShottyShell(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderPistolAmmo()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(windowWidth / 2.3, -(windowHeight / 2.8), 2);
-		modelStack.Scale(windowWidth / 350, windowHeight / 360, 1);
-		Render2DMesh(model->getPistolBullets(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderRifleAmmo()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Translate(windowWidth / 2.3, -(windowHeight / 2.9), 2);
-		modelStack.Scale(windowWidth / 350, windowHeight / 260, 1);
-		Render2DMesh(model->getRifleBullets(), false);
-	}
-	modelStack.PopMatrix();
-}
-void GameView2D::RenderLockPick()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Scale(windowWidth / 4, windowHeight / 3, 1);
-		modelStack.Translate(1, 0, 0);
-		Render2DMesh(model->getLockPickBG(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderLockBar()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Scale(windowWidth / 32, windowHeight / 32, 1);
-		modelStack.Translate(4.8f, 0, 0);
-		Render2DMesh(model->getLockPickBar(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderLockBall()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Scale(windowWidth / 128, windowHeight / 100, 1);
-		modelStack.Translate(19, model->getLockPickY(), 0);
-		Render2DMesh(model->getLockPickBall(), false);
 	}
 	modelStack.PopMatrix();
 }

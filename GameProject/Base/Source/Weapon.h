@@ -14,11 +14,13 @@ public:
 	float GetCooldown(void);
 	int GetDamage(void);
 	float GetFireCooldown(void);
+	float GetBulletSpeed(void);
 
 protected:
 	int Ammo;
 	int Damage;
 	float AttackSpeed;
 	float FireCooldown;
+	float BulletSpeed;
 };
 

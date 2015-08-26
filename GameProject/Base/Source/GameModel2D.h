@@ -28,7 +28,7 @@ public:
 		MOVE_DOWN,
 		MOVE_LEFT,
 		MOVE_RIGHT,
-		UNLOCK,
+		JUMP,
 		ENTER,
 		//Weapon changing
 		PREVWEAP,
@@ -37,7 +37,6 @@ public:
 		SHOOT,
 		//Reload
 		RELOAD,
-		INTERACT,
 		NUM_COMMANDS,
 	};
 
@@ -55,12 +54,6 @@ public:
 		TEXT_PROMPT,
 		HEALTH,
 		HEALTH_BAR,
-		SHOTGUN_ICON,
-		PISTOL_ICON,
-		RIFLE_ICON,
-		SHOTGUN_AMMO,
-		PISTOL_AMMO,
-		RIFLE_AMMO,
 
 		//Player
 		PISTOL_IDLE,
@@ -78,11 +71,6 @@ public:
 		CAUTION,
 		ENEMY_LIGHT_IDLE,
 		ENEMY_CAMERA,
-
-		//Lock-Picking
-		LOCKPICKBG,
-		LOCKPICKBAR,
-		LOCKPICKBALL,
 		TOTAL_GEOMETRY,
 	};
 
@@ -148,27 +136,15 @@ protected:
 	int GroupToSpawn;
 	float FPS;
 
-	//Lock Key
 	int KEYCOUNT;
-	//Computer Laser
-	bool LaserActive;
-	//Lock Picking
-	bool InLockPick;
-	float LockPickY;
-	bool LockPickUp;
-	float LockPickBoxTop;
-	float LockPickBoxBtm;
+
 	//GameObjects
 	std::vector<GameObject *> m_goList;
+	std::vector<GameObject *> m_checkingList;
 
 public:
-	//Lock Picking
-	bool getLockPick();
+
 	bool hasReadLoc;
-	Mesh* getLockPickBG();
-	Mesh* getLockPickBar();
-	Mesh* getLockPickBall();
-	float getLockPickY();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -195,7 +171,7 @@ public:
 
 	void SpawnBullet(int WeaponDamage,float Speed);
 	void SpawnSGBullets(int WeaponDamage, float Speed);
-	void SpawnEnemyBullet(Vector3 EnemyPos);
+	void SpawnEnemyBullet(Vector3 EnemyPos, Vector3 Vel);
 
 	//Gameobjects
 	GameObject* FetchGO();
@@ -225,16 +201,6 @@ public:
 	Mesh* getHealth();
 	Mesh* getHealthBar();
 
-	//Weapon Icons
-	Mesh* getShottyIcon();
-	Mesh* getPistolIcon();
-	Mesh* getRifleIcon();
-
-	//Ammo Types
-	Mesh* getShottyShell();
-	Mesh* getPistolBullets();
-	Mesh* getRifleBullets();
-
 	void setNewPlayerPos(float x, float y, float z);
 	void setNewExitPos(float x, float y, float z);
 	void setNewEnemy(float x, float y, float z, int ID);
@@ -253,6 +219,7 @@ public:
 	bool ZoomIN;
 	float getFPS();
 	int m_CurrentLevel;
+	int m_EnemySpawnCount;
 
 	//sound
 	CSoundManager Sound;

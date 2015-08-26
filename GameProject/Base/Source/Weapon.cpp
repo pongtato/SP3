@@ -47,3 +47,8 @@ float CWeapon::GetFireCooldown(void)
 {
 	return FireCooldown;
 }
+
+float CWeapon::GetBulletSpeed(void)
+{
+	return BulletSpeed;
+}

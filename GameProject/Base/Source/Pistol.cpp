@@ -18,6 +18,7 @@ CPistol::CPistol(void)
 	Damage = 1;
 	FireCooldown = 0.0f;
 	AttackSpeed = 1.0f;
+	BulletSpeed = 2.5f;
 }
 
 

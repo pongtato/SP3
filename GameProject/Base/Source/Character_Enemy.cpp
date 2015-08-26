@@ -41,7 +41,7 @@ int CCharacter_Enemy::getState()
 	return m_enemyState;
 }
 
-bool CCharacter_Enemy::detectPlayer(Vector3 playerPos)
+bool CCharacter_Enemy::detectPlayer(Vector3 playerPos, TileMap* tileMap)
 {
 	m_RotationArcMax = getRotation() + FOVArc;
 	m_RotationArcMin = getRotation() - FOVArc;
@@ -65,56 +65,55 @@ bool CCharacter_Enemy::detectPlayer(Vector3 playerPos)
 		{
 			tempAngle += 360;
 		}
-		
+
 		if ( tempAngle <= m_RotationArcMax && tempAngle >= m_RotationArcMin )
 		{
-			cout << " Detected at " << tempAngle << " Expected: " << m_RotationArcMax << "," << m_RotationArcMin << endl;
-			//if ( m_weaponChoice != CAMERA )
-			{
-				m_enemyState = CHASING;
-				TargetPosition = playerPos;
-			}
+			//cout << " Detected at " << tempAngle << " Expected: " << m_RotationArcMax << "," << m_RotationArcMin << endl;
+			
+			//Get direction from enemy to player
+			LineOfSight = (playerPos - getPosition()).Normalized();
 			return true;
 		}
 		else
 		{
-			cout << " Not Detected" << tempAngle << " Expected: " << m_RotationArcMax << "," << m_RotationArcMin << endl;
+			//cout << " Not Detected" << tempAngle << " Expected: " << m_RotationArcMax << "," << m_RotationArcMin << endl;
 			return false;
 		}
 	}
 	return false;
 }
 
-void CCharacter_Enemy::Strategy_Chaseplayer(Vector3 playerPos)
+void CCharacter_Enemy::Strategy_Chaseplayer(Vector3 playerPos,TileMap* tileMap)
 {
 	Vector3 temp = (TargetPosition - getPosition()).Normalized() * MoveSpeed;
-
-	if (temp.Length() > 1.f)
+	if ( m_weaponChoice != CAMERA && (TargetPosition - getPosition()).Length() > 1.5f )
+	{		
+		setVelocity(temp.x,temp.y,0);
+	}
+	else
 	{
-		if ( m_weaponChoice != CAMERA )
-		{
-			if ( (playerPos - getPosition()).Length() > 1.5f )
-			{
-				setVelocity(temp.x,temp.y,0);
-			}
-		}
-		setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
+		setVelocity(0,0,0);
+	}
 
+	if ((TargetPosition - getPosition()).Length() > 1.5f)
+	{
+		setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
 		if ( getRotation() <= 0 )
 		{
 			setRotation(getRotation() + 360);
 		}	
 	}
-	else if ( m_weaponChoice != CAMERA )
+	else if ( m_weaponChoice != CAMERA && !detectPlayer(playerPos,tileMap))
 	{
-		m_ScanTimer = ScanDuration;
+
+		resetTimer();
 		setRotateDirection(playerPos);
 		setNewState(SCANNING);
 	}
 
 	if ( m_weaponChoice == CAMERA )
 	{
-		if ( !detectPlayer(playerPos) )
+		if ( !detectPlayer(playerPos,tileMap) )
 		{
 			setNewState(SCANNING);
 		}
@@ -127,9 +126,12 @@ void CCharacter_Enemy::Strategy_Return(void)
 	setVelocity(temp.x,temp.y,0);
 	setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
 	
-	if ( temp.Length() < 0.5f )
+	if ( (getInitPosition() - getPosition()).Length() < 0.2f )
 	{
 		setRotation(getRotation() - 180);
+		setVelocity(0,0,0);
+		setNewState(IDLE);
+
 	}
 
 	if ( getRotation() <= 0 )
@@ -179,7 +181,7 @@ void CCharacter_Enemy::Strategy_Scan(double dt)
 	}
 	else if ( m_weaponChoice != CAMERA )
 	{
-		setNewState(RUNNING);
+		setNewState(TRACKING);
 	}
 }
 
@@ -213,25 +215,35 @@ void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
 		m_CurrentNode = 0;
 		PathFound = PATHFIND->FindPath(getPosition(),playerPos,tileMap);
 		TargetPosition = playerPos;
+		PATHFIND->hasFound = false;
 	}
 
 	if ( !PATHFIND->hasFound )
 	{
 		if ( PathFound.size() > 0 )
 		{
-			//setPosition(ceil(PathFound[m_CurrentNode]->m_WorldPosition.x),ceil(PathFound[m_CurrentNode]->m_WorldPosition.y),getPosition().z);
 			Vector3 temp = (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Normalized() * MoveSpeed;
 			setVelocity(temp.x,temp.y,0);
 
 			if ( (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Length() < 0.1f )
 			{
-				//setPosition(ceil(PathFound[m_CurrentNode]->m_WorldPosition.x),ceil(PathFound[m_CurrentNode]->m_WorldPosition.y),getPosition().z);
-				if ( m_CurrentNode < PathFound.size() - 2 )
+				if ( m_CurrentNode < PathFound.size() - 1 )
 				{
 					m_CurrentNode++;
 				}
+				else
+				{
+					PATHFIND->hasFound = true;
+				}
 			}
 		}
+	}
+	else
+	{
+		setVelocity(0,0,0);
+		resetTimer();
+		setRotateDirection(playerPos);
+		setNewState(IDLE);
 	}
 }
 
@@ -245,4 +257,19 @@ void CCharacter_Enemy::UpdateEnemyPosition(double dt)
 void CCharacter_Enemy::CreateGrid(void)
 {
 	PATHFIND->Init(pathfind_tilemap);
+}
+
+Vector3 CCharacter_Enemy::getTargetPosition(void)
+{
+	return TargetPosition;
+}
+
+void CCharacter_Enemy::setTargetPosition(Vector3 newTarget)
+{
+	TargetPosition = newTarget;
+}
+
+void CCharacter_Enemy::resetTimer(void)
+{
+	m_ScanTimer = ScanDuration;
 }
