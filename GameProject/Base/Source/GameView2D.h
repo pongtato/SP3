@@ -27,7 +27,9 @@ public:
 	void RenderCrosshair();
 	void RenderGO(GameObject *go, TileMap* tileMap);
 	void RenderScene();
-
+	void RenderHelpText();
+	void RenderHealth();
+	void RenderHBar();
 };
 
 #endif

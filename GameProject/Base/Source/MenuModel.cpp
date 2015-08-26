@@ -109,6 +109,7 @@ void MenuModel::Update(double dt)
 				exitBtn->textureID[0] = LoadTGA("Image//Menu//Exit.tga");
 			}
 			break;
+
 		case 1:
 			{
 				startBtn->textureID[0] = LoadTGA("Image//Menu//Start.tga");

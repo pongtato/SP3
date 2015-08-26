@@ -51,6 +51,9 @@ public:
 		BULLET,
 		EBULLET,
 		CUBE,
+		TEXT_PROMPT,
+		HEALTH,
+		HEALTH_BAR,
 
 		//Player
 		PISTOL_IDLE,
@@ -190,6 +193,13 @@ public:
 	std::vector<GameObject *> getInteractionList();
 	Mesh* getMobsMesh();
 
+	//Text Prompts
+	Mesh* getTextPrompt();
+
+	//Health Bar
+	Mesh* getHealth();
+	Mesh* getHealthBar();
+
 	void setNewPlayerPos(float x, float y, float z);
 	void setNewExitPos(float x, float y, float z);
 	void setNewEnemy(float x, float y, float z, int ID);
@@ -207,6 +217,7 @@ public:
 	int AniToUpdate;
 	bool ZoomIN;
 	float getFPS();
+	int m_CurrentLevel;
 
 	//sound
 	CSoundManager Sound;

@@ -71,6 +71,16 @@ void GameModel2D::Init()
 
 	meshList[CAUTION] = MeshBuilder::GenerateSpriteAnimation("CAUTION", 1, 1);
 	meshList[CAUTION]->textureID[0] = LoadTGA("Image\\Enemy\\CAUTION.tga");
+	//Text Prompts
+	meshList[TEXT_PROMPT] = MeshBuilder::GenerateQuad("TEXT_PROMPT", 1, 20);
+	meshList[TEXT_PROMPT]->textureID[0] = LoadTGA("Image\\DialogueBoxTemp.tga");
+
+	//UI - Health
+	meshList[HEALTH] = MeshBuilder::GenerateQuad("HEALTH", 1, 20);
+	meshList[HEALTH]->textureID[0] = LoadTGA("Image\\HealthBar.tga");
+
+	//UI - Health Bar
+	meshList[HEALTH_BAR] = MeshBuilder::GenerateQuad("HEALTH", 0, 20);
 
 	//Animation Init
 	SpriteAnimation *eENEMY_LIGHT_IDLE = dynamic_cast<SpriteAnimation*>(meshList[ENEMY_LIGHT_IDLE]);
@@ -807,6 +817,20 @@ Mesh* GameModel2D::getWallMesh()
 	return meshList[CUBE];
 }
 
+Mesh* GameModel2D::getTextPrompt()
+{
+	return meshList[TEXT_PROMPT];
+}
+
+Mesh* GameModel2D::getHealth()
+{
+	return meshList[HEALTH];
+}
+
+Mesh* GameModel2D::getHealthBar()
+{
+	return meshList[HEALTH_BAR];
+}
 void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 {
 	for ( unsigned i = 0; i < EnemyList.size(); ++i)
