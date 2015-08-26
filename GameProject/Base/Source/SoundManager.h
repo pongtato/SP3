@@ -32,6 +32,7 @@ public:
 	void walkfloor();
 	void walkMetal();
 	void guardDie();
+	void guardAlert();
 
 	//Guns
 	void reloadSound();
@@ -45,7 +46,6 @@ public:
 	void alarmSound();
 	void openDoorSound();
 	void closeDoorSound();
-
 
 	//Others
 	void lasers();
