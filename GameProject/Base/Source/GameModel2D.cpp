@@ -353,7 +353,12 @@ void GameModel2D::Update(double dt)
 		}
 		if (go->active && (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_EBULLET))
 		{
-			if (getTileMap()->getTile(go->pos.x, floor(go->pos.y)) >= 0 && getTileMap()->getTile(go->pos.x, floor(go->pos.y)) <= 15 || getTileMap()->getTile(go->pos.x, ceil(go->pos.y)) >= 0 && getTileMap()->getTile(go->pos.x, ceil(go->pos.y)) <= 15)
+
+			float tempX = go->pos.x + 0.5f;
+			float tempY = go->pos.y + 0.5f;
+
+
+			if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
 			{
 				go->active = false;
 			}
@@ -418,7 +423,7 @@ void GameModel2D::Update(double dt)
 			//Testing
 			if ( go->getAmmoType() != go->CAMERA )
 			{
-				go->setNewState(go->TRACKING);
+				//go->setNewState(go->TRACKING);
 			}
 
 			go->UpdateEnemyPosition(dt);
