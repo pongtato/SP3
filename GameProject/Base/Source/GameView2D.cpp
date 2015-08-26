@@ -76,7 +76,14 @@ void GameView2D::RenderScene()
 		GameObject *go = (GameObject *)*it;
 		if (go->active)
 		{
-			RenderGO(go,tileMap);
+			if ( go->type != go->GO_EXIT )
+			{
+				RenderGO(go,tileMap);
+			}
+			else if ( model->getObjectiveCleared() )
+			{
+				RenderGO(go,tileMap);
+			}
 		}
 	}
 }
@@ -351,7 +358,7 @@ void GameView2D::RenderMobs()
 			modelStack.Translate(go->PathFound[i]->m_WorldPosition.x,go->PathFound[i]->m_WorldPosition.y,0.01f);
 			if (go->getActive())
 			{
-				RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );		
+				//RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );		
 			}
 			modelStack.PopMatrix();
 		}
@@ -407,13 +414,13 @@ void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 		}
 		break;
 	case GameObject::GO_EBULLET:
-	{
-								   modelStack.PushMatrix();
-								   modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-								   modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-								   RenderMesh(model->getEBulletMesh(), false);
-								   modelStack.PopMatrix();
-	}
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getEBulletMesh(), false);
+			modelStack.PopMatrix();
+		}
 		break;
 	case GameObject::GO_AMMO:
 		{
@@ -488,6 +495,15 @@ void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 		}
 		break;
 	case GameObject::GO_LASER_VERTI:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_EXIT:
 		{
 			modelStack.PushMatrix();
 			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);

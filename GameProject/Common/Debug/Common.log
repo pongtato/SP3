@@ -1,10 +1,18 @@
-﻿Build started 20/8/2015 1:14:40 AM.
-     1>Project "C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Common\Common.vcxproj" on node 2 (clean target(s)).
+﻿Build started 25/8/2015 11:29:14 PM.
+     1>Project "C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Common\Common.vcxproj" on node 2 (build target(s)).
        Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
-     1>_PrepareForClean:
-         Deleting file "Debug\Common.lastbuildstate".
-     1>Done Building Project "C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Common\Common.vcxproj" (clean target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\Common.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       Lib:
+         All outputs are up-to-date.
+         Common.vcxproj -> C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Debug\Common.lib
+       FinalizeBuildStatus:
+         Deleting file "Debug\Common.unsuccessfulbuild".
+         Touching "Debug\Common.lastbuildstate".
+     1>Done Building Project "C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Common\Common.vcxproj" (build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.00
+Time Elapsed 00:00:00.13

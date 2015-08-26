@@ -39,6 +39,7 @@ public:
 	void RenderLockPick();
 	void RenderLockBar();
 	void RenderLockBall();
+	void RenderExit();
 };
 
 #endif

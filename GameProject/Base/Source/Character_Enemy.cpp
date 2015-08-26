@@ -8,6 +8,7 @@ CCharacter_Enemy::CCharacter_Enemy(void)
 	pathfind_tilemap = new TileMap;
 	m_CurrentNode = 0;
 	MoveDelay = MovementDelay;
+	InLineOfSight = false;
 }
 
 
@@ -107,7 +108,7 @@ void CCharacter_Enemy::Strategy_Chaseplayer(Vector3 playerPos,TileMap* tileMap)
 	{
 
 		resetTimer();
-		setRotateDirection(playerPos);
+			setRotateDirection(playerPos);
 		setNewState(SCANNING);
 	}
 

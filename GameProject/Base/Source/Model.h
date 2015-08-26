@@ -7,6 +7,8 @@
 
 #include <vector>
 
+using namespace std;
+
 class Model
 {
 protected:
@@ -31,6 +33,8 @@ public:
 
 	void setPos(Vector3 CursorPos);
 	Vector3 getPos();
+
+	void ChangeLevel(int NewLevel);
 };
 
 #endif

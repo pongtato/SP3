@@ -23,6 +23,8 @@ public:
 	virtual void RunLoop();
 
 	double xpos, ypos;
+
+	bool gameExit();
 };
 
 #endif

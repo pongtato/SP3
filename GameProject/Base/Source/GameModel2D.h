@@ -30,6 +30,7 @@ public:
 		MOVE_RIGHT,
 		UNLOCK,
 		ENTER,
+		ESCAPE,
 		//Weapon changing
 		PREVWEAP,
 		NEXTWEAP,
@@ -109,24 +110,18 @@ protected:
 	TileMap* m_ReartileMap;
 	TileMap* m_AItilemap;
 
-
 	//Player spawn point read from text file
 	Vector3 newPlayerPos;
 	//Exit point read from text file
 	Vector3 newExitPos;
 
-
-	//float m_mapOffset_x;
-	//float m_mapOffset_y;
-
 	//Player
-	//CCharacter_Player *player;
 	std::vector<CCharacter_Enemy*> EnemyList;
 	std::vector<GameObject*> CollectiblesList;
 	std::vector<GameObject*> InteractionList;
-
-	//Weapon
-	//PlayerWeapon* m_weapon;
+	//GameObjects
+	std::vector<GameObject *> m_goList;
+	std::vector<GameObject *> m_checkingList;
 
 
 	int score;
@@ -134,6 +129,7 @@ protected:
 	int CDTimerLimit;
 	bool SpawnReady;
 	bool newLevel;
+	bool m_ObjectiveCleared;
 	int GroupToSpawn;
 	float FPS;
 
@@ -148,54 +144,38 @@ protected:
 	float LockPickBoxTop;
 	float LockPickBoxBtm;
 
-	//GameObjects
-	std::vector<GameObject *> m_goList;
-	std::vector<GameObject *> m_checkingList;
+	Model levelSet;
 
 public:
 
 	bool hasReadLoc;
-
-	virtual void Init();
-	virtual void Update(double dt);
-
-	void setCommands(int command);
+	int AniToUpdate;
+	bool ZoomIN;
+	int m_CurrentLevel;
+	int m_EnemySpawnCount;
 
 	Mesh* getTextMesh();
 	Mesh* getBackgroundMesh();
 	//Crosshair
 	Mesh* getCrosshairMesh();
-
-	void getOffset(float& mapOffset_x, float& mapOffset_y);
 	TileMap* getTileMap();
 	TileMap* getRearTileMap();
 	TileMap* getAITileMap();
 	Mesh* getTileMesh();
 	Mesh* getFloorTileMesh();
 	Mesh* getWallMesh();
-
 	//Bullet
 	Mesh* getBulletMesh();
 	Mesh* getEBulletMesh();
-	void BulletUpdate(double dt);
-
-	void SpawnBullet(int WeaponDamage,float Speed);
-	void SpawnSGBullets(int WeaponDamage, float Speed);
-	void SpawnEnemyBullet(Vector3 EnemyPos, Vector3 Vel);
-
 	//Gameobjects
 	GameObject* FetchGO();
 	std::vector<GameObject *> getGameObjectList();
-
 	//Player
 	Mesh* getPlayerMesh(GEOMETRY_TYPE meshToTake);
-
 	//Enemy
 	Mesh* getEnemyMesh(GEOMETRY_TYPE meshToTake);
-
 	//Weapon
 	Mesh* getWeaponMesh();
-
 	//Guards, camera
 	std::vector<CCharacter_Enemy *> getEnemyList();
 	//Ammo, key, save
@@ -203,10 +183,8 @@ public:
 	//PC, locks
 	std::vector<GameObject *> getInteractionList();
 	Mesh* getMobsMesh();
-
 	//Text Prompts
 	Mesh* getTextPrompt();
-
 	//Health Bar
 	Mesh* getHealth();
 	Mesh* getHealthBar();
@@ -217,22 +195,27 @@ public:
 	void setNewCollectible(Vector3 Pos,Vector3 Scale,GameObject::GAMEOBJECT_TYPE type, int spriteCol, int spriteRow);
 	void setNewInteraction(Vector3 Pos,Vector3 Scale,GameObject::GAMEOBJECT_TYPE type, int spriteCol, int spriteRow);
 	void getMapData();
-
+	void BulletUpdate(double dt);
+	void VeryRealRaycasting(double dt);
+	void SpawnBullet(int WeaponDamage,float Speed);
+	void SpawnSGBullets(int WeaponDamage, float Speed);
+	void SpawnEnemyBullet(Vector3 EnemyPos, Vector3 Vel);
 	//void checkCollision(float x, float y, float z, float scale, float VelX, float VelY, float VelZ, GameObject* go2);
 	bool checkCollision(Vector3 Pos, Vector3 scale, Vector3 Vel, GameObject* go2, double dt);
-
 	Vector3 getNewPlayerPos();
 	Vector3 getNewExitPos();
 	int getScore();
 	int getCDTimer();
-	int AniToUpdate;
-	bool ZoomIN;
 	float getFPS();
-	int m_CurrentLevel;
-	int m_EnemySpawnCount;
-
 	//sound
 	CSoundManager Sound;
+	virtual void Init();
+	virtual void Update(double dt);
+	void setCommands(int command);
+	void getOffset(float& mapOffset_x, float& mapOffset_y);
+	void cameraZoom(double dt);
+	void objective(void);
+	bool getObjectiveCleared(void);
 };
 
 #endif

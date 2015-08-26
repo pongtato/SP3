@@ -95,6 +95,8 @@ public:
 	Vector3 getTargetPosition(void);
 	void resetTimer(void);
 
+	bool InLineOfSight;
+
 private:
 	ENEMY_TYPE m_enemyMesh;
 	ENEMY_AMMO_TYPE m_weaponChoice;

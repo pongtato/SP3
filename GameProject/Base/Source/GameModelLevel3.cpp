@@ -21,6 +21,10 @@ void GameModelLevel3::Init()
 	m_ReartileMap->Init(32, 32, 32, 32, 32);
 	m_ReartileMap->LoadMap("Image//Maps//L3_L1.csv");
 
+	m_AItilemap = new TileMap();
+	m_AItilemap->Init(32, 32, 32, 32, 32);
+	m_AItilemap->LoadMap("Image//Maps//L3_AI.csv");
+
 	CCharacter_Player::GetInstance()->Init(newPlayerPos.x - 0.5f,
 			newPlayerPos.y - 0.25f,
 			newPlayerPos.z,1,1,100,1,5);

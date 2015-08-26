@@ -1,10 +1,199 @@
-﻿Build started 20/8/2015 1:14:40 AM.
-     1>Project "C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Base\Base.vcxproj" on node 2 (clean target(s)).
+﻿Build started 25/8/2015 11:28:57 PM.
+     1>Project "C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Base\Base.vcxproj" on node 2 (build target(s)).
        Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
-     1>_PrepareForClean:
-         Deleting file "Debug\Base.lastbuildstate".
-     1>Done Building Project "C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Base\Base.vcxproj" (clean target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\Base.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\/irrKlang/include" /I"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\/Common/Source" /I"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\/glew/include" /I"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\/glfw/include" /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Source\Character.cpp Source\Character_Enemy.cpp Source\Character_Player.cpp Source\Controller.cpp Source\GameController2D.cpp Source\GameModel2D.cpp Source\GameModelLevel1.cpp Source\GameModelLevel2.cpp Source\GameModelLevel3.cpp Source\GameModelLevel4.cpp Source\GameObject.cpp Source\GameView2D.cpp Source\main.cpp Source\MenuController.cpp Source\MenuModel.cpp Source\MenuView.cpp Source\Model.cpp Source\Pathfinding.cpp Source\Pathfinding_Grid.cpp Source\Pathfinding_Node.cpp Source\Pistol.cpp Source\Rifle.cpp Source\Shotgun.cpp Source\View.cpp Source\Weapon.cpp
+         Weapon.cpp
+         View.cpp
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\view.cpp(228): warning C4258: 'count' : definition from the for loop is ignored; the definition from the enclosing scope is used
+                 c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\view.cpp(213) : definition of 'count' ignored
+                 c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\view.cpp(189) : definition of 'count' used
+         Shotgun.cpp
+         Rifle.cpp
+         Pistol.cpp
+         Pathfinding_Node.cpp
+         Pathfinding_Grid.cpp
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\pathfinding_grid.cpp(33): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\pathfinding_grid.cpp(33): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\pathfinding_grid.cpp(45): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\pathfinding_grid.cpp(45): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\pathfinding_grid.cpp(85): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\pathfinding_grid.cpp(85): warning C4018: '<' : signed/unsigned mismatch
+         Pathfinding.cpp
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\pathfinding.cpp(34): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\pathfinding.cpp(54): warning C4018: '<' : signed/unsigned mismatch
+         MenuModel.cpp
+         GameView2D.cpp
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(104): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(106): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(109): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(109): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(111): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(111): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(133): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(135): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(138): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(138): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(216): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(216): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(226): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(226): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(237): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(237): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(339): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(378): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gameview2d.cpp(378): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+         GameModelLevel4.cpp
+         GameModelLevel3.cpp
+         GameModelLevel2.cpp
+         GameModelLevel1.cpp
+         GameModel2D.cpp
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(17): warning C4482: nonstandard extension used: enum 'GameModel2D::GEOMETRY_TYPE' used in qualified name
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(174): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(199): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(229): warning C4244: '-=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(234): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(235): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(236): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(237): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(346): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(346): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(346): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(346): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(346): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(346): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(346): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(346): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(353): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(456): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(457): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(569): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(585): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(585): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(585): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(606): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(606): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(606): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(628): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(628): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(628): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(886): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(909): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(911): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(914): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(914): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(924): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(924): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(929): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(929): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(936): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(936): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(942): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(942): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+         GameController2D.cpp
+     1>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\windef.h(126): warning C4005: 'APIENTRY' : macro redefinition
+                 c:\users\aloysius chun\desktop\sp3.git\gameproject\glfw\include\glfw\glfw3.h(92) : see previous definition of 'APIENTRY'
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamecontroller2d.cpp(14): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamecontroller2d.cpp(16): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamecontroller2d.cpp(18): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamecontroller2d.cpp(20): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamecontroller2d.cpp(22): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamecontroller2d.cpp(24): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamecontroller2d.cpp(27): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamecontroller2d.cpp(29): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamecontroller2d.cpp(31): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamecontroller2d.cpp(33): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
+         Character_Enemy.cpp
+         Character.cpp
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(53): warning C4244: '*=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(59): warning C4244: '*=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(63): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(79): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(84): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(84): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(84): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(84): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(84): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(84): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(84): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(84): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(91): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(96): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(96): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(96): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(96): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(96): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(96): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(96): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(96): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\character.cpp(102): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+         Generating Code...
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(729): warning C4715: 'GameModel2D::getPlayerMesh' : not all control paths return a value
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(748): warning C4715: 'GameModel2D::getEnemyMesh' : not all control paths return a value
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\gamemodel2d.cpp(905): warning C4715: 'GameModel2D::checkCollision' : not all control paths return a value
+     1>c:\users\aloysius chun\desktop\sp3.git\gameproject\base\source\pathfinding.cpp(76): warning C4715: 'CPathfinding::FindPath' : not all control paths return a value
+         Compiling...
+         main.cpp
+     1>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\windef.h(126): warning C4005: 'APIENTRY' : macro redefinition
+                 c:\users\aloysius chun\desktop\sp3.git\gameproject\glfw\include\glfw\glfw3.h(92) : see previous definition of 'APIENTRY'
+         GameObject.cpp
+         Character_Player.cpp
+         Generating Code...
+         Skipping... (no relevant changes detected)
+         Model.cpp
+         MenuView.cpp
+         MenuController.cpp
+         Controller.cpp
+       Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Debug\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Debug" /LIBPATH:"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\/glfw/lib-msvc100" /LIBPATH:"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\/glew/lib" /LIBPATH:\irrKlang\lib /LIBPATH:"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\/irrKlang/lib" Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib irrKlang.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Base.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Debug\Base.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Debug\Base.lib" /MACHINE:X86 Debug\Camera.obj
+         Debug\Camera3.obj
+         Debug\Character.obj
+         Debug\Character_Enemy.obj
+         Debug\Character_Player.obj
+         Debug\Controller.obj
+         Debug\GameController2D.obj
+         Debug\GameModel2D.obj
+         Debug\GameModelLevel1.obj
+         Debug\GameModelLevel2.obj
+         Debug\GameModelLevel3.obj
+         Debug\GameModelLevel4.obj
+         Debug\GameObject.obj
+         Debug\GameView2D.obj
+         Debug\LoadHmap.obj
+         Debug\LoadOBJ.obj
+         Debug\LoadTGA.obj
+         Debug\main.obj
+         Debug\MenuController.obj
+         Debug\MenuModel.obj
+         Debug\MenuView.obj
+         Debug\Mesh.obj
+         Debug\MeshBuilder.obj
+         Debug\Model.obj
+         Debug\Pathfinding.obj
+         Debug\Pathfinding_Grid.obj
+         Debug\Pathfinding_Node.obj
+         Debug\Pistol.obj
+         Debug\Rifle.obj
+         Debug\shader.obj
+         Debug\Shotgun.obj
+         Debug\SoundManager.obj
+         Debug\SpriteAnimation.obj
+         Debug\TileMap.obj
+         Debug\Utility.obj
+         Debug\View.obj
+         Debug\Weapon.obj
+     1>Camera.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
+     1>LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+         Base.vcxproj -> C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Debug\Base.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Debug\Base.exe;#1" /manifest Debug\Base.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Debug\Base.unsuccessfulbuild".
+         Touching "Debug\Base.lastbuildstate".
+     1>Done Building Project "C:\Users\Aloysius Chun\Desktop\SP3.git\GameProject\Base\Base.vcxproj" (build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.01
+Time Elapsed 00:00:08.41
