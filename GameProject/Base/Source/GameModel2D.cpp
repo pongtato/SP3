@@ -188,6 +188,12 @@ void GameModel2D::Init()
 	WeaponChangeCooldown = 0.5f;
 
 	KEYCOUNT = 0;
+	LaserActive = true;
+	InLockPick = false;
+	LockPickY = 0;
+	LockPickUp = true;
+	LockPickBoxTop = 1;
+	LockPickBoxBtm = -1;
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -319,6 +325,202 @@ void GameModel2D::Update(double dt)
 				CRifle::GetInstance()->SetAmmo(50);
 			}
 			break;
+		}
+	}
+
+	for (int i = 0; i < CollectiblesList.size(); i++)
+	{
+		if (CollectiblesList[i]->type == GameObject::GO_KEY_ID && CollectiblesList[i]->active)
+		{
+			if((CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
+			{
+				CollectiblesList[i]->active = false;
+				KEYCOUNT++;
+				break;
+			}
+		}
+	}
+
+
+	//Lock Key Collision Collection
+	for (int i = 0; i < InteractionList.size(); i++)
+	{
+		if (InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID && InteractionList[i]->active)
+		{
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+			if (getTileMap()->getTile(position.x, floor(position.y)) == 43 && getTileMap()->getTile(position.x, floor(position.y)) == 43 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f || 
+				getTileMap()->getTile(position.x, ceil(position.y)) == 43 && getTileMap()->getTile(position.x, ceil(position.y)) == 43 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+				velocity.x = 0;
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+			position.y += velocity.y * dt;
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+			if (getTileMap()->getTile(floor(position.x), position.y) == 43 && getTileMap()->getTile(floor(position.x), position.y) == 43 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f || 
+				getTileMap()->getTile(ceil(position.x), position.y) == 43 && getTileMap()->getTile(ceil(position.x), position.y) == 43 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				velocity.y = 0;
+			}
+			position += velocity * dt;
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f && KEYCOUNT > 0)
+			{
+				InteractionList[i]->active = false;
+				KEYCOUNT--;
+				break;
+			}
+		}
+	}
+
+	//Computer Laser Collision Activation
+	for (int i = 0; i < InteractionList.size(); i++)
+	{
+		if (InteractionList[i]->type == GameObject::GO_PC && InteractionList[i]->active)
+		{
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+			if (getTileMap()->getTile(position.x, floor(position.y)) == 39 && getTileMap()->getTile(position.x, floor(position.y)) == 39 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) == 39 && getTileMap()->getTile(position.x, ceil(position.y)) == 39 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+				velocity.x = 0;
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+			position.y += velocity.y * dt;
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+			if (getTileMap()->getTile(floor(position.x), position.y) == 39 && getTileMap()->getTile(floor(position.x), position.y) == 39 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) == 39 && getTileMap()->getTile(ceil(position.x), position.y) == 39 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				velocity.y = 0;
+			}
+			position += velocity * dt;
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f && LaserActive)
+			{
+				LaserActive = false;
+				break;
+			}
+		}
+	}
+	//Laser Deactivation
+	for (int i = 0; i < CollectiblesList.size(); i++)
+	{
+		if ((CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI) && CollectiblesList[i]->active)
+		{
+			if (!LaserActive)
+			{
+				CollectiblesList[i]->active = false;
+			}
+		}
+	}
+
+	//LockPicking
+	for (int i = 0; i < InteractionList.size(); i++)
+	{
+		if ((InteractionList[i]->type == GameObject::GO_LOCKPICK_1 || InteractionList[i]->type == GameObject::GO_LOCKPICK_2) && InteractionList[i]->active)
+		{
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+			if (getTileMap()->getTile(position.x, floor(position.y)) >= 41 && getTileMap()->getTile(position.x, floor(position.y)) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) >= 41 && getTileMap()->getTile(position.x, ceil(position.y)) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+				velocity.x = 0;
+				if (commands[INTERACT])
+				{
+					InLockPick = true;
+				}
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+			position.y += velocity.y * dt;
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+			if (getTileMap()->getTile(floor(position.x), position.y) >= 41 && getTileMap()->getTile(floor(position.x), position.y) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) >= 41 && getTileMap()->getTile(ceil(position.x), position.y) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				velocity.y = 0;
+				if (commands[INTERACT])
+				{
+					InLockPick = true;
+				}
+			}
+			position += velocity * dt;
+		}
+	}
+	
+	if (LockPickUp)
+	{
+		LockPickY += static_cast<float>(dt * 10);
+		if (LockPickY > 12)
+		{
+			LockPickUp = false;
+		}
+	}
+	else if (!LockPickUp)
+	{
+		LockPickY -= static_cast<float>(dt * 10);
+		if (LockPickY < -12)
+		{
+			LockPickUp = true;
+		}
+	}
+	if (commands[UNLOCK])
+	{
+		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
+		{
+			InLockPick = false;
+			for (int i = 0; i < InteractionList.size(); i++)
+			{
+				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1)
+				{
+					InteractionList[i]->active = false;
+				}
+			}
+		}
+		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
+		{
+			InLockPick = false;
 		}
 	}
 

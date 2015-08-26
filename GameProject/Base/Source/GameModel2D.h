@@ -28,7 +28,7 @@ public:
 		MOVE_DOWN,
 		MOVE_LEFT,
 		MOVE_RIGHT,
-		JUMP,
+		UNLOCK,
 		ENTER,
 		//Weapon changing
 		PREVWEAP,
@@ -37,6 +37,7 @@ public:
 		SHOOT,
 		//Reload
 		RELOAD,
+		INTERACT,
 		NUM_COMMANDS,
 	};
 
@@ -136,7 +137,16 @@ protected:
 	int GroupToSpawn;
 	float FPS;
 
+	//Lock Key
 	int KEYCOUNT;
+	//Computer Laser
+	bool LaserActive;
+	//Lock Picking
+	bool InLockPick;
+	float LockPickY;
+	bool LockPickUp;
+	float LockPickBoxTop;
+	float LockPickBoxBtm;
 
 	//GameObjects
 	std::vector<GameObject *> m_goList;
