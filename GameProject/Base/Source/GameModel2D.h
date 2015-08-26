@@ -28,7 +28,7 @@ public:
 		MOVE_DOWN,
 		MOVE_LEFT,
 		MOVE_RIGHT,
-		JUMP,
+		UNLOCK,
 		ENTER,
 		//Weapon changing
 		PREVWEAP,
@@ -37,6 +37,7 @@ public:
 		SHOOT,
 		//Reload
 		RELOAD,
+		INTERACT,
 		NUM_COMMANDS,
 	};
 
@@ -155,6 +156,8 @@ protected:
 	bool InLockPick;
 	float LockPickY;
 	bool LockPickUp;
+	float LockPickBoxTop;
+	float LockPickBoxBtm;
 	//GameObjects
 	std::vector<GameObject *> m_goList;
 

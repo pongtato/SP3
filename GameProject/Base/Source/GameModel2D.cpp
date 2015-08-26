@@ -224,6 +224,8 @@ void GameModel2D::Init()
 	InLockPick = false;
 	LockPickY = 0;
 	LockPickUp = true;
+	LockPickBoxTop = 1;
+	LockPickBoxBtm = -1;
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -567,7 +569,10 @@ void GameModel2D::Update(double dt)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
 				velocity.x = 0;
-				InLockPick = true;
+				if (commands[INTERACT])
+				{
+					InLockPick = true;
+				}
 			}
 			position = CCharacter_Player::GetInstance()->getPosition();
 			position.y += velocity.y * dt;
@@ -582,7 +587,10 @@ void GameModel2D::Update(double dt)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
 				velocity.y = 0;
-				InLockPick = true;
+				if (commands[INTERACT])
+				{
+					InLockPick = true;
+				}
 			}
 			position += velocity * dt;
 		}
@@ -604,7 +612,25 @@ void GameModel2D::Update(double dt)
 			LockPickUp = true;
 		}
 	}
-
+	if (commands[UNLOCK])
+	{
+		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
+		{
+			InLockPick = false;
+			for (int i = 0; i < InteractionList.size(); i++)
+			{
+				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1)
+				{
+					InteractionList[i]->active = false;
+				}
+			}
+		}
+		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
+		{
+			InLockPick = false;
+		}
+	}
+	
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
 		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;

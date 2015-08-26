@@ -62,12 +62,16 @@ void GameView2D::Render()
 			RenderHelpText();
 			break;
 		}
-		//if (model->getLockPick())
-		//{
+		if (model->getLockPick())
+		{
 			RenderLockBall();
 			RenderLockBar();
 			RenderLockPick();
-		//}
+		}
+		if (!model->getLockPick())
+		{
+			
+		}
 	} 
 	modelStack.PopMatrix();
 }

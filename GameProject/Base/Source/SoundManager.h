@@ -32,19 +32,20 @@ public:
 	void walkfloor();
 	void walkMetal();
 	void guardDie();
+	void guardAlert();
 
 	//Guns
 	void reloadSound();
 	void pistolShot();
 	void rifleShot();
 	void shotgunShot();
+	void emptyClip();
 
 	//Player interactions
 	void interactionSound();
 	void alarmSound();
 	void openDoorSound();
 	void closeDoorSound();
-
 
 	//Others
 	void lasers();
