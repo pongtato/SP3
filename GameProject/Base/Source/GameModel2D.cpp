@@ -254,10 +254,17 @@ void GameModel2D::Update(double dt)
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() > 0 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				//pistol fire sound
+				Sound.pistolShot();
 				//Spawn Bullet
 				SpawnBullet(CPistol::GetInstance()->GetDamage(), 0.5f);
 				//Ammo decrease
 				CPistol::GetInstance()->UseAmmo(1);
+				CPistol::GetInstance()->ResetCooldown();
+			}
+			else if(CPistol::GetInstance()->GetAmmo() < 1 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				Sound.emptyClip();
 				CPistol::GetInstance()->ResetCooldown();
 			}
 			break;
@@ -268,6 +275,11 @@ void GameModel2D::Update(double dt)
 				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
 				//Ammo decrease
 				CRifle::GetInstance()->UseAmmo(1);
+				CRifle::GetInstance()->ResetCooldown();
+			}
+			else if(CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				Sound.emptyClip();
 				CRifle::GetInstance()->ResetCooldown();
 			}
 			break;
@@ -285,6 +297,11 @@ void GameModel2D::Update(double dt)
 				CShotgun::GetInstance()->ResetCooldown();
 
 			}
+			else if(CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				Sound.emptyClip();
+				CShotgun::GetInstance()->ResetCooldown();
+			}
 			break;
 		}
 	}
@@ -295,24 +312,31 @@ void GameModel2D::Update(double dt)
 	//Reload
 	if (commands[RELOAD])
 	{
+		
 
 		switch (CCharacter_Player::GetInstance()->getAmmoType())
 		{
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() == 0)
 			{
+				//reload sound
+				Sound.reloadSound();
 				CPistol::GetInstance()->SetAmmo(10);
 			}
 			break;
 		case 1:
 			if (CShotgun::GetInstance()->GetAmmo() == 0)
 			{
+				//reload sound
+				Sound.reloadSound();
 				CShotgun::GetInstance()->SetAmmo(70);
 			}
 			break;
 		case 2:
 			if (CRifle::GetInstance()->GetAmmo() == 0)
 			{
+				//reload sound
+				Sound.reloadSound();
 				CRifle::GetInstance()->SetAmmo(50);
 			}
 			break;

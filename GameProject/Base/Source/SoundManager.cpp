@@ -17,7 +17,7 @@ CSoundManager::~CSoundManager(void)
 void CSoundManager::mainMenuBGM()
 {
 	//play main song
-	ISound* music = engine->play2D("../irrKlang/media/SmokeWeedEveryday.mp3",
+	ISound* music = engine->play2D("../irrKlang/media/mainMenuBGM.mp3",
 		true, false, true);
 
 	engine->setSoundVolume(0.25f);
@@ -46,7 +46,7 @@ void CSoundManager::level1BGM()
 	ISound* music = engine->play2D("../irrKlang/media/Level1BGM.mp3",
 		true, false, true);
 
-	engine->setSoundVolume(0.25f);
+	//engine->setSoundVolume(0.25f);
 }
 void CSoundManager::level2BGM()
 {
@@ -54,7 +54,7 @@ void CSoundManager::level2BGM()
 	ISound* music = engine->play2D("../irrKlang/media/Level2BGM.mp3",
 		true, false, true);
 
-	engine->setSoundVolume(0.25f);
+	//engine->setSoundVolume(0.25f);
 
 }
 void CSoundManager::level3BGM()
@@ -63,7 +63,7 @@ void CSoundManager::level3BGM()
 	ISound* music = engine->play2D("../irrKlang/media/Level3BGM.mp3",
 		true, false, true);
 
-	engine->setSoundVolume(0.25f);
+	//engine->setSoundVolume(0.25f);
 }
 void CSoundManager::level4BGM()
 {
@@ -71,7 +71,7 @@ void CSoundManager::level4BGM()
 	ISound* music = engine->play2D("../irrKlang/media/Level4BGM.mp3",
 		true, false, true);
 
-	engine->setSoundVolume(0.25f);
+	//engine->setSoundVolume(0.25f);
 }
 
 //Player & Enemies
@@ -133,6 +133,15 @@ void CSoundManager::shotgunShot()
 
 	engine->setSoundVolume(0.4f);
 }
+void CSoundManager::emptyClip()
+{
+	//firing an empty clip
+	ISound* music = engine->play2D("../irrKlang/media/dryFire.wav",
+		false, false, true);
+
+	engine->setSoundVolume(0.4f);
+}
+
 
 //Player interactions
 void CSoundManager::interactionSound()

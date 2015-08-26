@@ -2,10 +2,12 @@
 
 GameModelLevel2::GameModelLevel2()
 {
+	Sound.level2BGM();
 }
 
 GameModelLevel2::~GameModelLevel2()
 {
+	Sound.engine->stopAllSounds();
 }
 
 void GameModelLevel2::Init()
@@ -20,6 +22,10 @@ void GameModelLevel2::Init()
 	m_ReartileMap = new TileMap();
 	m_ReartileMap->Init(32, 32, 32, 32, 32);
 	m_ReartileMap->LoadMap("Image//Maps//L2_L1.csv");
+
+	m_AItilemap = new TileMap();
+	m_AItilemap->Init(32, 32, 32, 32, 32);
+	m_AItilemap->LoadMap("Image//Maps//L2_AI.csv");
 
 	CCharacter_Player::GetInstance()->Init(newPlayerPos.x - 0.5f,
 			newPlayerPos.y - 0.25f,
