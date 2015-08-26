@@ -142,7 +142,14 @@ void CSoundManager::shotgunShot()
 
 	engine->setSoundVolume(0.4f);
 }
+void CSoundManager::emptyClip()
+{
+	//firing an empty clip
+	ISound* music = engine->play2D("../irrKlang/media/dryfiring.wav", 
+		false, false, true);
 
+	//engine->setSoundVolume(0.4f);
+}
 //Player interactions
 void CSoundManager::interactionSound()
 {

@@ -71,6 +71,11 @@ public:
 		CAUTION,
 		ENEMY_LIGHT_IDLE,
 		ENEMY_CAMERA,
+
+		//Lock-Picking
+		LOCKPICKBG,
+		LOCKPICKBAR,
+		LOCKPICKBALL,
 		TOTAL_GEOMETRY,
 	};
 
@@ -136,14 +141,25 @@ protected:
 	int GroupToSpawn;
 	float FPS;
 
+	//Lock Key
 	int KEYCOUNT;
-
+	//Computer Laser
+	bool LaserActive;
+	//Lock Picking
+	bool InLockPick;
+	float LockPickY;
+	bool LockPickUp;
 	//GameObjects
 	std::vector<GameObject *> m_goList;
 
 public:
-
+	//Lock Picking
+	bool getLockPick();
 	bool hasReadLoc;
+	Mesh* getLockPickBG();
+	Mesh* getLockPickBar();
+	Mesh* getLockPickBall();
+	float getLockPickY();
 
 	virtual void Init();
 	virtual void Update(double dt);

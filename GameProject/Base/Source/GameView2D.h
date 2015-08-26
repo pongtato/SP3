@@ -30,6 +30,9 @@ public:
 	void RenderHelpText();
 	void RenderHealth();
 	void RenderHBar();
+	void RenderLockPick();
+	void RenderLockBar();
+	void RenderLockBall();
 };
 
 #endif

@@ -39,6 +39,7 @@ public:
 	void pistolShot();
 	void rifleShot();
 	void shotgunShot();
+	void emptyClip();
 
 	//Player interactions
 	void interactionSound();
