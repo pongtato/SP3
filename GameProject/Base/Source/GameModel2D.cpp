@@ -271,6 +271,8 @@ void GameModel2D::Update(double dt)
 		case 1:
 			if (CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				//rifle fire sound
+				Sound.rifleShot();
 				//Spawn Bullet
 				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
 				//Ammo decrease
@@ -286,6 +288,8 @@ void GameModel2D::Update(double dt)
 		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				//shotgun sound
+				Sound.shotgunShot();
 				//Spawn Bullet
 				for (int i = 0; i < 7; i++)
 				{
