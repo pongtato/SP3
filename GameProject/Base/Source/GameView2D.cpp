@@ -351,7 +351,7 @@ void GameView2D::RenderMobs()
 			modelStack.Translate(go->PathFound[i]->m_WorldPosition.x,go->PathFound[i]->m_WorldPosition.y,0.01f);
 			if (go->getActive())
 			{
-				//RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );		
+				RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );		
 			}
 			modelStack.PopMatrix();
 		}
