@@ -734,6 +734,51 @@ void GameModel2D::Update(double dt)
 				break;
 			}
 		}
+
+		
+	}
+
+
+	//for testing
+	if (commands[CHECK])
+	{
+		string line;
+		float x, y, z;
+		ifstream playerPos("savepoint.txt");
+
+		if (playerPos.is_open())
+		{
+			while (getline(playerPos, line))
+			{
+				cout << line << '\n';
+			}
+			playerPos.close();
+		}
+		else
+			cout << "unable to open file";
+	}
+	
+	//SAVE_ID waypoint
+	for (int i = 0; i < InteractionList.size(); i++)
+	{
+		if (InteractionList[i]->type == GameObject::GO_SAVE && InteractionList[i]->active)
+		{
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
+			{
+				cout << "player position saved! " << endl;
+				ofstream playerPos("savepoint.txt");
+				if (playerPos.is_open())
+				{
+					//playerPos << CCharacter_Player::GetInstance()->getPosition().Length();
+					playerPos << getNewPlayerPos().x << endl;
+					playerPos << getNewPlayerPos().y << endl;
+					playerPos << getNewPlayerPos().z << endl;
+
+					playerPos.close();
+				}
+				break;
+			}
+		}
 	}
 
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)

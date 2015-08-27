@@ -19,6 +19,7 @@
 #include "EnemyPistol.h"
 
 #include <vector>
+#include <fstream>
 
 class GameModel2D : public Model
 {
@@ -30,7 +31,9 @@ public:
 		MOVE_RIGHT,
 		UNLOCK,
 		ENTER,
+		CHECK,
 		ESCAPE,
+
 		//Weapon changing
 		PREVWEAP,
 		NEXTWEAP,
