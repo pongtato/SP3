@@ -60,10 +60,10 @@ void CSoundManager::level2BGM()
 void CSoundManager::level3BGM()
 {
 	//Level 3 background music
-	ISound* music = engine->play2D("../irrKlang/media/Level3BGM.mp3",
+	ISound* music = engine->play2D("../irrKlang/media/Level3BGM2.mp3",
 		true, false, true);
 
-	engine->setSoundVolume(0.25f);
+	//engine->setSoundVolume(0.25f);
 }
 void CSoundManager::level4BGM()
 {
@@ -183,7 +183,14 @@ void CSoundManager::closeDoorSound()
 
 	engine->setSoundVolume(0.4f);
 }
+void CSoundManager::PCON()
+{
+	//sound when hacking into pc
+	ISound* music = engine->play2D("../irrKlang/media/pcon.wav",
+		false, false, true);
 
+	engine->setSoundVolume(0.4f);
+}
 
 //Others
 void CSoundManager::lasers()

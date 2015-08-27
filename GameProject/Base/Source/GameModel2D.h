@@ -76,6 +76,11 @@ public:
 		CAUTION,
 		ENEMY_LIGHT_IDLE,
 		ENEMY_CAMERA,
+
+		//Lock-Picking
+		LOCKPICKBG,
+		LOCKPICKBAR,
+		LOCKPICKBALL,
 		TOTAL_GEOMETRY,
 	};
 
@@ -150,8 +155,14 @@ protected:
 	Model levelSet;
 
 public:
-
+	//Lock Picking
+	bool getLockPick();
 	bool hasReadLoc;
+	Mesh* getLockPickBG();
+	Mesh* getLockPickBar();
+	Mesh* getLockPickBall();
+	float getLockPickY();
+
 	int AniToUpdate;
 	bool ZoomIN;
 	int m_CurrentLevel;

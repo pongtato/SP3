@@ -2,6 +2,7 @@
 
 GameModelLevel4::GameModelLevel4()
 {
+	Sound.level4BGM();
 }
 
 GameModelLevel4::~GameModelLevel4()

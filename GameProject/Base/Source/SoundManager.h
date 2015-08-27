@@ -46,7 +46,7 @@ public:
 	void alarmSound();
 	void openDoorSound();
 	void closeDoorSound();
-
+	void PCON();
 	//Others
 	void lasers();
 };

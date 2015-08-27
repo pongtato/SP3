@@ -43,6 +43,12 @@ void GameView2D::Render()
 			//RenderHelpText();
 			break;
 		}
+		if (model->getLockPick())
+		{
+			RenderLockBall();
+			RenderLockBar();
+			RenderLockPick();
+		}
 	} 
 	modelStack.PopMatrix();
 }
@@ -564,6 +570,48 @@ void GameView2D::RenderHBar()
 		modelStack.Translate(-273, 301, 2);
 		modelStack.Scale(8.1, 1.6, 1);
 		Render2DMesh(model->getHealthBar(), false);
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderLockPick()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Scale(windowWidth / 4, windowHeight / 3, 1);
+		modelStack.Translate(1, 0, 0);
+		Render2DMesh(model->getLockPickBG(), false);
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderLockBar()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Scale(windowWidth / 32, windowHeight / 32, 1);
+		modelStack.Translate(4.8f, 0, 0);
+		Render2DMesh(model->getLockPickBar(), false);
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderLockBall()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Scale(windowWidth / 128, windowHeight / 100, 1);
+		modelStack.Translate(19, model->getLockPickY(), 0);
+		Render2DMesh(model->getLockPickBall(), false);
 	}
 	modelStack.PopMatrix();
 }
