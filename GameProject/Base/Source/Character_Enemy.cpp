@@ -8,7 +8,7 @@ CCharacter_Enemy::CCharacter_Enemy(void)
 	pathfind_tilemap = new TileMap;
 	m_CurrentNode = 0;
 	MoveDelay = MovementDelay;
-	InLineOfSight = false;
+	InLineOfSight = false; 
 }
 
 

@@ -332,7 +332,7 @@ void GameModel2D::Update(double dt)
 	CPistol::GetInstance()->FireCooldownTick(dt);
 	CShotgun::GetInstance()->FireCooldownTick(dt);
 	CRifle::GetInstance()->FireCooldownTick(dt);
-	CPistol::GetInstance()->FireCooldownTick(dt);
+	EPistol::GetInstance()->FireCooldownTick(dt);
 
 	//Shooting (Bullet spawning)
 	if (commands[SHOOT])
@@ -692,6 +692,7 @@ void GameModel2D::Update(double dt)
 		}
 		if (go->active && go->type == GameObject::GO_EBULLET) //Enemy Bullet
 		{
+
 			for (unsigned i = 0; i < EnemyList.size(); ++i)
 			{
 				if (EnemyList[i]->getActive())
@@ -706,6 +707,10 @@ void GameModel2D::Update(double dt)
 					}
 				}
 
+			}
+			if (go->pos.x < CCharacter_Player::GetInstance()->getPosition().x + 0.5f && go->pos.x > CCharacter_Player::GetInstance()->getPosition().x - 0.5f && go->pos.y <CCharacter_Player::GetInstance()->getPosition().y + 0.5f && go->pos.y > CCharacter_Player::GetInstance()->getPosition().y - 0.5f)
+			{
+				go->active = false;
 			}
 		}
 
@@ -795,12 +800,12 @@ void GameModel2D::Update(double dt)
 					if (go->getAmmoType() != 0)
 					{
 						//Enemy Shooting (EBullet spawning)
-						if (CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
+						if (EPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 						{
 							//Spawn bullet
-							SpawnEnemyBullet(go->getPosition(),(go->getTargetPosition()-go->getPosition()).Normalized() * CPistol::GetInstance()->GetBulletSpeed());
+							SpawnEnemyBullet(go->getPosition(),(go->getTargetPosition()-go->getPosition()).Normalized() * EPistol::GetInstance()->GetBulletSpeed());
 							//Reset fire cooldown
-							CPistol::GetInstance()->ResetCooldown();
+							EPistol::GetInstance()->ResetCooldown();
 						}
 					}
 					break;
