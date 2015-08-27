@@ -863,7 +863,7 @@ void GameModel2D::Update(double dt)
 	//Enemy AI Flocking
 	for (unsigned i = 0; i < EnemyList.size(); ++i)
 	{
-		if (EnemyList[i]->getActive())
+		if (EnemyList[i]->getActive() && !EnemyList[i]->isPathFinding())
 		{
 			/*
 			if (CCharacter_Player::GetInstance()->getPosition().x < EnemyList[i]->getPosition().x + 0.5f &&

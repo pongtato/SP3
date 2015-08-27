@@ -211,6 +211,7 @@ void CCharacter_Enemy::setRotateDirection(Vector3 playerPos)
 
 void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
 {
+	PathFinding = true;
 	if (TargetPosition != playerPos )
 	{
 		m_CurrentNode = 0;
@@ -241,11 +242,17 @@ void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
 	}
 	else
 	{
+		PathFinding = false;
 		setVelocity(0,0,0);
 		resetTimer();
 		setRotateDirection(playerPos);
 		setNewState(IDLE);
 	}
+}
+
+bool CCharacter_Enemy::isPathFinding(void)
+{
+	return PathFinding;
 }
 
 void CCharacter_Enemy::UpdateEnemyPosition(double dt)

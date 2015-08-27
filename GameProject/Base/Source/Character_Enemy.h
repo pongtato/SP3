@@ -97,6 +97,8 @@ public:
 
 	bool InLineOfSight;
 
+	bool PathFinding;
+	bool isPathFinding(void);
 private:
 	ENEMY_TYPE m_enemyMesh;
 	ENEMY_AMMO_TYPE m_weaponChoice;
