@@ -17,6 +17,7 @@
     <ClCompile Include="Source\Character_Enemy.cpp" />
     <ClCompile Include="Source\Character_Player.cpp" />
     <ClCompile Include="Source\Controller.cpp" />
+    <ClCompile Include="Source\EnemyPistol.cpp" />
     <ClCompile Include="Source\GameController2D.cpp" />
     <ClCompile Include="Source\GameModel2D.cpp" />
     <ClCompile Include="Source\GameModelLevel1.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="Source\Character_Enemy.h" />
     <ClInclude Include="Source\Character_Player.h" />
     <ClInclude Include="Source\Controller.h" />
+    <ClInclude Include="Source\EnemyPistol.h" />
     <ClInclude Include="Source\GameController2D.h" />
     <ClInclude Include="Source\GameModel2D.h" />
     <ClInclude Include="Source\GameModelLevel1.h" />
