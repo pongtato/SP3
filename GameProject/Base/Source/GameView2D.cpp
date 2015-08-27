@@ -43,12 +43,6 @@ void GameView2D::Render()
 			//RenderHelpText();
 			break;
 		}
-		if (model->getLockPick1() || model->getLockPick2())
-		{
-			RenderLockBall();
-			RenderLockBar();
-			RenderLockPick();
-		}
 	} 
 	modelStack.PopMatrix();
 }
@@ -89,6 +83,19 @@ void GameView2D::RenderScene()
 			else if ( model->getObjectiveCleared() )
 			{
 				RenderGO(go,tileMap);
+			}
+		}
+	}
+
+	std::vector<GameObject*> fogList = model->getFogList();
+	for (std::vector<GameObject *>::iterator it = fogList.begin(); it != fogList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			if ( go->type == go->GO_FOG )
+			{
+			RenderGO(go,tileMap);
 			}
 		}
 	}
@@ -327,6 +334,12 @@ void GameView2D::RenderMobs()
 					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );			
 				}
 				break;
+			case 7:
+				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
+				{
+					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );			
+				}
+				break;
 			}
 
 			if ( go->getAmmoType() == CCharacter_Enemy::CAMERA)
@@ -350,6 +363,11 @@ void GameView2D::RenderMobs()
 				break;
 				// scanning
 			case 5:
+				{
+					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+				}
+				break;
+			case 7:
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
@@ -518,6 +536,16 @@ void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 			modelStack.PopMatrix();
 		}
 		break;
+	case GameObject::GO_FOG:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getFogOfWar(), false);
+			//RenderMesh(model->getFogOfWar(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
 	/*case GameObject::GO_WALL:
 		{
 			modelStack.PushMatrix();
@@ -570,48 +598,6 @@ void GameView2D::RenderHBar()
 		modelStack.Translate(-273, 301, 2);
 		modelStack.Scale(8.1, 1.6, 1);
 		Render2DMesh(model->getHealthBar(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderLockPick()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Scale(windowWidth / 4, windowHeight / 3, 1);
-		modelStack.Translate(1, 0, 0);
-		Render2DMesh(model->getLockPickBG(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderLockBar()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Scale(windowWidth / 32, windowHeight / 32, 1);
-		modelStack.Translate(4.8f, 0, 0);
-		Render2DMesh(model->getLockPickBar(), false);
-	}
-	modelStack.PopMatrix();
-}
-
-void GameView2D::RenderLockBall()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-	modelStack.PushMatrix();
-	{
-		modelStack.Scale(windowWidth / 128, windowHeight / 100, 1);
-		modelStack.Translate(19, model->getLockPickY(), 0);
-		Render2DMesh(model->getLockPickBall(), false);
 	}
 	modelStack.PopMatrix();
 }

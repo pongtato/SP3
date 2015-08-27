@@ -19,7 +19,6 @@
 #include "EnemyPistol.h"
 
 #include <vector>
-#include <fstream>
 
 class GameModel2D : public Model
 {
@@ -31,9 +30,7 @@ public:
 		MOVE_RIGHT,
 		UNLOCK,
 		ENTER,
-		CHECK,
 		ESCAPE,
-
 		//Weapon changing
 		PREVWEAP,
 		NEXTWEAP,
@@ -59,6 +56,7 @@ public:
 		TEXT_PROMPT,
 		HEALTH,
 		HEALTH_BAR,
+		FOG,
 
 		//Player
 		PISTOL_IDLE,
@@ -76,11 +74,6 @@ public:
 		CAUTION,
 		ENEMY_LIGHT_IDLE,
 		ENEMY_CAMERA,
-
-		//Lock-Picking
-		LOCKPICKBG,
-		LOCKPICKBAR,
-		LOCKPICKBALL,
 		TOTAL_GEOMETRY,
 	};
 
@@ -130,6 +123,8 @@ protected:
 	//GameObjects
 	std::vector<GameObject *> m_goList;
 	std::vector<GameObject *> m_checkingList;
+	std::vector<GameObject *> m_fogList;
+	std::vector<GameObject *> m_fogCheckerList;
 
 
 	int score;
@@ -146,8 +141,7 @@ protected:
 	//Computer Laser
 	bool LaserActive;
 	//Lock Picking
-	bool InLockPick1;
-	bool InLockPick2;
+	bool InLockPick;
 	float LockPickY;
 	bool LockPickUp;
 	float LockPickBoxTop;
@@ -156,22 +150,8 @@ protected:
 	Model levelSet;
 
 public:
-	//Weapon
-	void WeaponShooting(double dt);
-	void WeaponReload(double dt);
-	//Collision Checks
-	void KeyNPlayerCollision(double dt);
-	void LockNKeyCollision(double dt);
-	void PlayerNExitCollision(double dt);
-	//Lock Picking
-	bool getLockPick1();
-	bool getLockPick2();
-	bool hasReadLoc;
-	Mesh* getLockPickBG();
-	Mesh* getLockPickBar();
-	Mesh* getLockPickBall();
-	float getLockPickY();
 
+	bool hasReadLoc;
 	int AniToUpdate;
 	bool ZoomIN;
 	int m_CurrentLevel;
@@ -205,12 +185,17 @@ public:
 	std::vector<GameObject *> getCollectiblesList();
 	//PC, locks
 	std::vector<GameObject *> getInteractionList();
+	//fog_list
+	std::vector<GameObject *> getFogList();
+	std::vector<GameObject *> getFogCheckerList();
+
 	Mesh* getMobsMesh();
 	//Text Prompts
 	Mesh* getTextPrompt();
 	//Health Bar
 	Mesh* getHealth();
 	Mesh* getHealthBar();
+	Mesh* getFogOfWar();
 
 	void setNewPlayerPos(float x, float y, float z);
 	void setNewExitPos(float x, float y, float z);
@@ -220,6 +205,7 @@ public:
 	void getMapData();
 	void BulletUpdate(double dt);
 	void VeryRealRaycasting(double dt);
+	void GhettoFogOfWar(double dt);
 	void SpawnBullet(int WeaponDamage,float Speed);
 	void SpawnSGBullets(int WeaponDamage, float Speed);
 	void SpawnEnemyBullet(Vector3 EnemyPos, Vector3 Vel);
