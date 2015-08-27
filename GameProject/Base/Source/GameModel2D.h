@@ -156,6 +156,13 @@ protected:
 	Model levelSet;
 
 public:
+	//Weapon
+	void WeaponShooting(double dt);
+	void WeaponReload(double dt);
+	//Collision Checks
+	void KeyNPlayerCollision(double dt);
+	void LockNKeyCollision(double dt);
+	void PlayerNExitCollision(double dt);
 	//Lock Picking
 	bool getLockPick1();
 	bool getLockPick2();

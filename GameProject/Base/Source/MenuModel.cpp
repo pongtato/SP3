@@ -95,6 +95,10 @@ void MenuModel::Update(double dt)
 				SelectingLevels = true;
 				menuTimer = true;
 			}
+			else if (arrowPosition == 2 && !SelectingLevels)
+			{
+				exit(0);
+			}
 		}
 	}
 
