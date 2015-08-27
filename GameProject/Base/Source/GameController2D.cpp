@@ -31,6 +31,9 @@ void GameController2D::Update()
 		model->setCommands(GameModel2D::COMMANDS::SHOOT);
 	if (IsKeyPressed('R'))
 		model->setCommands(GameModel2D::COMMANDS::RELOAD);
+
+	if (IsKeyPressed('X'))
+		model->setCommands(GameModel2D::COMMANDS::CHECK);
 	Controller::Update();
 	
 }
