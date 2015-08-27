@@ -8,7 +8,7 @@ CCharacter_Enemy::CCharacter_Enemy(void)
 	pathfind_tilemap = new TileMap;
 	m_CurrentNode = 0;
 	MoveDelay = MovementDelay;
-	InLineOfSight = false; 
+	InLineOfSight = false;
 }
 
 
@@ -211,7 +211,6 @@ void CCharacter_Enemy::setRotateDirection(Vector3 playerPos)
 
 void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
 {
-	PathFinding = true;
 	if (TargetPosition != playerPos )
 	{
 		m_CurrentNode = 0;
@@ -224,8 +223,18 @@ void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
 	{
 		if ( PathFound.size() > 0 )
 		{
-			Vector3 temp = (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Normalized() * MoveSpeed;
+			Vector3 temp = (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Normalized() * MoveSpeed * PathfindMS_multiplier;
 			setVelocity(temp.x,temp.y,0);
+			setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
+
+		/*	if ( getRotation() >= 360 )
+			{
+				setRotation(0);
+			}
+			else if (  getRotation() <= 0 )
+			{
+				setRotation(360);
+			}*/
 
 			if ( (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Length() < 0.1f )
 			{
@@ -240,19 +249,18 @@ void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
 			}
 		}
 	}
-	else
+	else if ( (getInitPosition()-getPosition()).Length() > 0.5f)
 	{
-		PathFinding = false;
 		setVelocity(0,0,0);
 		resetTimer();
 		setRotateDirection(playerPos);
+		setNewState(SCANNING);
+	}
+	else
+	{
+		setRotateDirection(getRotation() - 180);
 		setNewState(IDLE);
 	}
-}
-
-bool CCharacter_Enemy::isPathFinding(void)
-{
-	return PathFinding;
 }
 
 void CCharacter_Enemy::UpdateEnemyPosition(double dt)

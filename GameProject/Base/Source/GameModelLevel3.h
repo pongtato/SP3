@@ -2,6 +2,7 @@
 #define GAMEMODELLEVEL3_H
 
 #include "GameModel2D.h"
+#include "MenuModel.h"
 
 #include "Character_Enemy.h"
 

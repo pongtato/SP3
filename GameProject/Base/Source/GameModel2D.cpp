@@ -36,6 +36,8 @@ void GameModel2D::Init()
 	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0, 0),10,10,1.0f);
 	meshList[EBULLET] = MeshBuilder::GenerateSphere("EnemyBullet", Color(0, 0, 1), 10, 10, 1.0f);
 	meshList[CUBE] = MeshBuilder::GenerateCube("Bullet", Color(1, 0, 0),1.0f);
+	meshList[FOG] = MeshBuilder::GenerateSpriteAnimation("FOG", 1, 1);
+	meshList[FOG]->textureID[0] = LoadTGA("Image\\FOG.tga");
 
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
@@ -229,6 +231,10 @@ void GameModel2D::Init()
 	{
 		GameObject * go = new GameObject(GameObject::GO_NONE);
 		m_goList.push_back(go);
+		GameObject * fog = new GameObject(GameObject::GO_NONE);
+		m_fogList.push_back(fog);
+		GameObject * fogcheck = new GameObject(GameObject::GO_NONE);
+		m_fogCheckerList.push_back(fogcheck);
 	}
 	for ( unsigned i = 0; i < 100; ++i)
 	{
@@ -245,6 +251,14 @@ void GameModel2D::Init()
 
 void GameModel2D::VeryRealRaycasting(double dt)
 {
+	//Tick for reudcing alert level
+	CCharacter_Player::GetInstance()->ManipulateDetectionFadeTimer(-float(dt));
+
+	if ( CCharacter_Player::GetInstance()->getDetectionFadeTimer() <= 0 )
+	{
+		CCharacter_Player::GetInstance()->ManipulateDetectionLevel(-float(dt));
+	}
+
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
 		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
@@ -282,6 +296,10 @@ void GameModel2D::VeryRealRaycasting(double dt)
 							go->InLineOfSight = true;
 							go->setNewState(go->CHASING);
 							go->setTargetPosition(CCharacter_Player::GetInstance()->getPosition());
+							//Player detected reset fading time
+							CCharacter_Player::GetInstance()->ResetTimer();
+							//Increase alert level
+							CCharacter_Player::GetInstance()->ManipulateDetectionLevel(float(dt));
 							checker->active = false;
 						}
 					}
@@ -292,13 +310,17 @@ void GameModel2D::VeryRealRaycasting(double dt)
 						if ( checker->ID == go->getGroupID() )
 						{
 							//Collided with wall, obstacle in the way
-							if ( go->getAmmoType() != go->CAMERA )
+
+							go->setVelocity(0,0,0);
+							if ( go->InLineOfSight )
 							{
-								go->InLineOfSight = false;
-								go->setVelocity(0,0,0);
 								go->resetTimer();
-								//go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
 								go->setNewState(go->SCANNING);
+								if ( go->getAmmoType() != go->CAMERA )
+								{
+									go->setRotateDirection(go->getTargetPosition());
+								}
+								go->InLineOfSight = false;
 							}
 							checker->active = false;
 						}
@@ -701,7 +723,7 @@ void GameModel2D::Update(double dt)
 				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
-				velocity.x = 0;
+					InLockPick2 = true;
 				if (commands[INTERACT])
 				{
 					InLockPick2 = true;
@@ -802,7 +824,6 @@ void GameModel2D::Update(double dt)
 		}
 		if (go->active && go->type == GameObject::GO_EBULLET) //Enemy Bullet
 		{
-
 			for (unsigned i = 0; i < EnemyList.size(); ++i)
 			{
 				if (EnemyList[i]->getActive())
@@ -902,6 +923,23 @@ void GameModel2D::Update(double dt)
 		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
 		if ( go->getActive() )
 		{
+			//test
+			//cout << CCharacter_Player::GetInstance()->getDetectionLevel() << endl;
+
+			if ( CCharacter_Player::GetInstance()->getAlertState() == CCharacter_Player::DETECTED )
+			{
+				if ( !CCharacter_Player::GetInstance()->getDetected() )
+				{
+					CCharacter_Player::GetInstance()->TrackedPosition = CCharacter_Player::GetInstance()->getPosition();
+					CCharacter_Player::GetInstance()->SetDetected(true);
+				}
+
+				if ( go->getAmmoType() != go->CAMERA)
+				{
+					go->setNewState(go->CHECKING);
+				}
+			}
+
 			VeryRealRaycasting(dt);	
 			switch ( go->getState() )
 			{
@@ -936,6 +974,11 @@ void GameModel2D::Update(double dt)
 					go->Strategy_Stalk(go->getInitPosition(),getAITileMap());
 					break;
 				}
+			case CCharacter_Enemy::CHECKING:
+				{
+					go->Strategy_Stalk(CCharacter_Player::GetInstance()->TrackedPosition,getAITileMap());
+					break;
+				}
 			};
 			//go->UpdateEnemyPosition(dt);
 			go->Update(dt,getTileMap());
@@ -945,7 +988,7 @@ void GameModel2D::Update(double dt)
 	//Enemy AI Flocking
 	for (unsigned i = 0; i < EnemyList.size(); ++i)
 	{
-		if (EnemyList[i]->getActive() && !EnemyList[i]->isPathFinding())
+		if (EnemyList[i]->getActive())
 		{
 			/*
 			if (CCharacter_Player::GetInstance()->getPosition().x < EnemyList[i]->getPosition().x + 0.5f &&
@@ -1023,6 +1066,7 @@ void GameModel2D::Update(double dt)
 	{
 		sa->Update(dt);
 	} 
+	GhettoFogOfWar(dt);
 	cameraZoom(dt);
 	BulletUpdate(dt);
 	for (int count = 0; count < NUM_COMMANDS; ++count)
@@ -1384,6 +1428,11 @@ Mesh* GameModel2D::getShotgunAmmo()
 	return meshList[SHOTGUN_AMMO];
 }
 
+Mesh* GameModel2D::getFogOfWar()
+{
+	return meshList[FOG];
+}
+
 void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 {
 	for ( unsigned i = 0; i < EnemyList.size(); ++i)
@@ -1627,4 +1676,46 @@ bool GameModel2D::getLockPick2()
 float GameModel2D::getLockPickY()
 {
 	return LockPickY;
+}
+
+std::vector<GameObject *> GameModel2D::getFogList()
+{
+	return m_fogList;
+}
+
+std::vector<GameObject *> GameModel2D::getFogCheckerList()
+{
+	return m_fogCheckerList;
+}
+
+void GameModel2D::GhettoFogOfWar(double dt)
+{
+	for (int ccount = 0; ccount < getTileMap()->getNumOfTilesWidth(); ++ccount)
+	{
+		for (int rcount = 0; rcount < getTileMap()->getNumOfTilesHeight(); ++rcount)
+		{
+			Vector3 tempPos;
+			tempPos.Set(ccount,rcount,0.1f);
+
+			if (getTileMap()->getTile(ccount,rcount) == -1 || getTileMap()->getTile(ccount,rcount) > 15 )
+			{
+				for (std::vector<GameObject *>::iterator it = m_fogList.begin(); it != m_fogList.end(); ++it)
+				{
+					GameObject *go = (GameObject *)*it;
+					{
+						if ( !go->active )
+						{
+							go->active = true;
+							go->pos = tempPos;
+							//go->scale = Scale;
+							go->type = go->GO_FOG;
+							go->SpriteRow = rcount;
+							go->SpriteColumn = ccount;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
 }

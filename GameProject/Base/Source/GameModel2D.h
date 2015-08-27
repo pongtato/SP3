@@ -33,7 +33,6 @@ public:
 		ENTER,
 		CHECK,
 		ESCAPE,
-
 		//Weapon changing
 		PREVWEAP,
 		NEXTWEAP,
@@ -65,6 +64,7 @@ public:
 		RIFLE_AMMO,
 		SHOTGUN_ICON,
 		SHOTGUN_AMMO,
+		FOG,
 
 		//Player
 		PISTOL_IDLE,
@@ -82,12 +82,12 @@ public:
 		CAUTION,
 		ENEMY_LIGHT_IDLE,
 		ENEMY_CAMERA,
+		TOTAL_GEOMETRY,
 
-		//Lock-Picking
+		//Lock Pick
 		LOCKPICKBG,
 		LOCKPICKBAR,
 		LOCKPICKBALL,
-		TOTAL_GEOMETRY,
 	};
 
 	enum TILE_IDS
@@ -136,6 +136,8 @@ protected:
 	//GameObjects
 	std::vector<GameObject *> m_goList;
 	std::vector<GameObject *> m_checkingList;
+	std::vector<GameObject *> m_fogList;
+	std::vector<GameObject *> m_fogCheckerList;
 
 
 	int score;
@@ -204,6 +206,10 @@ public:
 	std::vector<GameObject *> getCollectiblesList();
 	//PC, locks
 	std::vector<GameObject *> getInteractionList();
+	//fog_list
+	std::vector<GameObject *> getFogList();
+	std::vector<GameObject *> getFogCheckerList();
+
 	Mesh* getMobsMesh();
 	//Text Prompts
 	Mesh* getTextPrompt();
@@ -218,6 +224,7 @@ public:
 	Mesh* getPistolAmmo();
 	Mesh* getRifleAmmo();
 	Mesh* getShotgunAmmo();
+	Mesh* getFogOfWar();
 
 	void setNewPlayerPos(float x, float y, float z);
 	void setNewExitPos(float x, float y, float z);
@@ -227,6 +234,7 @@ public:
 	void getMapData();
 	void BulletUpdate(double dt);
 	void VeryRealRaycasting(double dt);
+	void GhettoFogOfWar(double dt);
 	void SpawnBullet(int WeaponDamage,float Speed);
 	void SpawnSGBullets(int WeaponDamage, float Speed);
 	void SpawnEnemyBullet(Vector3 EnemyPos, Vector3 Vel);

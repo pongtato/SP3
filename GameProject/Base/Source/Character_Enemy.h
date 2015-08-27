@@ -22,6 +22,7 @@ public:
 		ScanDuration	= 5,
 		MovementDelay	= 2,
 		MoveSpeed       = 1,
+		PathfindMS_multiplier = 2,
 		VARIABLES_TOTAL,
 	};
 
@@ -56,6 +57,7 @@ public:
 		RUNNING,
 		SCANNING,
 		TRACKING,
+		CHECKING,
 		STATE_TOTAL,
 	};
 
@@ -97,8 +99,6 @@ public:
 
 	bool InLineOfSight;
 
-	bool PathFinding;
-	bool isPathFinding(void);
 private:
 	ENEMY_TYPE m_enemyMesh;
 	ENEMY_AMMO_TYPE m_weaponChoice;

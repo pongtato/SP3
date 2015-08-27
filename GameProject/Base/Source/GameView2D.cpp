@@ -104,6 +104,19 @@ void GameView2D::RenderScene()
 			}
 		}
 	}
+
+	std::vector<GameObject*> fogList = model->getFogList();
+	for (std::vector<GameObject *>::iterator it = fogList.begin(); it != fogList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			if ( go->type == go->GO_FOG )
+			{
+			RenderGO(go,tileMap);
+			}
+		}
+	}
 }
 
 void GameView2D::RenderBackground()
@@ -339,6 +352,12 @@ void GameView2D::RenderMobs()
 					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );			
 				}
 				break;
+			case 7:
+				if ( go->getAmmoType() == CCharacter_Enemy::FLASHLIGHT)
+				{
+					RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );			
+				}
+				break;
 			}
 
 			if ( go->getAmmoType() == CCharacter_Enemy::CAMERA)
@@ -362,6 +381,11 @@ void GameView2D::RenderMobs()
 				break;
 				// scanning
 			case 5:
+				{
+					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+				}
+				break;
+			case 7:
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
@@ -527,6 +551,16 @@ void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_FOG:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getFogOfWar(), false);
+			//RenderMesh(model->getFogOfWar(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
 			modelStack.PopMatrix();
 		}
 		break;
