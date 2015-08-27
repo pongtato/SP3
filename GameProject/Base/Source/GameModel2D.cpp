@@ -199,7 +199,8 @@ void GameModel2D::Init()
 
 	KEYCOUNT = 0;
 	LaserActive = true;
-	InLockPick = false;
+	InLockPick1 = false;
+	InLockPick2 = false;
 	LockPickY = 0;
 	LockPickUp = true;
 	LockPickBoxTop = 1;
@@ -308,7 +309,7 @@ void GameModel2D::Update(double dt)
 		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
 		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
 	}
-	if (!InLockPick)
+	if (!InLockPick1 || !InLockPick2)
 	{
 		CCharacter_Player::GetInstance()->Update(dt, getTileMap());
 	}
@@ -622,7 +623,7 @@ void GameModel2D::Update(double dt)
 	//LockPicking
 	for (int i = 0; i < InteractionList.size(); i++)
 	{
-		if ((InteractionList[i]->type == GameObject::GO_LOCKPICK_1 || InteractionList[i]->type == GameObject::GO_LOCKPICK_2) && InteractionList[i]->active)
+		if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1 && InteractionList[i]->active)
 		{
 			//Lock collision
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
@@ -641,7 +642,7 @@ void GameModel2D::Update(double dt)
 				velocity.x = 0;
 				if (commands[INTERACT])
 				{
-					InLockPick = true;
+					InLockPick1 = true;
 				}
 			}
 			position = CCharacter_Player::GetInstance()->getPosition();
@@ -659,7 +660,50 @@ void GameModel2D::Update(double dt)
 				velocity.y = 0;
 				if (commands[INTERACT])
 				{
-					InLockPick = true;
+					InLockPick1 = true;
+				}
+			}
+			position += velocity * dt;
+		}
+
+		if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2 && InteractionList[i]->active)
+		{
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+			if (getTileMap()->getTile(position.x, floor(position.y)) >= 41 && getTileMap()->getTile(position.x, floor(position.y)) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) >= 41 && getTileMap()->getTile(position.x, ceil(position.y)) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+				velocity.x = 0;
+				if (commands[INTERACT])
+				{
+					InLockPick2 = true;
+				}
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+			position.y += velocity.y * dt;
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+			if (getTileMap()->getTile(floor(position.x), position.y) >= 41 && getTileMap()->getTile(floor(position.x), position.y) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) >= 41 && getTileMap()->getTile(ceil(position.x), position.y) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				velocity.y = 0;
+				if (commands[INTERACT])
+				{
+					InLockPick2 = true;
 				}
 			}
 			position += velocity * dt;
@@ -682,11 +726,11 @@ void GameModel2D::Update(double dt)
 			LockPickUp = true;
 		}
 	}
-	if (commands[UNLOCK])
+	if (commands[UNLOCK] && InLockPick1 == true)
 	{
 		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
 		{
-			InLockPick = false;
+			InLockPick1 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
 			{
 				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1)
@@ -697,7 +741,25 @@ void GameModel2D::Update(double dt)
 		}
 		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
 		{
-			InLockPick = false;
+			InLockPick1= false;
+		}
+	}
+	if (commands[UNLOCK] && InLockPick2 == true)
+	{
+		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
+		{
+			InLockPick2 = false;
+			for (int i = 0; i < InteractionList.size(); i++)
+			{
+				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2)
+				{
+					InteractionList[i]->active = false;
+				}
+			}
+		}
+		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
+		{
+			InLockPick2 = false;
 		}
 	}
 
@@ -1501,9 +1563,14 @@ Mesh* GameModel2D::getLockPickBall()
 	return meshList[LOCKPICKBALL];
 }
 
-bool GameModel2D::getLockPick()
+bool GameModel2D::getLockPick1()
 {
-	return InLockPick;
+	return InLockPick1;
+}
+
+bool GameModel2D::getLockPick2()
+{
+	return InLockPick2;
 }
 
 float GameModel2D::getLockPickY()

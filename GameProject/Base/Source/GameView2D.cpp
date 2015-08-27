@@ -43,7 +43,7 @@ void GameView2D::Render()
 			//RenderHelpText();
 			break;
 		}
-		if (model->getLockPick())
+		if (model->getLockPick1() || model->getLockPick2())
 		{
 			RenderLockBall();
 			RenderLockBar();

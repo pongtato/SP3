@@ -146,7 +146,8 @@ protected:
 	//Computer Laser
 	bool LaserActive;
 	//Lock Picking
-	bool InLockPick;
+	bool InLockPick1;
+	bool InLockPick2;
 	float LockPickY;
 	bool LockPickUp;
 	float LockPickBoxTop;
@@ -156,7 +157,8 @@ protected:
 
 public:
 	//Lock Picking
-	bool getLockPick();
+	bool getLockPick1();
+	bool getLockPick2();
 	bool hasReadLoc;
 	Mesh* getLockPickBG();
 	Mesh* getLockPickBar();
