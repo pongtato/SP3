@@ -20,6 +20,7 @@ struct GameObject
 		GO_KEY_ID,
 		GO_LASER_HORI,
 		GO_LASER_VERTI,
+		GO_EXIT,
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;

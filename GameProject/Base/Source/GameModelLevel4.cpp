@@ -2,12 +2,10 @@
 
 GameModelLevel4::GameModelLevel4()
 {
-	Sound.level4BGM();
 }
 
 GameModelLevel4::~GameModelLevel4()
 {
-	Sound.engine->stopAllSounds();
 }
 
 void GameModelLevel4::Init()
@@ -28,10 +26,11 @@ void GameModelLevel4::Init()
 	m_AItilemap->LoadMap("Image//Maps//L4_AI.csv");
 
 	CCharacter_Player::GetInstance()->Init(newPlayerPos.x - 0.5f,
-		newPlayerPos.y - 0.25f,
-		newPlayerPos.z,1,1,100,1,5);
+			newPlayerPos.y - 0.25f,
+			newPlayerPos.z,1,1,100,1,5);
 
 	getMapData();
+	m_CurrentLevel = 4;
 }
 
 void GameModelLevel4::Update(double dt)

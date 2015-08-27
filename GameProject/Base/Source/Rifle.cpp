@@ -18,6 +18,7 @@ CRifle::CRifle(void)
 	Damage = 2;
 	FireCooldown = 0.0f;
 	AttackSpeed = 0.5f;
+	BulletSpeed = 3.f;
 }
 
 

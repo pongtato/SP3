@@ -183,10 +183,17 @@ void GameModel2D::Init()
 	AniToUpdate = PISTOL_IDLE;
 	srand (time(NULL));
 	GroupToSpawn = rand() % 3 + 0;
+	m_EnemySpawnCount = 0;
 
 	WeaponChangeCooldown = 0.5f;
 
 	KEYCOUNT = 0;
+	LaserActive = true;
+	InLockPick = false;
+	LockPickY = 0;
+	LockPickUp = true;
+	LockPickBoxTop = 1;
+	LockPickBoxBtm = -1;
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -199,8 +206,76 @@ void GameModel2D::Init()
 		CollectiblesList.push_back(collectibles);
 		GameObject * interact = new GameObject(GameObject::GO_NONE);
 		InteractionList.push_back(interact);
+		GameObject * checker = new GameObject(GameObject::GO_NONE);
+		m_checkingList.push_back(checker);
 		CCharacter_Enemy * enemy = new CCharacter_Enemy();
 		EnemyList.push_back(enemy);
+	}
+}
+
+void GameModel2D::VeryRealRaycasting(double dt)
+{
+	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
+	{
+		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
+		if ( go->getActive() )
+		{
+			if ( go->detectPlayer(CCharacter_Player::GetInstance()->getPosition(),getTileMap()) )
+			{
+				for (std::vector<GameObject *>::iterator it = m_checkingList.begin(); it != m_checkingList.end(); ++it)
+				{
+					//Spawn checker
+					GameObject *checker = (GameObject *)*it;
+					if (!checker->active)
+					{
+						checker->type = GameObject::GO_EBULLET;
+						checker->active = true;
+						checker->scale.Set(0.05, 0.05, 0.05);
+						checker->pos = go->getPosition();
+						checker->vel = go->LineOfSight;
+						checker->ID = go->getGroupID();
+						break;
+					}
+				}
+			}
+			for (std::vector<GameObject *>::iterator it = m_checkingList.begin(); it != m_checkingList.end(); ++it)
+			{
+				GameObject *checker = (GameObject *)*it;
+				if (checker->active)
+				{
+					checker->pos += checker->vel * (float)dt;
+					if ( (CCharacter_Player::GetInstance()->getPosition() - checker->pos).Length() < 1.f )
+					{
+						//collide with player = true
+						if ( checker->ID == go->getGroupID() )
+						{
+							go->InLineOfSight = true;
+							go->setNewState(go->CHASING);
+							go->setTargetPosition(CCharacter_Player::GetInstance()->getPosition());
+							checker->active = false;
+						}
+					}
+					float tempX = checker->pos.x + 0.5f;
+					float tempY = checker->pos.y + 0.5f;
+					if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
+					{
+						if ( checker->ID == go->getGroupID() )
+						{
+							//Collided with wall, obstacle in the way
+							if ( go->getAmmoType() != go->CAMERA )
+							{
+								go->InLineOfSight = false;
+								go->setVelocity(0,0,0);
+								go->resetTimer();
+								//go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
+								go->setNewState(go->SCANNING);
+							}
+							checker->active = false;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -215,6 +290,7 @@ void GameModel2D::Update(double dt)
 		CDTimerLimit = 0;
 		CDTimer -= 1;
 	}
+	//allow gameplay after zoom in
 	if (ZoomIN)
 	{
 		if (commands[MOVE_UP]) CCharacter_Player::GetInstance()->moveUp();
@@ -254,42 +330,26 @@ void GameModel2D::Update(double dt)
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() > 0 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
-				//pistol fire sound
-				Sound.pistolShot();
 				//Spawn Bullet
 				SpawnBullet(CPistol::GetInstance()->GetDamage(), 0.5f);
 				//Ammo decrease
 				CPistol::GetInstance()->UseAmmo(1);
 				CPistol::GetInstance()->ResetCooldown();
 			}
-			else if(CPistol::GetInstance()->GetAmmo() < 1 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
-			{
-				Sound.emptyClip();
-				CPistol::GetInstance()->ResetCooldown();
-			}
 			break;
 		case 1:
 			if (CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
-				//rifle fire sound
-				Sound.rifleShot();
 				//Spawn Bullet
 				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
 				//Ammo decrease
 				CRifle::GetInstance()->UseAmmo(1);
 				CRifle::GetInstance()->ResetCooldown();
 			}
-			else if(CRifle::GetInstance()->GetAmmo() < 1 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
-			{
-				Sound.emptyClip();
-				CRifle::GetInstance()->ResetCooldown();
-			}
 			break;
 		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
-				//shotgun sound
-				Sound.shotgunShot();
 				//Spawn Bullet
 				for (int i = 0; i < 7; i++)
 				{
@@ -301,11 +361,6 @@ void GameModel2D::Update(double dt)
 				CShotgun::GetInstance()->ResetCooldown();
 
 			}
-			else if(CShotgun::GetInstance()->GetAmmo() < 1 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
-			{
-				Sound.emptyClip();
-				CShotgun::GetInstance()->ResetCooldown();
-			}
 			break;
 		}
 	}
@@ -316,34 +371,292 @@ void GameModel2D::Update(double dt)
 	//Reload
 	if (commands[RELOAD])
 	{
-		
 
 		switch (CCharacter_Player::GetInstance()->getAmmoType())
 		{
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() == 0)
 			{
-				//reload sound
-				Sound.reloadSound();
 				CPistol::GetInstance()->SetAmmo(10);
 			}
 			break;
 		case 1:
 			if (CShotgun::GetInstance()->GetAmmo() == 0)
 			{
-				//reload sound
-				Sound.reloadSound();
 				CShotgun::GetInstance()->SetAmmo(70);
 			}
 			break;
 		case 2:
 			if (CRifle::GetInstance()->GetAmmo() == 0)
 			{
-				//reload sound
-				Sound.reloadSound();
 				CRifle::GetInstance()->SetAmmo(50);
 			}
 			break;
+		}
+	}
+
+	for (int i = 0; i < CollectiblesList.size(); i++)
+	{
+		if (CollectiblesList[i]->type == GameObject::GO_KEY_ID && CollectiblesList[i]->active)
+		{
+			if((CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
+			{
+				CollectiblesList[i]->active = false;
+				KEYCOUNT++;
+				break;
+			}
+		}
+	}
+
+
+	//Lock Key Collision Collection
+	for (int i = 0; i < InteractionList.size(); i++)
+	{
+		if (InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID && InteractionList[i]->active)
+		{
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+			if (getTileMap()->getTile(position.x, floor(position.y)) == KEYUNLOCK_ID && getTileMap()->getTile(position.x, floor(position.y)) == KEYUNLOCK_ID &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f || 
+				getTileMap()->getTile(position.x, ceil(position.y)) == KEYUNLOCK_ID && getTileMap()->getTile(position.x, ceil(position.y)) == KEYUNLOCK_ID &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+				velocity.x = 0;
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+			position.y += velocity.y * dt;
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+			if (getTileMap()->getTile(floor(position.x), position.y) == KEYUNLOCK_ID && getTileMap()->getTile(floor(position.x), position.y) == KEYUNLOCK_ID &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f || 
+				getTileMap()->getTile(ceil(position.x), position.y) == KEYUNLOCK_ID && getTileMap()->getTile(ceil(position.x), position.y) == KEYUNLOCK_ID &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				velocity.y = 0;
+			}
+			position += velocity * dt;
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f && KEYCOUNT > 0)
+			{
+				InteractionList[i]->active = false;
+				KEYCOUNT--;
+				break;
+			}
+		}
+
+		if (InteractionList[i]->type == GameObject::GO_EXIT && InteractionList[i]->active)
+		{
+
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+			if (getTileMap()->getTile(position.x, floor(position.y)) == EXIT_ID && getTileMap()->getTile(position.x, floor(position.y)) == EXIT_ID &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f || 
+				getTileMap()->getTile(position.x, ceil(position.y)) == EXIT_ID && getTileMap()->getTile(position.x, ceil(position.y)) == EXIT_ID &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				switch ( m_CurrentLevel)
+				{
+				case 1:
+					m_CurrentLevel = 2;
+					throw m_CurrentLevel - 1;
+					break;
+				case 2:
+					m_CurrentLevel = 3;
+					throw m_CurrentLevel - 1;
+					break;
+				case 3:
+					m_CurrentLevel = 4;
+					throw m_CurrentLevel - 1;
+					break;
+				}
+				break;
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+			position.y += velocity.y * dt;
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+			if (getTileMap()->getTile(floor(position.x), position.y) == EXIT_ID && getTileMap()->getTile(floor(position.x), position.y) == EXIT_ID &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f || 
+				getTileMap()->getTile(ceil(position.x), position.y) == EXIT_ID && getTileMap()->getTile(ceil(position.x), position.y) == EXIT_ID &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				velocity.y = 0;
+			}
+			position += velocity * dt;
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f && KEYCOUNT > 0)
+			{
+				switch ( m_CurrentLevel)
+				{
+				case 1:
+					m_CurrentLevel = 2;
+					throw m_CurrentLevel - 1;
+					break;
+				case 2:
+					m_CurrentLevel = 3;
+					throw m_CurrentLevel - 1;
+					break;
+				case 3:
+					m_CurrentLevel = 4;
+					throw m_CurrentLevel - 1;
+					break;
+				}
+				break;
+			}
+		}
+	}
+
+	//Computer Laser Collision Activation
+	for (int i = 0; i < InteractionList.size(); i++)
+	{
+		if (InteractionList[i]->type == GameObject::GO_PC && InteractionList[i]->active)
+		{
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+			if (getTileMap()->getTile(position.x, floor(position.y)) == 39 && getTileMap()->getTile(position.x, floor(position.y)) == 39 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) == 39 && getTileMap()->getTile(position.x, ceil(position.y)) == 39 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+				velocity.x = 0;
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+			position.y += velocity.y * dt;
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+			if (getTileMap()->getTile(floor(position.x), position.y) == 39 && getTileMap()->getTile(floor(position.x), position.y) == 39 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) == 39 && getTileMap()->getTile(ceil(position.x), position.y) == 39 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				velocity.y = 0;
+			}
+			position += velocity * dt;
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f && LaserActive)
+			{
+				LaserActive = false;
+				break;
+			}
+		}
+	}
+	//Laser Deactivation
+	for (int i = 0; i < CollectiblesList.size(); i++)
+	{
+		if ((CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI) && CollectiblesList[i]->active)
+		{
+			if (!LaserActive)
+			{
+				CollectiblesList[i]->active = false;
+			}
+		}
+	}
+
+	//LockPicking
+	for (int i = 0; i < InteractionList.size(); i++)
+	{
+		if ((InteractionList[i]->type == GameObject::GO_LOCKPICK_1 || InteractionList[i]->type == GameObject::GO_LOCKPICK_2) && InteractionList[i]->active)
+		{
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+			if (getTileMap()->getTile(position.x, floor(position.y)) >= 41 && getTileMap()->getTile(position.x, floor(position.y)) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) >= 41 && getTileMap()->getTile(position.x, ceil(position.y)) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+				velocity.x = 0;
+				if (commands[INTERACT])
+				{
+					InLockPick = true;
+				}
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+			position.y += velocity.y * dt;
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+			if (getTileMap()->getTile(floor(position.x), position.y) >= 41 && getTileMap()->getTile(floor(position.x), position.y) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) >= 41 && getTileMap()->getTile(ceil(position.x), position.y) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				velocity.y = 0;
+				if (commands[INTERACT])
+				{
+					InLockPick = true;
+				}
+			}
+			position += velocity * dt;
+		}
+	}
+
+	if (LockPickUp)
+	{
+		LockPickY += static_cast<float>(dt * 10);
+		if (LockPickY > 12)
+		{
+			LockPickUp = false;
+		}
+	}
+	else if (!LockPickUp)
+	{
+		LockPickY -= static_cast<float>(dt * 10);
+		if (LockPickY < -12)
+		{
+			LockPickUp = true;
+		}
+	}
+	if (commands[UNLOCK])
+	{
+		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
+		{
+			InLockPick = false;
+			for (int i = 0; i < InteractionList.size(); i++)
+			{
+				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1)
+				{
+					InteractionList[i]->active = false;
+				}
+			}
+		}
+		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
+		{
+			InLockPick = false;
 		}
 	}
 
@@ -371,7 +684,11 @@ void GameModel2D::Update(double dt)
 			{
 				if (EnemyList[i]->getActive())
 				{
-					if (go->pos.x < CCharacter_Player::GetInstance()->getPosition().x + 0.5f && go->pos.x > CCharacter_Player::GetInstance()->getPosition().x - 0.5f && go->pos.y < CCharacter_Player::GetInstance()->getPosition().y + 0.5f && go->pos.y > CCharacter_Player::GetInstance()->getPosition().y - 0.5f)
+					float tempX = go->pos.x + 0.5f;
+					float tempY = go->pos.y + 0.5f;
+
+
+					if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
 					{
 						go->active = false;
 					}
@@ -379,6 +696,7 @@ void GameModel2D::Update(double dt)
 
 			}
 		}
+
 		if (go->active && (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_EBULLET))
 		{
 
@@ -456,20 +774,19 @@ void GameModel2D::Update(double dt)
 		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
 		if ( go->getActive() )
 		{
-			go->detectPlayer(CCharacter_Player::GetInstance()->getPosition()); 
-			
+			VeryRealRaycasting(dt);	
 			switch ( go->getState() )
 			{
 			case CCharacter_Enemy::CHASING:
 				{
-					go->Strategy_Chaseplayer(CCharacter_Player::GetInstance()->getPosition());
+					go->Strategy_Chaseplayer(CCharacter_Player::GetInstance()->getPosition(),getTileMap());
 					if (go->getAmmoType() != 0)
 					{
 						//Enemy Shooting (EBullet spawning)
 						if (CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 						{
 							//Spawn bullet
-							SpawnEnemyBullet(go->getPosition());
+							SpawnEnemyBullet(go->getPosition(),(go->getTargetPosition()-go->getPosition()).Normalized() * CPistol::GetInstance()->GetBulletSpeed());
 							//Reset fire cooldown
 							CPistol::GetInstance()->ResetCooldown();
 						}
@@ -488,22 +805,14 @@ void GameModel2D::Update(double dt)
 				}
 			case CCharacter_Enemy::TRACKING:
 				{
-					go->Strategy_Stalk(CCharacter_Player::GetInstance()->getPosition(),getAITileMap());
+					go->Strategy_Stalk(go->getInitPosition(),getAITileMap());
 					break;
 				}
 			};
-
-			//Testing
-			if ( go->getAmmoType() != go->CAMERA )
-			{
-				//go->setNewState(go->TRACKING);
-			}
-
-			go->UpdateEnemyPosition(dt);
-			//go->Update(dt,getTileMap());
+			//go->UpdateEnemyPosition(dt);
+			go->Update(dt,getTileMap());
 		}
 	}
-	BulletUpdate(dt);
 
 	//Enemy AI Flocking
 	for (unsigned i = 0; i < EnemyList.size(); ++i)
@@ -512,11 +821,11 @@ void GameModel2D::Update(double dt)
 		{
 			/*
 			if (CCharacter_Player::GetInstance()->getPosition().x < EnemyList[i]->getPosition().x + 0.5f &&
-				CCharacter_Player::GetInstance()->getPosition().x  > EnemyList[i]->getPosition().x - 0.5f &&
-				CCharacter_Player::GetInstance()->getPosition().y  < EnemyList[i]->getPosition().y + 0.5f &&
-				CCharacter_Player::GetInstance()->getPosition().y > EnemyList[i]->getPosition().y - 0.5f)
+			CCharacter_Player::GetInstance()->getPosition().x  > EnemyList[i]->getPosition().x - 0.5f &&
+			CCharacter_Player::GetInstance()->getPosition().y  < EnemyList[i]->getPosition().y + 0.5f &&
+			CCharacter_Player::GetInstance()->getPosition().y > EnemyList[i]->getPosition().y - 0.5f)
 			{
-					EnemyList[i]->setPosition(EnemyList[i]->getPosition().x + 0.1f, EnemyList[i]->getPosition().y + 0.1f, 0);
+			EnemyList[i]->setPosition(EnemyList[i]->getPosition().x + 0.1f, EnemyList[i]->getPosition().y + 0.1f, 0);
 			}*/
 			for (unsigned j = i; j < EnemyList.size() - j; j++)
 			{
@@ -532,6 +841,71 @@ void GameModel2D::Update(double dt)
 		}
 	}
 
+
+
+	switch ( CCharacter_Player::GetInstance()->getState())
+	{
+	case 0:
+		if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
+		{
+			AniToUpdate = PISTOL_IDLE;
+		}
+		else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
+		{
+			AniToUpdate = RIFLE_IDLE;
+		}
+		else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
+		{
+			AniToUpdate = SHOTGUN_IDLE;
+		}
+		break;
+	case 2:
+		if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
+		{
+			AniToUpdate = PISTOL_RELOAD;
+		}
+		else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
+		{
+			AniToUpdate = RIFLE_RELOAD;
+		}
+		else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
+		{
+			AniToUpdate = SHOTGUN_RELOAD;
+		}
+		break;
+	case 3:
+		if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
+		{
+			AniToUpdate = PISTOL_SHOOT;
+		}
+		else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
+		{
+			AniToUpdate = RIFLE_SHOOT;
+		}
+		else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
+		{
+			AniToUpdate = SHOTGUN_SHOOT;
+		}
+		break;
+	}
+
+	// *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?* Animations *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?* //
+	SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[AniToUpdate]);
+	if(sa)
+	{
+		sa->Update(dt);
+	} 
+	cameraZoom(dt);
+	BulletUpdate(dt);
+	for (int count = 0; count < NUM_COMMANDS; ++count)
+	{
+		commands[count] = false;
+	}
+	FPS = (float)(1.f / dt);
+}
+
+void GameModel2D::cameraZoom(double dt)
+{
 	Vector3 initialCam;
 	initialCam.Set(camera.position.x, camera.position.y, camera.position.z);
 	Vector3 playerPos;
@@ -550,64 +924,6 @@ void GameModel2D::Update(double dt)
 	{
 		ZoomIN = true;
 	}
-
-	for (int count = 0; count < NUM_COMMANDS; ++count)
-		commands[count] = false;
-
-		switch ( CCharacter_Player::GetInstance()->getState())
-		{
-		case 0:
-			if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
-			{
-				AniToUpdate = PISTOL_IDLE;
-			}
-			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
-			{
-				AniToUpdate = RIFLE_IDLE;
-			}
-			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
-			{
-				AniToUpdate = SHOTGUN_IDLE;
-			}
-			break;
-		case 2:
-			if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
-			{
-				AniToUpdate = PISTOL_RELOAD;
-			}
-			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
-			{
-				AniToUpdate = RIFLE_RELOAD;
-			}
-			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
-			{
-				AniToUpdate = SHOTGUN_RELOAD;
-			}
-			break;
-		case 3:
-			if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
-			{
-				AniToUpdate = PISTOL_SHOOT;
-			}
-			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 1 )
-			{
-				AniToUpdate = RIFLE_SHOOT;
-			}
-			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
-			{
-				AniToUpdate = SHOTGUN_SHOOT;
-			}
-			break;
-		}
-
-	// *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?* Animations *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?*  *?* *?* *?* //
-	SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[AniToUpdate]);
-	if(sa)
-	{
-		sa->Update(dt);
-	} 
-
-	FPS = (float)(1.f / dt);
 }
 
 float GameModel2D::getFPS()
@@ -704,7 +1020,7 @@ void GameModel2D::SpawnSGBullets(int WeaponDamage, float Speed)
 	}
 }
 
-void GameModel2D::SpawnEnemyBullet(Vector3 EnemyPos)
+void GameModel2D::SpawnEnemyBullet(Vector3 EnemyPos, Vector3 Vel)
 {
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
@@ -716,7 +1032,7 @@ void GameModel2D::SpawnEnemyBullet(Vector3 EnemyPos)
 			go->scale.Set(0.05, 0.05, 0.05);
 			go->pos = EnemyPos;
 			Vector3 tempVel;
-			tempVel = (CCharacter_Player::GetInstance()->getPosition() - EnemyPos).Normalized();
+			tempVel = Vel;
 			go->vel = tempVel * 0.1f;
 			break;
 
@@ -918,9 +1234,11 @@ void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 			EnemyList[i]->setActive(true);
 			EnemyList[i]->setPosition(x,y,z);
 			EnemyList[i]->setID(ID);
+			EnemyList[i]->setGroupID(m_EnemySpawnCount);
 			EnemyList[i]->setRotation(180);
 			EnemyList[i]->pathfind_tilemap = getAITileMap();
 			EnemyList[i]->CreateGrid();
+			m_EnemySpawnCount++;
 			switch ( ID )
 			{
 			case 0:
@@ -1028,7 +1346,8 @@ void GameModel2D::getMapData()
 				break;
 			case GameModel2D::EXIT_ID:
 				{
-					setNewExitPos(ccount,rcount,0);
+					//setNewExitPos(ccount,rcount,0);
+					setNewInteraction(tempPos,tempScale,GameObject::GO_EXIT,ccount,rcount);
 				}
 				break;
 			case GameModel2D::ENEMY_ID:
@@ -1092,4 +1411,31 @@ void GameModel2D::getMapData()
 			}
 		}
 	}
+}
+
+void GameModel2D::objective(void)
+{
+	switch ( m_CurrentLevel )
+	{
+	case 1:
+		m_ObjectiveCleared = true;
+		break;
+	case 2:
+		m_ObjectiveCleared = true;
+		//vehicle tracked
+		break;
+	case 3:
+		m_ObjectiveCleared = true;
+		//data got
+		break;
+	case 4:
+		m_ObjectiveCleared = true;
+		//boss died
+		break;
+	}
+}
+
+bool GameModel2D::getObjectiveCleared(void)
+{
+	return m_ObjectiveCleared;
 }

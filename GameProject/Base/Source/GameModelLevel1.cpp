@@ -2,12 +2,10 @@
 
 GameModelLevel1::GameModelLevel1()
 {
-	Sound.level1BGM();
 }
 
 GameModelLevel1::~GameModelLevel1()
 {
-	Sound.engine->stopAllSounds();
 }
 
 void GameModelLevel1::Init()

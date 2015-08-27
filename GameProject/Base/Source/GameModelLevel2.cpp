@@ -2,12 +2,10 @@
 
 GameModelLevel2::GameModelLevel2()
 {
-	Sound.level2BGM();
 }
 
 GameModelLevel2::~GameModelLevel2()
 {
-	Sound.engine->stopAllSounds();
 }
 
 void GameModelLevel2::Init()
@@ -32,6 +30,7 @@ void GameModelLevel2::Init()
 			newPlayerPos.z,1,1,100,1,5);
 
 	getMapData();
+	m_CurrentLevel = 2;
 }
 
 void GameModelLevel2::Update(double dt)

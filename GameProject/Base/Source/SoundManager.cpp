@@ -60,10 +60,10 @@ void CSoundManager::level2BGM()
 void CSoundManager::level3BGM()
 {
 	//Level 3 background music
-	ISound* music = engine->play2D("../irrKlang/media/Level3BGM2.mp3",
+	ISound* music = engine->play2D("../irrKlang/media/Level3BGM.mp3",
 		true, false, true);
 
-	//engine->setSoundVolume(0.25f);
+	engine->setSoundVolume(0.25f);
 }
 void CSoundManager::level4BGM()
 {
@@ -145,13 +145,11 @@ void CSoundManager::shotgunShot()
 void CSoundManager::emptyClip()
 {
 	//firing an empty clip
-	ISound* music = engine->play2D("../irrKlang/media/dryFiring.wav",
+	ISound* music = engine->play2D("../irrKlang/media/dryfiring.wav", 
 		false, false, true);
 
 	//engine->setSoundVolume(0.4f);
 }
-
-
 //Player interactions
 void CSoundManager::interactionSound()
 {

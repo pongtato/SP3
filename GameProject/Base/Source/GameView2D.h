@@ -30,6 +30,16 @@ public:
 	void RenderHelpText();
 	void RenderHealth();
 	void RenderHBar();
+	void RenderShottyIcon();
+	void RenderPistolIcon();
+	void RenderRifleIcon();
+	void RenderShottyAmmo();
+	void RenderPistolAmmo();
+	void RenderRifleAmmo();
+	void RenderLockPick();
+	void RenderLockBar();
+	void RenderLockBall();
+	void RenderExit();
 };
 
 #endif

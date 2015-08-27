@@ -2,12 +2,10 @@
 
 GameModelLevel3::GameModelLevel3()
 {
-	Sound.level3BGM();
 }
 
 GameModelLevel3::~GameModelLevel3()
 {
-	Sound.engine->stopAllSounds();
 }
 
 void GameModelLevel3::Init()
@@ -32,6 +30,7 @@ void GameModelLevel3::Init()
 			newPlayerPos.z,1,1,100,1,5);
 
 	getMapData();
+	m_CurrentLevel = 3;
 }
 
 void GameModelLevel3::Update(double dt)

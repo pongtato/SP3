@@ -86,3 +86,11 @@ void Controller::Update()
 	glfwGetCursorPos(view->getWindow(), &xpos, &ypos);
 	model->setPos(Vector3(xpos, ypos, 0));
 }
+
+bool Controller::gameExit()
+{
+	if ( IsKeyPressed(VK_ESCAPE))
+	{
+		return true;
+	}
+}

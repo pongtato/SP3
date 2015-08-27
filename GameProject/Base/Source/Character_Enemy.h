@@ -14,14 +14,14 @@ public:
 
 	enum DETECTION_VARIABLES
 	{
-		FOVdistance		= 2,
+		FOVdistance		= 5,
 		FOVArc			= 20,
 		ChaseDistance	= 5,
 		ScanSpeed		= 50,
 		ScanArc			= 45,
 		ScanDuration	= 5,
 		MovementDelay	= 2,
-		MoveSpeed       = 10,
+		MoveSpeed       = 1,
 		VARIABLES_TOTAL,
 	};
 
@@ -62,7 +62,7 @@ public:
 	void setMesh(ENEMY_TYPE newMesh);
 	void setAmmoType(ENEMY_AMMO_TYPE newAmmoType);
 	void setNewState(EMEY_CURRENT_STATE newState);
-	bool detectPlayer(Vector3 playerPos);
+	bool detectPlayer(Vector3 playerPos, TileMap* tileMap);
 	void setGroupID(int newGroupID);
 
 	int getMesh(void);
@@ -72,7 +72,7 @@ public:
 	float m_RotationArcMin;
 	int getGroupID(void);
 
-	void Strategy_Chaseplayer(Vector3 playerPos);
+	void Strategy_Chaseplayer(Vector3 playerPos,TileMap* tileMap);
 	void Strategy_Return(void);
 	void Strategy_Scan(double dt);
 	void Strategy_Stalk(Vector3 playerPos,TileMap* tileMap);
@@ -80,6 +80,7 @@ public:
 	Vector3 DetectionCornerL;
 	Vector3 DetectionCornerR;
 	Vector3 DetectionCornerM;
+	Vector3 LineOfSight;
 
 	void setRotateDirection(Vector3 playerPos);
 	CPathfinding* PATHFIND;
@@ -90,6 +91,11 @@ public:
 	void CreateGrid(void);
 	float MoveDelay;
 	vector<CPathfinding_Node*> PathFound;
+	void setTargetPosition(Vector3 newTarget);
+	Vector3 getTargetPosition(void);
+	void resetTimer(void);
+
+	bool InLineOfSight;
 
 private:
 	ENEMY_TYPE m_enemyMesh;

@@ -19,9 +19,11 @@ void GameController2D::Update()
 	if (IsKeyPressed('D'))
 		model->setCommands(GameModel2D::COMMANDS::MOVE_RIGHT);
 	if (IsKeyPressed(VK_SPACE))
-		model->setCommands(GameModel2D::COMMANDS::JUMP);
+		model->setCommands(GameModel2D::COMMANDS::UNLOCK);
 	if (IsKeyPressed(VK_RETURN))
 		model->setCommands(GameModel2D::COMMANDS::ENTER);
+	if (IsKeyPressed(VK_ESCAPE))
+		model->setCommands(GameModel2D::COMMANDS::ESCAPE);
 	//Weapon changing
 	if (IsKeyPressed('Q'))
 		model->setCommands(GameModel2D::COMMANDS::PREVWEAP);
@@ -31,9 +33,10 @@ void GameController2D::Update()
 		model->setCommands(GameModel2D::COMMANDS::SHOOT);
 	if (IsKeyPressed('R'))
 		model->setCommands(GameModel2D::COMMANDS::RELOAD);
-
 	if (IsKeyPressed('X'))
 		model->setCommands(GameModel2D::COMMANDS::CHECK);
+	if (IsKeyPressed('F'))
+		model->setCommands(GameModel2D::COMMANDS::INTERACT);
 	Controller::Update();
 	
 }

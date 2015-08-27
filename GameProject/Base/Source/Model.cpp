@@ -29,3 +29,8 @@ Vector3 Model::getPos()
 {
 	return Vector3(xpos - 512, -(ypos - 400), 0);
 }
+
+void Model::ChangeLevel(int NewLevel)
+{
+	cout << " test " << NewLevel << endl;
+}

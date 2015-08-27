@@ -21,6 +21,11 @@
 #include "MenuController.h"
 #include "GameController2D.h"
 
+int levelsCount = 0;
+bool loop = true;
+void RunGame(int gameLevel);
+
+
 void main( void )
 {
 	Model* model = new MenuModel();
@@ -36,18 +41,26 @@ void main( void )
 	view->Init();
 	model->Init();
 
-	
 	try {
 		controller->RunLoop();
 	}
 	catch (int state)
 	{
 		glfwDestroyWindow(view->getWindow());
-		switch (state)
+		levelsCount = state;
+	}
+
+	while ( loop )
+	{
+		if (controller->gameExit())
+		{
+			break;
+		}
+
+		switch (levelsCount)
 		{
 		case 0:
 			model = new GameModelLevel1();
-			
 			break;
 		case 1:
 			model = new GameModelLevel2();
@@ -57,6 +70,9 @@ void main( void )
 			break;
 		case 3:
 			model = new GameModelLevel4();
+			break;
+		default:
+			//loop = false;
 			break;
 		}
 		view = new GameView2D(model);
@@ -70,10 +86,24 @@ void main( void )
 		if (glewInit() != GLEW_OK) exit(EXIT_FAILURE);
 		view->Init();
 		model->Init();
-		controller->RunLoop();
+		try
+		{
+			controller->RunLoop();
+		}
+		catch (int newZ)
+		{
+			glfwDestroyWindow(view->getWindow());
+			levelsCount = newZ;
+		}
 	}
+
 
 	if (model != NULL) delete model;
 	if (view != NULL) delete view;
 	if (controller != NULL) delete controller;
+}
+
+void RunGame(int gameLevel)
+{
+
 }

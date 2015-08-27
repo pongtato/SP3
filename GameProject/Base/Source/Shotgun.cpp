@@ -18,6 +18,7 @@ CShotgun::CShotgun(void)
 	Damage = 1;
 	FireCooldown = 0.0f;
 	AttackSpeed = 1.5f;
+	BulletSpeed = 2.f;
 }
 
 
