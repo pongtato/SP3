@@ -82,7 +82,36 @@ void GameModel2D::Init()
 	meshList[HEALTH]->textureID[0] = LoadTGA("Image\\HealthBar.tga");
 
 	//UI - Health Bar
-	meshList[HEALTH_BAR] = MeshBuilder::GenerateQuad("HEALTH", 0, 20);
+	meshList[HEALTH_BAR] = MeshBuilder::GenerateQuad("HEALTH_BAR", 0, 20);
+
+	//Weapon Icon
+	meshList[PISTOL_ICON] = MeshBuilder::GenerateQuad("PISTOL_ICON", 1, 20);
+	meshList[PISTOL_ICON]->textureID[0] = LoadTGA("Image\\IconPistol.tga");
+
+	meshList[RIFLE_ICON] = MeshBuilder::GenerateQuad("RIFLE_ICON", 1, 20);
+	meshList[RIFLE_ICON]->textureID[0] = LoadTGA("Image\\IconRifle.tga");
+
+	meshList[SHOTGUN_ICON] = MeshBuilder::GenerateQuad("SHOTGUN_ICON", 1, 20);
+	meshList[SHOTGUN_ICON]->textureID[0] = LoadTGA("Image\\IconShotgun.tga");
+
+	//Weapon Ammo
+	meshList[PISTOL_AMMO] = MeshBuilder::GenerateQuad("PISTOL_AMMO", 1, 20);
+	meshList[PISTOL_AMMO]->textureID[0] = LoadTGA("Image\\PistolBullet.tga");
+
+	meshList[RIFLE_AMMO] = MeshBuilder::GenerateQuad("RIFLE_AMMO", 1, 20);
+	meshList[RIFLE_AMMO]->textureID[0] = LoadTGA("Image\\RifleBullet.tga");
+
+	meshList[SHOTGUN_AMMO] = MeshBuilder::GenerateQuad("SHOTGUN_AMMO", 1, 20);
+	meshList[SHOTGUN_AMMO]->textureID[0] = LoadTGA("Image\\ShotgunShell.tga");
+
+	//Lock picking
+	meshList[LOCKPICKBG] = MeshBuilder::GenerateQuad("LPBG", 0, 1.0f);
+	meshList[LOCKPICKBG]->textureID[0] = LoadTGA("Image\\LockPickBG.tga");
+
+	meshList[LOCKPICKBAR] = MeshBuilder::GenerateQuad("LPBAR", Color(0, 0, 1), 1.0f);
+
+	meshList[LOCKPICKBALL] = MeshBuilder::GenerateSphere("LPBALL", Color(1, 0, 0), 20, 20, 1.0f);
+
 
 	//Animation Init
 	SpriteAnimation *eENEMY_LIGHT_IDLE = dynamic_cast<SpriteAnimation*>(meshList[ENEMY_LIGHT_IDLE]);
@@ -191,7 +220,8 @@ void GameModel2D::Init()
 
 	KEYCOUNT = 0;
 	LaserActive = true;
-	InLockPick = false;
+	InLockPick1 = false;
+	InLockPick2 = false;
 	LockPickY = 0;
 	LockPickUp = true;
 	LockPickBoxTop = 1;
@@ -320,8 +350,10 @@ void GameModel2D::Update(double dt)
 		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
 		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
 	}
-
-	CCharacter_Player::GetInstance()->Update(dt, getTileMap());
+	if (!InLockPick1 || !InLockPick2)
+	{
+		CCharacter_Player::GetInstance()->Update(dt, getTileMap());
+	}
 	//Weapon changing
 	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
 	if (commands[PREVWEAP] && WeaponChangeCooldown < 0)
@@ -342,7 +374,7 @@ void GameModel2D::Update(double dt)
 	CPistol::GetInstance()->FireCooldownTick(dt);
 	CShotgun::GetInstance()->FireCooldownTick(dt);
 	CRifle::GetInstance()->FireCooldownTick(dt);
-	CPistol::GetInstance()->FireCooldownTick(dt);
+	EPistol::GetInstance()->FireCooldownTick(dt);
 
 	//Shooting (Bullet spawning)
 	if (commands[SHOOT])
@@ -352,26 +384,42 @@ void GameModel2D::Update(double dt)
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() > 0 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				//Pistol fire sound
+				Sound.pistolShot();
 				//Spawn Bullet
 				SpawnBullet(CPistol::GetInstance()->GetDamage(), 0.5f);
 				//Ammo decrease
 				CPistol::GetInstance()->UseAmmo(1);
 				CPistol::GetInstance()->ResetCooldown();
 			}
+			else if (CPistol::GetInstance()->GetAmmo() < 1 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				Sound.emptyClip();
+				CPistol::GetInstance()->ResetCooldown();
+			}
 			break;
 		case 1:
 			if (CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				//rifle fire sound
+				Sound.rifleShot();
 				//Spawn Bullet
 				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
 				//Ammo decrease
 				CRifle::GetInstance()->UseAmmo(1);
 				CRifle::GetInstance()->ResetCooldown();
 			}
+			else if (CRifle::GetInstance()->GetAmmo() < 1 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				Sound.emptyClip();
+				CRifle::GetInstance()->ResetCooldown();
+			}
 			break;
 		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				//Shotgun fire sound
+				Sound.shotgunShot();
 				//Spawn Bullet
 				for (int i = 0; i < 7; i++)
 				{
@@ -382,6 +430,11 @@ void GameModel2D::Update(double dt)
 				CShotgun::GetInstance()->UseAmmo(7);
 				CShotgun::GetInstance()->ResetCooldown();
 
+			}
+			else if (CShotgun::GetInstance()->GetAmmo() < 1 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
+			{
+				Sound.emptyClip();
+				CShotgun::GetInstance()->ResetCooldown();
 			}
 			break;
 		}
@@ -399,19 +452,23 @@ void GameModel2D::Update(double dt)
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() == 0)
 			{
+				Sound.reloadSound();
 				CPistol::GetInstance()->SetAmmo(10);
 			}
 			break;
 		case 1:
-			if (CShotgun::GetInstance()->GetAmmo() == 0)
-			{
-				CShotgun::GetInstance()->SetAmmo(70);
-			}
-			break;
-		case 2:
 			if (CRifle::GetInstance()->GetAmmo() == 0)
 			{
+				Sound.reloadSound();
 				CRifle::GetInstance()->SetAmmo(50);
+			}
+
+			break;
+		case 2:
+			if (CShotgun::GetInstance()->GetAmmo() == 0)
+			{
+				Sound.reloadSound();
+				CShotgun::GetInstance()->SetAmmo(70);
 			}
 			break;
 		}
@@ -494,14 +551,17 @@ void GameModel2D::Update(double dt)
 				switch ( m_CurrentLevel)
 				{
 				case 1:
+					Sound.engine->stopAllSounds();
 					m_CurrentLevel = 2;
 					throw m_CurrentLevel - 1;
 					break;
 				case 2:
+					Sound.engine->stopAllSounds();
 					m_CurrentLevel = 3;
 					throw m_CurrentLevel - 1;
 					break;
 				case 3:
+					Sound.engine->stopAllSounds();
 					m_CurrentLevel = 4;
 					throw m_CurrentLevel - 1;
 					break;
@@ -550,7 +610,7 @@ void GameModel2D::Update(double dt)
 	{
 		if (InteractionList[i]->type == GameObject::GO_PC && InteractionList[i]->active)
 		{
-			//Lock collision
+			//PC collision
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
 			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
 			position.x += velocity.x * dt;
@@ -583,6 +643,7 @@ void GameModel2D::Update(double dt)
 			position += velocity * dt;
 			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f && LaserActive)
 			{
+				Sound.PCON();
 				LaserActive = false;
 				break;
 			}
@@ -603,7 +664,7 @@ void GameModel2D::Update(double dt)
 	//LockPicking
 	for (int i = 0; i < InteractionList.size(); i++)
 	{
-		if ((InteractionList[i]->type == GameObject::GO_LOCKPICK_1 || InteractionList[i]->type == GameObject::GO_LOCKPICK_2) && InteractionList[i]->active)
+		if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1 && InteractionList[i]->active)
 		{
 			//Lock collision
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
@@ -622,7 +683,7 @@ void GameModel2D::Update(double dt)
 				velocity.x = 0;
 				if (commands[INTERACT])
 				{
-					InLockPick = true;
+					InLockPick1 = true;
 				}
 			}
 			position = CCharacter_Player::GetInstance()->getPosition();
@@ -640,7 +701,50 @@ void GameModel2D::Update(double dt)
 				velocity.y = 0;
 				if (commands[INTERACT])
 				{
-					InLockPick = true;
+					InLockPick1 = true;
+				}
+			}
+			position += velocity * dt;
+		}
+
+		if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2 && InteractionList[i]->active)
+		{
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+			if (getTileMap()->getTile(position.x, floor(position.y)) >= 41 && getTileMap()->getTile(position.x, floor(position.y)) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) >= 41 && getTileMap()->getTile(position.x, ceil(position.y)) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+					InLockPick2 = true;
+				if (commands[INTERACT])
+				{
+					InLockPick2 = true;
+				}
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+			position.y += velocity.y * dt;
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+			if (getTileMap()->getTile(floor(position.x), position.y) >= 41 && getTileMap()->getTile(floor(position.x), position.y) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) >= 41 && getTileMap()->getTile(ceil(position.x), position.y) <= 42 &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				velocity.y = 0;
+				if (commands[INTERACT])
+				{
+					InLockPick2 = true;
 				}
 			}
 			position += velocity * dt;
@@ -663,11 +767,11 @@ void GameModel2D::Update(double dt)
 			LockPickUp = true;
 		}
 	}
-	if (commands[UNLOCK])
+	if (commands[UNLOCK] && InLockPick1 == true)
 	{
 		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
 		{
-			InLockPick = false;
+			InLockPick1 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
 			{
 				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1)
@@ -678,7 +782,25 @@ void GameModel2D::Update(double dt)
 		}
 		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
 		{
-			InLockPick = false;
+			InLockPick1= false;
+		}
+	}
+	if (commands[UNLOCK] && InLockPick2 == true)
+	{
+		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
+		{
+			InLockPick2 = false;
+			for (int i = 0; i < InteractionList.size(); i++)
+			{
+				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2)
+				{
+					InteractionList[i]->active = false;
+				}
+			}
+		}
+		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
+		{
+			InLockPick2 = false;
 		}
 	}
 
@@ -717,6 +839,11 @@ void GameModel2D::Update(double dt)
 				}
 
 			}
+			if (go->pos.x < CCharacter_Player::GetInstance()->getPosition().x + 0.5f && go->pos.x > CCharacter_Player::GetInstance()->getPosition().x - 0.5f && go->pos.y <CCharacter_Player::GetInstance()->getPosition().y + 0.5f && go->pos.y > CCharacter_Player::GetInstance()->getPosition().y - 0.5f)
+			{
+				go->active = false;
+				CCharacter_Player::GetInstance()->Damaged(25);
+			}
 		}
 
 		if (go->active && (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_EBULLET))
@@ -741,6 +868,51 @@ void GameModel2D::Update(double dt)
 			{
 				CollectiblesList[i]->active = false;
 				KEYCOUNT++;
+				break;
+			}
+		}
+
+		
+	}
+
+
+	//for testing
+	if (commands[CHECK])
+	{
+		string line;
+		float x, y, z;
+		ifstream playerPos("savepoint.txt");
+
+		if (playerPos.is_open())
+		{
+			while (getline(playerPos, line))
+			{
+				cout << line << '\n';
+			}
+			playerPos.close();
+		}
+		else
+			cout << "unable to open file";
+	}
+	
+	//SAVE_ID waypoint
+	for (int i = 0; i < InteractionList.size(); i++)
+	{
+		if (InteractionList[i]->type == GameObject::GO_SAVE && InteractionList[i]->active)
+		{
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
+			{
+				cout << "player position saved! " << endl;
+				ofstream playerPos("savepoint.txt");
+				if (playerPos.is_open())
+				{
+					//playerPos << CCharacter_Player::GetInstance()->getPosition().Length();
+					playerPos << getNewPlayerPos().x << endl;
+					playerPos << getNewPlayerPos().y << endl;
+					playerPos << getNewPlayerPos().z << endl;
+
+					playerPos.close();
+				}
 				break;
 			}
 		}
@@ -777,12 +949,12 @@ void GameModel2D::Update(double dt)
 					if (go->getAmmoType() != 0)
 					{
 						//Enemy Shooting (EBullet spawning)
-						if (CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
+						if (EPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 						{
 							//Spawn bullet
-							SpawnEnemyBullet(go->getPosition(),(go->getTargetPosition()-go->getPosition()).Normalized() * CPistol::GetInstance()->GetBulletSpeed());
+							SpawnEnemyBullet(go->getPosition(),(go->getTargetPosition()-go->getPosition()).Normalized() * EPistol::GetInstance()->GetBulletSpeed());
 							//Reset fire cooldown
-							CPistol::GetInstance()->ResetCooldown();
+							EPistol::GetInstance()->ResetCooldown();
 						}
 					}
 					break;
@@ -1226,6 +1398,36 @@ Mesh* GameModel2D::getHealthBar()
 	return meshList[HEALTH_BAR];
 }
 
+Mesh* GameModel2D::getPistolIcon()
+{
+	return meshList[PISTOL_ICON];
+}
+
+Mesh* GameModel2D::getRifleIcon()
+{
+	return meshList[RIFLE_ICON];
+}
+
+Mesh* GameModel2D::getShotgunIcon()
+{
+	return meshList[SHOTGUN_ICON];
+}
+
+Mesh* GameModel2D::getPistolAmmo()
+{
+	return meshList[PISTOL_AMMO];
+}
+
+Mesh* GameModel2D::getRifleAmmo()
+{
+	return meshList[RIFLE_AMMO];
+}
+
+Mesh* GameModel2D::getShotgunAmmo()
+{
+	return meshList[SHOTGUN_AMMO];
+}
+
 Mesh* GameModel2D::getFogOfWar()
 {
 	return meshList[FOG];
@@ -1444,6 +1646,36 @@ void GameModel2D::objective(void)
 bool GameModel2D::getObjectiveCleared(void)
 {
 	return m_ObjectiveCleared;
+}
+
+Mesh* GameModel2D::getLockPickBG()
+{
+	return meshList[LOCKPICKBG];
+}
+
+Mesh* GameModel2D::getLockPickBar()
+{
+	return meshList[LOCKPICKBAR];
+}
+
+Mesh* GameModel2D::getLockPickBall()
+{
+	return meshList[LOCKPICKBALL];
+}
+
+bool GameModel2D::getLockPick1()
+{
+	return InLockPick1;
+}
+
+bool GameModel2D::getLockPick2()
+{
+	return InLockPick2;
+}
+
+float GameModel2D::getLockPickY()
+{
+	return LockPickY;
 }
 
 std::vector<GameObject *> GameModel2D::getFogList()

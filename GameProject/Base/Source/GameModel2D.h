@@ -19,6 +19,7 @@
 #include "EnemyPistol.h"
 
 #include <vector>
+#include <fstream>
 
 class GameModel2D : public Model
 {
@@ -30,6 +31,7 @@ public:
 		MOVE_RIGHT,
 		UNLOCK,
 		ENTER,
+		CHECK,
 		ESCAPE,
 		//Weapon changing
 		PREVWEAP,
@@ -56,6 +58,12 @@ public:
 		TEXT_PROMPT,
 		HEALTH,
 		HEALTH_BAR,
+		PISTOL_ICON,
+		PISTOL_AMMO,
+		RIFLE_ICON,
+		RIFLE_AMMO,
+		SHOTGUN_ICON,
+		SHOTGUN_AMMO,
 		FOG,
 
 		//Player
@@ -75,6 +83,11 @@ public:
 		ENEMY_LIGHT_IDLE,
 		ENEMY_CAMERA,
 		TOTAL_GEOMETRY,
+
+		//Lock Pick
+		LOCKPICKBG,
+		LOCKPICKBAR,
+		LOCKPICKBALL,
 	};
 
 	enum TILE_IDS
@@ -141,7 +154,8 @@ protected:
 	//Computer Laser
 	bool LaserActive;
 	//Lock Picking
-	bool InLockPick;
+	bool InLockPick1;
+	bool InLockPick2;
 	float LockPickY;
 	bool LockPickUp;
 	float LockPickBoxTop;
@@ -150,8 +164,15 @@ protected:
 	Model levelSet;
 
 public:
-
+	//Lock Picking
+	bool getLockPick1();
+	bool getLockPick2();
 	bool hasReadLoc;
+	Mesh* getLockPickBG();
+	Mesh* getLockPickBar();
+	Mesh* getLockPickBall();
+	float getLockPickY();
+
 	int AniToUpdate;
 	bool ZoomIN;
 	int m_CurrentLevel;
@@ -195,6 +216,14 @@ public:
 	//Health Bar
 	Mesh* getHealth();
 	Mesh* getHealthBar();
+	//Weapon Icon
+	Mesh* getPistolIcon();
+	Mesh* getRifleIcon();
+	Mesh* getShotgunIcon();
+	//Weapon Ammo
+	Mesh* getPistolAmmo();
+	Mesh* getRifleAmmo();
+	Mesh* getShotgunAmmo();
 	Mesh* getFogOfWar();
 
 	void setNewPlayerPos(float x, float y, float z);
