@@ -82,6 +82,16 @@ void GameModel2D::Init()
 	//UI - Health Bar
 	meshList[HEALTH_BAR] = MeshBuilder::GenerateQuad("HEALTH", 0, 20);
 
+
+	//Lock picking
+	meshList[LOCKPICKBG] = MeshBuilder::GenerateQuad("LPBG", 0, 1.0f);
+	meshList[LOCKPICKBG]->textureID[0] = LoadTGA("Image\\LockPickBG.tga");
+
+	meshList[LOCKPICKBAR] = MeshBuilder::GenerateQuad("LPBAR", Color(0, 0, 1), 1.0f);
+
+	meshList[LOCKPICKBALL] = MeshBuilder::GenerateSphere("LPBALL", Color(1, 0, 0), 20, 20, 1.0f);
+
+
 	//Animation Init
 	SpriteAnimation *eENEMY_LIGHT_IDLE = dynamic_cast<SpriteAnimation*>(meshList[ENEMY_LIGHT_IDLE]);
 	if(eENEMY_LIGHT_IDLE)
@@ -298,8 +308,10 @@ void GameModel2D::Update(double dt)
 		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
 		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
 	}
-
-	CCharacter_Player::GetInstance()->Update(dt, getTileMap());
+	if (!InLockPick)
+	{
+		CCharacter_Player::GetInstance()->Update(dt, getTileMap());
+	}
 	//Weapon changing
 	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
 	if (commands[PREVWEAP] && WeaponChangeCooldown < 0)
@@ -1393,4 +1405,29 @@ void GameModel2D::objective(void)
 bool GameModel2D::getObjectiveCleared(void)
 {
 	return m_ObjectiveCleared;
+}
+
+Mesh* GameModel2D::getLockPickBG()
+{
+	return meshList[LOCKPICKBG];
+}
+
+Mesh* GameModel2D::getLockPickBar()
+{
+	return meshList[LOCKPICKBAR];
+}
+
+Mesh* GameModel2D::getLockPickBall()
+{
+	return meshList[LOCKPICKBALL];
+}
+
+bool GameModel2D::getLockPick()
+{
+	return InLockPick;
+}
+
+float GameModel2D::getLockPickY()
+{
+	return LockPickY;
 }
