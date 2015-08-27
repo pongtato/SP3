@@ -80,8 +80,27 @@ void GameModel2D::Init()
 	meshList[HEALTH]->textureID[0] = LoadTGA("Image\\HealthBar.tga");
 
 	//UI - Health Bar
-	meshList[HEALTH_BAR] = MeshBuilder::GenerateQuad("HEALTH", 0, 20);
+	meshList[HEALTH_BAR] = MeshBuilder::GenerateQuad("HEALTH_BAR", 0, 20);
 
+	//Weapon Icon
+	meshList[PISTOL_ICON] = MeshBuilder::GenerateQuad("PISTOL_ICON", 1, 20);
+	meshList[PISTOL_ICON]->textureID[0] = LoadTGA("Image\\IconPistol.tga");
+
+	meshList[RIFLE_ICON] = MeshBuilder::GenerateQuad("RIFLE_ICON", 1, 20);
+	meshList[RIFLE_ICON]->textureID[0] = LoadTGA("Image\\IconRifle.tga");
+
+	meshList[SHOTGUN_ICON] = MeshBuilder::GenerateQuad("SHOTGUN_ICON", 1, 20);
+	meshList[SHOTGUN_ICON]->textureID[0] = LoadTGA("Image\\IconShotgun.tga");
+
+	//Weapon Ammo
+	meshList[PISTOL_AMMO] = MeshBuilder::GenerateQuad("PISTOL_AMMO", 1, 20);
+	meshList[PISTOL_AMMO]->textureID[0] = LoadTGA("Image\\PistolBullet.tga");
+
+	meshList[RIFLE_AMMO] = MeshBuilder::GenerateQuad("RIFLE_AMMO", 1, 20);
+	meshList[RIFLE_AMMO]->textureID[0] = LoadTGA("Image\\RifleBullet.tga");
+
+	meshList[SHOTGUN_AMMO] = MeshBuilder::GenerateQuad("SHOTGUN_AMMO", 1, 20);
+	meshList[SHOTGUN_AMMO]->textureID[0] = LoadTGA("Image\\ShotgunShell.tga");
 
 	//Lock picking
 	meshList[LOCKPICKBG] = MeshBuilder::GenerateQuad("LPBG", 0, 1.0f);
@@ -802,6 +821,7 @@ void GameModel2D::Update(double dt)
 			if (go->pos.x < CCharacter_Player::GetInstance()->getPosition().x + 0.5f && go->pos.x > CCharacter_Player::GetInstance()->getPosition().x - 0.5f && go->pos.y <CCharacter_Player::GetInstance()->getPosition().y + 0.5f && go->pos.y > CCharacter_Player::GetInstance()->getPosition().y - 0.5f)
 			{
 				go->active = false;
+				CCharacter_Player::GetInstance()->Damaged(25);
 			}
 		}
 
@@ -1333,6 +1353,37 @@ Mesh* GameModel2D::getHealthBar()
 {
 	return meshList[HEALTH_BAR];
 }
+
+Mesh* GameModel2D::getPistolIcon()
+{
+	return meshList[PISTOL_ICON];
+}
+
+Mesh* GameModel2D::getRifleIcon()
+{
+	return meshList[RIFLE_ICON];
+}
+
+Mesh* GameModel2D::getShotgunIcon()
+{
+	return meshList[SHOTGUN_ICON];
+}
+
+Mesh* GameModel2D::getPistolAmmo()
+{
+	return meshList[PISTOL_AMMO];
+}
+
+Mesh* GameModel2D::getRifleAmmo()
+{
+	return meshList[RIFLE_AMMO];
+}
+
+Mesh* GameModel2D::getShotgunAmmo()
+{
+	return meshList[SHOTGUN_AMMO];
+}
+
 void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 {
 	for ( unsigned i = 0; i < EnemyList.size(); ++i)

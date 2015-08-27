@@ -30,10 +30,10 @@ public:
 	void RenderHelpText();
 	void RenderHealth();
 	void RenderHBar();
-	void RenderShottyIcon();
+	void RenderShotgunIcon();
 	void RenderPistolIcon();
 	void RenderRifleIcon();
-	void RenderShottyAmmo();
+	void RenderShotgunAmmo();
 	void RenderPistolAmmo();
 	void RenderRifleAmmo();
 	void RenderLockPick();
