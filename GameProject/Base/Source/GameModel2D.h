@@ -82,12 +82,13 @@ public:
 		CAUTION,
 		ENEMY_LIGHT_IDLE,
 		ENEMY_CAMERA,
-		TOTAL_GEOMETRY,
 
 		//Lock Pick
 		LOCKPICKBG,
 		LOCKPICKBAR,
 		LOCKPICKBALL,
+
+		TOTAL_GEOMETRY,
 	};
 
 	enum TILE_IDS
@@ -164,6 +165,8 @@ protected:
 	Model levelSet;
 
 public:
+	//Collision
+	void LaserCollisionCheck(double dt);
 	//Lock Picking
 	bool getLockPick1();
 	bool getLockPick2();

@@ -331,8 +331,44 @@ void GameModel2D::VeryRealRaycasting(double dt)
 	}
 }
 
+//Collision Checks
+
+void GameModel2D::LaserCollisionCheck(double dt)
+{
+	//Laser Collision Check
+	for (int i = 0; i < CollectiblesList.size(); i++)
+	{
+		if (CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI && CollectiblesList[i]->active)
+		{
+			//Lock collision
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			position.x += velocity.x * dt;
+		
+			if (getTileMap()->getTile(position.x, floor(position.y)) >= LASER_HORI_ID && getTileMap()->getTile(position.x, floor(position.y)) <= LASER_VERTI_ID &&
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) >= LASER_HORI_ID && getTileMap()->getTile(position.x, ceil(position.y)) <= LASER_VERTI_ID &&
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				std::cout << "ALARM" << std::endl;
+			}
+			position = CCharacter_Player::GetInstance()->getPosition();
+		
+			if (getTileMap()->getTile(floor(position.x), position.y) >= LASER_HORI_ID && getTileMap()->getTile(floor(position.x), position.y) <= LASER_VERTI_ID &&
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) >= LASER_HORI_ID && getTileMap()->getTile(ceil(position.x), position.y) <= LASER_VERTI_ID &&
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				std::cout << "ALARM" << std::endl;
+			}
+			position += velocity * dt;
+		}
+	}
+}
 void GameModel2D::Update(double dt)
 {
+	//Collision Checks
+	LaserCollisionCheck(dt);
 	float fps = (1 / dt);
 	//countdown timer
 	CDTimerLimit += 1;
@@ -350,7 +386,7 @@ void GameModel2D::Update(double dt)
 		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
 		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
 	}
-	if (!InLockPick1 || !InLockPick2)
+	if (!InLockPick1 && !InLockPick2)
 	{
 		CCharacter_Player::GetInstance()->Update(dt, getTileMap());
 	}
@@ -723,7 +759,7 @@ void GameModel2D::Update(double dt)
 				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
-					InLockPick2 = true;
+				velocity.x = 0;
 				if (commands[INTERACT])
 				{
 					InLockPick2 = true;
