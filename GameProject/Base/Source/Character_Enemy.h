@@ -77,7 +77,8 @@ public:
 	void Strategy_Chaseplayer(Vector3 playerPos,TileMap* tileMap);
 	void Strategy_Return(void);
 	void Strategy_Scan(double dt);
-	void Strategy_Stalk(Vector3 playerPos,TileMap* tileMap);
+	bool Strategy_Pathfind(Vector3 playerPos,TileMap* tileMap);
+	void Strategy_Track(double dt);
 
 	Vector3 DetectionCornerL;
 	Vector3 DetectionCornerR;

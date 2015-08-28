@@ -254,6 +254,7 @@ public:
 	void cameraZoom(double dt);
 	void objective(void);
 	bool getObjectiveCleared(void);
+	void EnemyDecision(double dt);
 };
 
 #endif

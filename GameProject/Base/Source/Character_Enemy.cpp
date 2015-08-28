@@ -86,55 +86,19 @@ bool CCharacter_Enemy::detectPlayer(Vector3 playerPos, TileMap* tileMap)
 
 void CCharacter_Enemy::Strategy_Chaseplayer(Vector3 playerPos,TileMap* tileMap)
 {
-	Vector3 temp = (TargetPosition - getPosition()).Normalized() * MoveSpeed;
-	if ( m_weaponChoice != CAMERA && (TargetPosition - getPosition()).Length() > 1.5f )
-	{		
-		setVelocity(temp.x,temp.y,0);
-	}
-	else
-	{
-		setVelocity(0,0,0);
-	}
-
-	if ((TargetPosition - getPosition()).Length() > 1.5f)
-	{
-		setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
-		if ( getRotation() <= 0 )
-		{
-			setRotation(getRotation() + 360);
-		}	
-	}
-	else if ( m_weaponChoice != CAMERA && !detectPlayer(playerPos,tileMap))
-	{
-
-		resetTimer();
-			setRotateDirection(playerPos);
-		setNewState(SCANNING);
-	}
-
-	if ( m_weaponChoice == CAMERA )
-	{
-		if ( !detectPlayer(playerPos,tileMap) )
-		{
-			setNewState(SCANNING);
-		}
-	}
+	
 }
 
 void CCharacter_Enemy::Strategy_Return(void)
 {
-	Vector3 temp = (getInitPosition() - getPosition()).Normalized() * MoveSpeed;
-	setVelocity(temp.x,temp.y,0);
-	setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
 	
-	if ( (getInitPosition() - getPosition()).Length() < 0.2f )
-	{
-		setRotation(getRotation() - 180);
-		setVelocity(0,0,0);
-		setNewState(IDLE);
+}
 
-	}
-
+void CCharacter_Enemy::Strategy_Track(double dt)
+{
+	Vector3 tempDirection = ( getTargetPosition() - getPosition());
+	setRotation(Math::RadianToDegree(atan2f(tempDirection.y,tempDirection.x)));
+	
 	if ( getRotation() <= 0 )
 	{
 		setRotation(getRotation() + 360);
@@ -182,7 +146,7 @@ void CCharacter_Enemy::Strategy_Scan(double dt)
 	}
 	else if ( m_weaponChoice != CAMERA )
 	{
-		setNewState(TRACKING);
+		setNewState(RUNNING);
 	}
 }
 
@@ -209,7 +173,7 @@ void CCharacter_Enemy::setRotateDirection(Vector3 playerPos)
 	m_MedianRotation = getRotation();
 }
 
-void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
+bool CCharacter_Enemy::Strategy_Pathfind(Vector3 playerPos,TileMap* tileMap)
 {
 	if (TargetPosition != playerPos )
 	{
@@ -227,14 +191,14 @@ void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
 			setVelocity(temp.x,temp.y,0);
 			setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
 
-		/*	if ( getRotation() >= 360 )
+			if ( getRotation() >= 360 )
 			{
 				setRotation(0);
 			}
 			else if (  getRotation() <= 0 )
 			{
 				setRotation(360);
-			}*/
+			}
 
 			if ( (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Length() < 0.1f )
 			{
@@ -245,22 +209,12 @@ void CCharacter_Enemy::Strategy_Stalk(Vector3 playerPos,TileMap* tileMap)
 				else
 				{
 					PATHFIND->hasFound = true;
+					return true;
 				}
 			}
 		}
 	}
-	else if ( (getInitPosition()-getPosition()).Length() > 0.5f)
-	{
-		setVelocity(0,0,0);
-		resetTimer();
-		setRotateDirection(playerPos);
-		setNewState(SCANNING);
-	}
-	else
-	{
-		setRotateDirection(getRotation() - 180);
-		setNewState(IDLE);
-	}
+	return false;
 }
 
 void CCharacter_Enemy::UpdateEnemyPosition(double dt)

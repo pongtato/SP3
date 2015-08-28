@@ -17,6 +17,7 @@ CCharacter_Player::CCharacter_Player(void)
 	m_playerState = IDLE;
 	walkLimit = 0;
 	m_HasBeenDetected = false;
+	m_AlertState = UNDETECTED;
 }
 
 

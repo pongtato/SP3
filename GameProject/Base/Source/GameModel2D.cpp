@@ -291,11 +291,11 @@ void GameModel2D::VeryRealRaycasting(double dt)
 					if ( (CCharacter_Player::GetInstance()->getPosition() - checker->pos).Length() < 1.f )
 					{
 						//collide with player = true
-						if ( checker->ID == go->getGroupID() )
+						if ( checker->ID == go->getGroupID() && CCharacter_Player::GetInstance()->getAlertState() == CCharacter_Player::GetInstance()->UNDETECTED)
 						{
 							go->InLineOfSight = true;
-							go->setNewState(go->CHASING);
 							go->setTargetPosition(CCharacter_Player::GetInstance()->getPosition());
+							go->setNewState(go->TRACKING);
 							//Player detected reset fading time
 							CCharacter_Player::GetInstance()->ResetTimer();
 							//Increase alert level
@@ -310,12 +310,11 @@ void GameModel2D::VeryRealRaycasting(double dt)
 						if ( checker->ID == go->getGroupID() )
 						{
 							//Collided with wall, obstacle in the way
-
-							go->setVelocity(0,0,0);
+							//go->setVelocity(0,0,0);
 							if ( go->InLineOfSight )
 							{
 								go->resetTimer();
-								go->setNewState(go->SCANNING);
+								//go->setNewState(go->SCANNING);
 								if ( go->getAmmoType() != go->CAMERA )
 								{
 									go->setRotateDirection(go->getTargetPosition());
@@ -424,7 +423,6 @@ void GameModel2D::Update(double dt)
 				for (int i = 0; i < 7; i++)
 				{
 					SpawnSGBullets(CShotgun::GetInstance()->GetDamage(), 1.0f);
-					std::cout << i << std::endl;
 				}
 				//Ammo decrease
 				CShotgun::GetInstance()->UseAmmo(7);
@@ -918,102 +916,6 @@ void GameModel2D::Update(double dt)
 		}
 	}
 
-	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
-	{
-		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
-		if ( go->getActive() )
-		{
-			//test
-			//cout << CCharacter_Player::GetInstance()->getDetectionLevel() << endl;
-
-			if ( CCharacter_Player::GetInstance()->getAlertState() == CCharacter_Player::DETECTED )
-			{
-				if ( !CCharacter_Player::GetInstance()->getDetected() )
-				{
-					CCharacter_Player::GetInstance()->TrackedPosition = CCharacter_Player::GetInstance()->getPosition();
-					CCharacter_Player::GetInstance()->SetDetected(true);
-				}
-
-				if ( go->getAmmoType() != go->CAMERA)
-				{
-					go->setNewState(go->CHECKING);
-				}
-			}
-
-			VeryRealRaycasting(dt);	
-			switch ( go->getState() )
-			{
-			case CCharacter_Enemy::CHASING:
-				{
-					go->Strategy_Chaseplayer(CCharacter_Player::GetInstance()->getPosition(),getTileMap());
-					if (go->getAmmoType() != 0)
-					{
-						//Enemy Shooting (EBullet spawning)
-						if (EPistol::GetInstance()->GetFireCooldown() <= 0.0f)
-						{
-							//Spawn bullet
-							SpawnEnemyBullet(go->getPosition(),(go->getTargetPosition()-go->getPosition()).Normalized() * EPistol::GetInstance()->GetBulletSpeed());
-							//Reset fire cooldown
-							EPistol::GetInstance()->ResetCooldown();
-						}
-					}
-					break;
-				}
-			case CCharacter_Enemy::RUNNING:
-				{
-					go->Strategy_Return();
-					break;
-				}
-			case CCharacter_Enemy::SCANNING:
-				{
-					go->Strategy_Scan(dt);
-					break;
-				}
-			case CCharacter_Enemy::TRACKING:
-				{
-					go->Strategy_Stalk(go->getInitPosition(),getAITileMap());
-					break;
-				}
-			case CCharacter_Enemy::CHECKING:
-				{
-					go->Strategy_Stalk(CCharacter_Player::GetInstance()->TrackedPosition,getAITileMap());
-					break;
-				}
-			};
-			//go->UpdateEnemyPosition(dt);
-			go->Update(dt,getTileMap());
-		}
-	}
-
-	//Enemy AI Flocking
-	for (unsigned i = 0; i < EnemyList.size(); ++i)
-	{
-		if (EnemyList[i]->getActive())
-		{
-			/*
-			if (CCharacter_Player::GetInstance()->getPosition().x < EnemyList[i]->getPosition().x + 0.5f &&
-			CCharacter_Player::GetInstance()->getPosition().x  > EnemyList[i]->getPosition().x - 0.5f &&
-			CCharacter_Player::GetInstance()->getPosition().y  < EnemyList[i]->getPosition().y + 0.5f &&
-			CCharacter_Player::GetInstance()->getPosition().y > EnemyList[i]->getPosition().y - 0.5f)
-			{
-			EnemyList[i]->setPosition(EnemyList[i]->getPosition().x + 0.1f, EnemyList[i]->getPosition().y + 0.1f, 0);
-			}*/
-			for (unsigned j = i; j < EnemyList.size() - j; j++)
-			{
-				if (EnemyList[j]->getPosition().x < EnemyList[j + 1]->getPosition().x + 0.5f &&
-					EnemyList[j]->getPosition().x > EnemyList[j + 1]->getPosition().x - 0.5f &&
-					EnemyList[j]->getPosition().y < EnemyList[j + 1]->getPosition().y + 0.5f &&
-					EnemyList[j]->getPosition().y > EnemyList[j + 1]->getPosition().y - 0.5f)
-				{
-					EnemyList[j]->setPosition(EnemyList[j]->getPosition().x + 0.1f, EnemyList[j]->getPosition().y + 0.1f, 0);
-					EnemyList[j + 1]->setPosition(EnemyList[j + 1]->getPosition().x - 0.1f, EnemyList[j + 1]->getPosition().y - 0.1f, 0);
-				}
-			}
-		}
-	}
-
-
-
 	switch ( CCharacter_Player::GetInstance()->getState())
 	{
 	case 0:
@@ -1066,6 +968,7 @@ void GameModel2D::Update(double dt)
 	{
 		sa->Update(dt);
 	} 
+	EnemyDecision(dt);
 	GhettoFogOfWar(dt);
 	cameraZoom(dt);
 	BulletUpdate(dt);
@@ -1074,6 +977,110 @@ void GameModel2D::Update(double dt)
 		commands[count] = false;
 	}
 	FPS = (float)(1.f / dt);
+}
+
+void GameModel2D::EnemyDecision(double dt)
+{
+	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
+	{
+		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
+		if ( go->getActive() )
+		{
+			//test
+			//cout << CCharacter_Player::GetInstance()->getAlertState() << ":" << CCharacter_Player::GetInstance()->getDetectionLevel() << endl;
+
+			if ( CCharacter_Player::GetInstance()->getAlertState() == CCharacter_Player::DETECTED )
+			{
+				//Send all enemies to last seen position
+				if ( !CCharacter_Player::GetInstance()->getDetected() )
+				{
+					CCharacter_Player::GetInstance()->TrackedPosition = CCharacter_Player::GetInstance()->getPosition();
+					CCharacter_Player::GetInstance()->SetDetected(true);
+				}
+				//Set all enemies except cameras to check last seen position
+				if ( go->getAmmoType() != go->CAMERA && go->detectPlayer(CCharacter_Player::GetInstance()->getPosition(),getTileMap()))
+				{
+					//go->setNewState(go->CHECKING);
+					go->setNewState(go->ATTACKING);
+				}
+			}
+
+			VeryRealRaycasting(dt);	
+
+			switch ( go->getState() )
+			{
+			case CCharacter_Enemy::CHASING:
+				{
+					go->Strategy_Chaseplayer(CCharacter_Player::GetInstance()->getPosition(),getTileMap());
+					break;
+				}
+			case CCharacter_Enemy::RUNNING:
+				{
+					go->Strategy_Pathfind(go->getInitPosition(),getAITileMap());
+					break;
+				}
+			case CCharacter_Enemy::SCANNING:
+				{
+					go->Strategy_Scan(dt);
+					break;
+				}
+			case CCharacter_Enemy::ATTACKING:
+				{
+					if (go->getAmmoType() != 0)
+					{
+						//Enemy Shooting (EBullet spawning)
+						if (EPistol::GetInstance()->GetFireCooldown() <= 0.0f)
+						{
+							//Spawn bullet
+							SpawnEnemyBullet(go->getPosition(),(go->getTargetPosition()-go->getPosition()).Normalized() * EPistol::GetInstance()->GetBulletSpeed());
+							//Reset fire cooldown
+							EPistol::GetInstance()->ResetCooldown();
+						}
+					}
+					break;
+				}
+			case CCharacter_Enemy::TRACKING:
+				{
+					go->Strategy_Track(dt);	
+					break;
+				}
+			case CCharacter_Enemy::CHECKING:
+				{
+					go->Strategy_Pathfind(CCharacter_Player::GetInstance()->TrackedPosition,getAITileMap());
+					break;
+				}
+			};
+			//go->UpdateEnemyPosition(dt);
+			go->Update(dt,getTileMap());
+		}
+	}
+
+	//Enemy AI Flocking
+	for (unsigned i = 0; i < EnemyList.size(); ++i)
+	{
+		if (EnemyList[i]->getActive())
+		{
+			/*
+			if (CCharacter_Player::GetInstance()->getPosition().x < EnemyList[i]->getPosition().x + 0.5f &&
+			CCharacter_Player::GetInstance()->getPosition().x  > EnemyList[i]->getPosition().x - 0.5f &&
+			CCharacter_Player::GetInstance()->getPosition().y  < EnemyList[i]->getPosition().y + 0.5f &&
+			CCharacter_Player::GetInstance()->getPosition().y > EnemyList[i]->getPosition().y - 0.5f)
+			{
+			EnemyList[i]->setPosition(EnemyList[i]->getPosition().x + 0.1f, EnemyList[i]->getPosition().y + 0.1f, 0);
+			}*/
+			for (unsigned j = i; j < EnemyList.size() - j; j++)
+			{
+				if (EnemyList[j]->getPosition().x < EnemyList[j + 1]->getPosition().x + 0.5f &&
+					EnemyList[j]->getPosition().x > EnemyList[j + 1]->getPosition().x - 0.5f &&
+					EnemyList[j]->getPosition().y < EnemyList[j + 1]->getPosition().y + 0.5f &&
+					EnemyList[j]->getPosition().y > EnemyList[j + 1]->getPosition().y - 0.5f)
+				{
+					EnemyList[j]->setPosition(EnemyList[j]->getPosition().x + 0.1f, EnemyList[j]->getPosition().y + 0.1f, 0);
+					EnemyList[j + 1]->setPosition(EnemyList[j + 1]->getPosition().x - 0.1f, EnemyList[j + 1]->getPosition().y - 0.1f, 0);
+				}
+			}
+		}
+	}
 }
 
 void GameModel2D::cameraZoom(double dt)
@@ -1539,7 +1546,7 @@ void GameModel2D::getMapData()
 		for (int rcount = 0; rcount < getTileMap()->getNumOfTilesHeight(); ++rcount)
 		{
 			Vector3 tempPos;
-			tempPos.Set(ccount,rcount,0.1f);
+			tempPos.Set(ccount,rcount,0.0f);
 
 			Vector3 tempScale;
 			tempScale.Set(1,1,1);
@@ -1549,7 +1556,7 @@ void GameModel2D::getMapData()
 			{
 			case GameModel2D::SPAWN_ID:
 				{
-					setNewPlayerPos(ccount, rcount,-0.8f);
+					setNewPlayerPos(ccount, rcount,0.0f);
 				}
 				break;
 			case GameModel2D::EXIT_ID:
