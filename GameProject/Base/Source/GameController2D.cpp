@@ -25,17 +25,25 @@ void GameController2D::Update()
 	if (IsKeyPressed(VK_ESCAPE))
 		model->setCommands(GameModel2D::COMMANDS::ESCAPE);
 	//Weapon changing
-	if (IsKeyPressed('Q'))
-		model->setCommands(GameModel2D::COMMANDS::PREVWEAP);
-	if (IsKeyPressed('E'))
-		model->setCommands(GameModel2D::COMMANDS::NEXTWEAP);
+	//if (IsKeyPressed('Q'))
+	//	model->setCommands(GameModel2D::COMMANDS::PREVWEAP);
+	//if (IsKeyPressed('E'))
+	//	model->setCommands(GameModel2D::COMMANDS::NEXTWEAP);
+
+	if (IsKeyPressed('1'))
+		model->setCommands(GameModel2D::COMMANDS::WEAPON1);
+	if (IsKeyPressed('2'))
+		model->setCommands(GameModel2D::COMMANDS::WEAPON2);
+	if (IsKeyPressed('3'))
+		model->setCommands(GameModel2D::COMMANDS::WEAPON3);
+
 	if (glfwGetMouseButton(view->getWindow(), 0))
 		model->setCommands(GameModel2D::COMMANDS::SHOOT);
 	if (IsKeyPressed('R'))
 		model->setCommands(GameModel2D::COMMANDS::RELOAD);
 	/*if (IsKeyPressed('X'))
 		model->setCommands(GameModel2D::COMMANDS::CHECK);*/
-	if (IsKeyPressed('F'))
+	if (IsKeyPressed('E'))
 		model->setCommands(GameModel2D::COMMANDS::INTERACT);
 	Controller::Update();
 	

@@ -40,6 +40,7 @@ public:
 	void RenderLockBar();
 	void RenderLockBall();
 	void RenderExit();
+	void RenderFog();
 };
 
 #endif

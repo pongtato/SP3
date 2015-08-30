@@ -36,6 +36,9 @@ public:
 		//Weapon changing
 		PREVWEAP,
 		NEXTWEAP,
+		WEAPON1,
+		WEAPON2,
+		WEAPON3,
 		//Shooting
 		SHOOT,
 		//Reload
@@ -236,8 +239,9 @@ public:
 	void setNewInteraction(Vector3 Pos,Vector3 Scale,GameObject::GAMEOBJECT_TYPE type, int spriteCol, int spriteRow);
 	void getMapData();
 	void BulletUpdate(double dt);
-	void VeryRealRaycasting(double dt);
-	void GhettoFogOfWar(double dt);
+	int VeryRealRaycasting(double dt);
+	void GhettoFogOfWar(void);
+	void FogUpdate(double dt);
 	void SpawnBullet(int WeaponDamage,float Speed);
 	void SpawnSGBullets(int WeaponDamage, float Speed);
 	void SpawnEnemyBullet(Vector3 EnemyPos, Vector3 Vel);
@@ -258,6 +262,10 @@ public:
 	void objective(void);
 	bool getObjectiveCleared(void);
 	void EnemyDecision(double dt);
+	bool CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goType,double dt);
+	void InteractWorldObject(TILE_IDS id,double dt);
+	void LockPicking(double dt);
+	void BulletHandle(double dt);
 };
 
 #endif

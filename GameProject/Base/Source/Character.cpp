@@ -81,7 +81,7 @@ void CCharacter::UpdatePosition(double dt, const TileMap *tileMap)
 		position.x = floor(position.x);
 	else if (m_Velocity.x > 0)
 		position.x = ceil(position.x);
-	/*if (tileMap->getTile(position.x, floor(position.y)) >= 0 && tileMap->getTile(position.x, floor(position.y)) <= 15 || tileMap->getTile(position.x, ceil(position.y)) >= 0 && tileMap->getTile(position.x, ceil(position.y)) <= 15)
+	if (tileMap->getTile(position.x, floor(position.y)) >= 0 && tileMap->getTile(position.x, floor(position.y)) <= 15 || tileMap->getTile(position.x, ceil(position.y)) >= 0 && tileMap->getTile(position.x, ceil(position.y)) <= 15)
 	{
 		m_Position.x = position.x + (m_Velocity.x < -0.0f ? 1 : -1);
 		m_Velocity.x = 0;
@@ -90,14 +90,14 @@ void CCharacter::UpdatePosition(double dt, const TileMap *tileMap)
 	{
 		m_Position.x = position.x + (m_Velocity.x < -0.0f ? 1 : -1);
 		m_Velocity.x = 0;
-	}*/
+	}
 	position = m_Position;
 	position.y += m_Velocity.y * dt;
 	if (m_Velocity.y < 0)
 		position.y = floor(position.y);
 	else if (m_Velocity.y > 0)
 		position.y = ceil(position.y);
-	/*if (tileMap->getTile(floor(position.x), position.y) >= 0 && tileMap->getTile(floor(position.x), position.y) <= 15  || tileMap->getTile(ceil(position.x), position.y) >= 0 && tileMap->getTile(ceil(position.x), position.y) <= 15)
+	if (tileMap->getTile(floor(position.x), position.y) >= 0 && tileMap->getTile(floor(position.x), position.y) <= 15  || tileMap->getTile(ceil(position.x), position.y) >= 0 && tileMap->getTile(ceil(position.x), position.y) <= 15)
 	{
 		m_Position.y = position.y + (m_Velocity.y < -0.0f ? 1 : -1);
 		m_Velocity.y = 0;
@@ -106,7 +106,7 @@ void CCharacter::UpdatePosition(double dt, const TileMap *tileMap)
 	{
 		m_Position.y = position.y + (m_Velocity.y < -0.0f ? 1 : -1);
 		m_Velocity.y = 0;
-	}*/
+	}
 
 	m_Position += m_Velocity * dt;
 }

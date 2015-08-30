@@ -25,9 +25,10 @@ void GameView2D::Render()
 		glDisable(GL_DEPTH_TEST);
 		RenderRearTileMap();
 		RenderScene();
+		RenderMobsDetection();
 		RenderTileMap();
 		RenderMobs();
-		RenderMobsDetection();
+		RenderFog();
 		glEnable(GL_DEPTH_TEST);
 		RenderPlayerCharacter();
 		//Gameobjects
@@ -63,6 +64,24 @@ void GameView2D::Render()
 		}
 	} 
 	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderFog()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	std::vector<GameObject*> tempList = model->getGameObjectList();
+	std::vector<GameObject*> fogList = model->getFogList();
+	for (std::vector<GameObject *>::iterator it = fogList.begin(); it != fogList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			if ( go->type == go->GO_FOG )
+			{
+				RenderGO(go,tileMap);
+			}
+		}
+	}
 }
 
 void GameView2D::RenderScene()
@@ -105,16 +124,13 @@ void GameView2D::RenderScene()
 		}
 	}
 
-	std::vector<GameObject*> fogList = model->getFogList();
+	std::vector<GameObject*> fogList = model->getFogCheckerList();
 	for (std::vector<GameObject *>::iterator it = fogList.begin(); it != fogList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
 		if (go->active)
 		{
-			if ( go->type == go->GO_FOG )
-			{
-			RenderGO(go,tileMap);
-			}
+				//RenderGO(go,tileMap);
 		}
 	}
 }
@@ -379,6 +395,7 @@ void GameView2D::RenderMobs()
 					RenderMeshSprite(model->getEnemyMesh(model->ALERT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
 				break;
+				//attacking
 			case 3:
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->ALERT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
@@ -390,11 +407,20 @@ void GameView2D::RenderMobs()
 					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
 				break;
+				// tracking
 			case 6:
 				{
-					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+					if ( CCharacter_Player::GetInstance()->getAlertState() == CCharacter_Player::DETECTED )
+					{
+						RenderMeshSprite(model->getEnemyMesh(model->ALERT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+					}
+					else
+					{
+						RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+					}
 				}
 				break;
+				// checking
 			case 7:
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
