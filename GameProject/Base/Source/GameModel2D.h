@@ -57,6 +57,7 @@ public:
 		CUBE,
 		TEXT_PROMPT,
 		HEALTH,
+		HEALTH_DYING,
 		HEALTH_BAR,
 		PISTOL_ICON,
 		PISTOL_AMMO,
@@ -82,12 +83,14 @@ public:
 		CAUTION,
 		ENEMY_LIGHT_IDLE,
 		ENEMY_CAMERA,
-		TOTAL_GEOMETRY,
 
 		//Lock Pick
 		LOCKPICKBG,
 		LOCKPICKBAR,
 		LOCKPICKBALL,
+
+		TOTAL_GEOMETRY,
+
 	};
 
 	enum TILE_IDS
@@ -160,6 +163,7 @@ protected:
 	bool LockPickUp;
 	float LockPickBoxTop;
 	float LockPickBoxBtm;
+	bool nearLockPick;
 
 	Model levelSet;
 
@@ -167,12 +171,13 @@ public:
 	//Lock Picking
 	bool getLockPick1();
 	bool getLockPick2();
+	bool getNearLock();
 	bool hasReadLoc;
 	Mesh* getLockPickBG();
 	Mesh* getLockPickBar();
 	Mesh* getLockPickBall();
 	float getLockPickY();
-
+	
 	int AniToUpdate;
 	bool ZoomIN;
 	int m_CurrentLevel;
@@ -215,6 +220,7 @@ public:
 	Mesh* getTextPrompt();
 	//Health Bar
 	Mesh* getHealth();
+	Mesh* getHealthDying();
 	Mesh* getHealthBar();
 	//Weapon Icon
 	Mesh* getPistolIcon();

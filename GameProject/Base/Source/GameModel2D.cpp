@@ -79,7 +79,11 @@ void GameModel2D::Init()
 
 	//UI - Health
 	meshList[HEALTH] = MeshBuilder::GenerateQuad("HEALTH", 1, 20);
-	meshList[HEALTH]->textureID[0] = LoadTGA("Image\\HealthBar.tga");
+	meshList[HEALTH]->textureID[0] = LoadTGA("Image\\Health.tga");
+
+	//UI - Health when dying
+	meshList[HEALTH_DYING] = MeshBuilder::GenerateQuad("HEALTH_DYING", 1, 20);
+	meshList[HEALTH_DYING]->textureID[0] = LoadTGA("Image\\HealthDying.tga");
 
 	//UI - Health Bar
 	meshList[HEALTH_BAR] = MeshBuilder::GenerateQuad("HEALTH_BAR", 0, 20);
@@ -222,6 +226,7 @@ void GameModel2D::Init()
 	LaserActive = true;
 	InLockPick1 = false;
 	InLockPick2 = false;
+	nearLockPick = false;
 	LockPickY = 0;
 	LockPickUp = true;
 	LockPickBoxTop = 1;
@@ -681,9 +686,11 @@ void GameModel2D::Update(double dt)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
 				velocity.x = 0;
+				nearLockPick = true;
 				if (commands[INTERACT])
 				{
 					InLockPick1 = true;
+					nearLockPick = false;
 				}
 			}
 			position = CCharacter_Player::GetInstance()->getPosition();
@@ -699,15 +706,17 @@ void GameModel2D::Update(double dt)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
 				velocity.y = 0;
+				nearLockPick = true;
 				if (commands[INTERACT])
 				{
 					InLockPick1 = true;
+					nearLockPick = false;
 				}
 			}
 			position += velocity * dt;
 		}
 
-		if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2 && InteractionList[i]->active)
+		else if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2 && InteractionList[i]->active)
 		{
 			//Lock collision
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
@@ -723,10 +732,12 @@ void GameModel2D::Update(double dt)
 				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
-					InLockPick2 = true;
+				velocity.x = 0;
+				nearLockPick = true;
 				if (commands[INTERACT])
 				{
 					InLockPick2 = true;
+					nearLockPick = false;
 				}
 			}
 			position = CCharacter_Player::GetInstance()->getPosition();
@@ -742,9 +753,11 @@ void GameModel2D::Update(double dt)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
 				velocity.y = 0;
+				nearLockPick = true;
 				if (commands[INTERACT])
 				{
 					InLockPick2 = true;
+					nearLockPick = false;
 				}
 			}
 			position += velocity * dt;
@@ -1393,6 +1406,11 @@ Mesh* GameModel2D::getHealth()
 	return meshList[HEALTH];
 }
 
+Mesh* GameModel2D::getHealthDying()
+{
+	return meshList[HEALTH_DYING];
+}
+
 Mesh* GameModel2D::getHealthBar()
 {
 	return meshList[HEALTH_BAR];
@@ -1671,6 +1689,11 @@ bool GameModel2D::getLockPick1()
 bool GameModel2D::getLockPick2()
 {
 	return InLockPick2;
+}
+
+bool GameModel2D::getNearLock()
+{
+	return nearLockPick;
 }
 
 float GameModel2D::getLockPickY()

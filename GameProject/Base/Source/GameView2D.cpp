@@ -37,6 +37,10 @@ void GameView2D::Render()
 		//RenderScore();
 		RenderHealth();
 		RenderHBar();
+		if (CCharacter_Player::GetInstance()->getHP() <= 25)
+		{
+			RenderHDying();
+		}
 		switch (CCharacter_Player::GetInstance()->getAmmoType())
 		{
 		case 0:
@@ -60,6 +64,10 @@ void GameView2D::Render()
 			RenderLockBall();
 			RenderLockBar();
 			RenderLockPick();
+		}
+		if (model->getNearLock())
+		{
+			RenderPrompt();
 		}
 	} 
 	modelStack.PopMatrix();
@@ -419,10 +427,11 @@ void GameView2D::RenderUI()
 void GameView2D::RenderCountDownTimer()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
 	ss << "Time Left: " << model->getCDTimer();
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, 150, 725);
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, windowWidth / 150, windowHeight / 725);
 }
 
 #define player model->getPlayer()
@@ -599,9 +608,23 @@ void GameView2D::RenderHealth()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth * -0.336, windowHeight / 2.46, 1);
-		modelStack.Scale(windowWidth / 56.99, windowHeight / 75, 1);
+		modelStack.Translate(windowWidth * -0.296, windowHeight / 2.23, 1);
+		modelStack.Scale(windowWidth / 56.99, windowHeight / 105, 1);
 		Render2DMesh(model->getHealth(), false);
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderHDying()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(windowWidth * -0.296, windowHeight / 2.23, 2);
+		modelStack.Scale(windowWidth / 56.99, windowHeight / 105, 1);
+		Render2DMesh(model->getHealthDying(), false);
 	}
 	modelStack.PopMatrix();
 }
@@ -613,11 +636,21 @@ void GameView2D::RenderHBar()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate((windowWidth * -0.35) + CCharacter_Player::GetInstance()->getHP() * 0.85, windowHeight / 2.5, 2);
-		modelStack.Scale(0.17 * CCharacter_Player::GetInstance()->getHP()*0.5, 1.8, 1);
+		modelStack.Translate((windowWidth * -0.35) + CCharacter_Player::GetInstance()->getHP() * 0.999, windowHeight / 2.2, 2);
+		modelStack.Scale(0.20 * CCharacter_Player::GetInstance()->getHP()*0.5, 1.4, 1);
 		Render2DMesh(model->getHealthBar(), false);
 	}
 	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderPrompt()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << "Press 'F'";
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 30, windowWidth / 5, windowHeight * 0.5);
 }
 
 void GameView2D::RenderLockPick()
