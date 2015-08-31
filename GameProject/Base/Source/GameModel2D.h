@@ -165,6 +165,9 @@ protected:
 	float LockPickBoxBtm;
 	bool nearLockPick;
 
+	//limit walking
+	int walkingSoundLimit;
+
 	Model levelSet;
 
 public:
@@ -242,7 +245,7 @@ public:
 	void getMapData();
 	void BulletUpdate(double dt);
 	int VeryRealRaycasting(double dt);
-	void GhettoFogOfWar();
+	void GhettoFogOfWar(void);
 	void FogUpdate(double dt);
 	void SpawnBullet(int WeaponDamage,float Speed);
 	void SpawnSGBullets(int WeaponDamage, float Speed);

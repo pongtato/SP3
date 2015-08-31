@@ -241,6 +241,20 @@ void GameView2D::RenderPlayerCharacter()
 				RenderMeshSprite(model->getPlayerMesh(model->SHOTGUN_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 			}
 			break;
+		case 1:
+			if (CCharacter_Player::GetInstance()->getAmmoType() == 0)
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->PISTOL_RELOAD), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6);
+			}
+			else if (CCharacter_Player::GetInstance()->getAmmoType() == 1)
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->RIFLE_RELOAD), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6);
+			}
+			else if (CCharacter_Player::GetInstance()->getAmmoType() == 2)
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->SHOTGUN_RELOAD), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6);
+			}
+			break;
 		case 2:
 			if ( CCharacter_Player::GetInstance()->getAmmoType() == 0 )
 			{
@@ -685,7 +699,7 @@ void GameView2D::RenderPrompt()
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
-	ss << "Press 'F'";
+	ss << "Press 'E'";
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 30, windowWidth / 5, windowHeight * 0.5);
 }
 
