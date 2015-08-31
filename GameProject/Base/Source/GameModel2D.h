@@ -91,7 +91,6 @@ public:
 		LOCKPICKBALL,
 
 		TOTAL_GEOMETRY,
-
 	};
 
 	enum TILE_IDS

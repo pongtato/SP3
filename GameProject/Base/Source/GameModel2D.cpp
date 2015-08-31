@@ -306,7 +306,7 @@ int GameModel2D::VeryRealRaycasting(double dt)
 					if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
 					{
 						checker->active = false;
-						return -go->getGroupID();
+						return go->getGroupID();
 					}
 
 					if ( (CCharacter_Player::GetInstance()->getPosition() - checker->pos).Length() < 0.5f )
