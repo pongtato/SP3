@@ -15,8 +15,6 @@
 #include "Pistol.h"
 #include "Rifle.h"
 #include "Shotgun.h"
-//Enemy Weapons
-#include "EnemyPistol.h"
 
 #include <vector>
 #include <fstream>

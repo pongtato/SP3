@@ -130,6 +130,11 @@ public:
 
 	void setCameraDelay(float newDelay);
 
+	//Weapons
+	float getFirecooldown(void);
+	void ResetCooldown(void);
+	void FireCooldownTick(float time);
+
 private:
 	ENEMY_TYPE m_enemyMesh;
 	ENEMY_AMMO_TYPE m_weaponChoice;
@@ -146,4 +151,8 @@ private:
 	float m_CameraDelayReset;
 	bool delayTicking;
 	float m_RotationCompare;
+
+	//Weapon
+	float AttackSpeed;
+	float FireCooldown;
 };
