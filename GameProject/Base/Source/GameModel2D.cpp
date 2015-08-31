@@ -41,6 +41,9 @@ void GameModel2D::Init()
 	meshList[EXPLORED_FOG] = MeshBuilder::GenerateSpriteAnimation("EXPLORED_FOG", 1, 1);
 	meshList[EXPLORED_FOG]->textureID[0] = LoadTGA("Image\\DEBUG_FOG.tga");
 
+	meshList[PLAYER_RADIUS] = MeshBuilder::GenerateQuad("RADIUS", Color());
+	meshList[PLAYER_RADIUS]->textureID[0] = LoadTGA("Image\\RADIUS.tga");
+
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
 	meshList[PISTOL_IDLE]->textureID[0] = LoadTGA("Image\\Player\\PISTOL_IDLE.tga");
@@ -234,6 +237,7 @@ void GameModel2D::Init()
 	LockPickUp = true;
 	LockPickBoxTop = 2;
 	LockPickBoxBtm = -2;
+	isZoomed = false;
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -1171,10 +1175,14 @@ void GameModel2D::cameraZoom(double dt)
 	
 	if (camera.position.Length() != 0 && ZoomIN)
 	{
-		if (!(playerPos - initialCam).IsZero())
+		if ((playerPos - initialCam).LengthSquared() > 0.1f)
 		{
 			camera.position += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
 			camera.target += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
+		}
+		else if ( !isZoomed)
+		{
+			isZoomed = true;
 		}
 	}
 	//Camera zoom in to player
@@ -1529,6 +1537,11 @@ Mesh* GameModel2D::getExploredFogOfWar()
 	return meshList[EXPLORED_FOG];
 }
 
+Mesh* GameModel2D::getPlayerRadius()
+{
+	return meshList[PLAYER_RADIUS];
+}
+
 void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 {
 	for ( unsigned i = 0; i < EnemyList.size(); ++i)
@@ -1829,7 +1842,7 @@ void GameModel2D::FogUpdate(double dt)
 		{
 			go->timer -= float(dt);
 
-			if ( go->timer <= 0.0f )
+			if ( go->timer <= 0.0f)
 			{
 				//spawn checker
 				for (std::vector<GameObject *>::iterator it2 = m_fogCheckerList.begin(); it2 != m_fogCheckerList.end(); ++it2)
@@ -1886,7 +1899,7 @@ void GameModel2D::FogUpdate(double dt)
 				float tempY = go->pos.y + 0.5f;
 
 
-				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
+				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 || (CCharacter_Player::GetInstance()->getPosition() - go->pos).LengthSquared() >= 20 )
 				{
 					go->active = false;
 					for (std::vector<GameObject *>::iterator it = m_fogList.begin(); it != m_fogList.end(); ++it)
@@ -1906,3 +1919,5 @@ void GameModel2D::FogUpdate(double dt)
 		}
 	}
 }
+
+

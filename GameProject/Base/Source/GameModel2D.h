@@ -79,6 +79,7 @@ public:
 		SHOTGUN_IDLE,
 		SHOTGUN_RELOAD,
 		SHOTGUN_SHOOT,
+		PLAYER_RADIUS,
 
 		//Enemy
 		ALERT,
@@ -238,6 +239,7 @@ public:
 	Mesh* getShotgunAmmo();
 	Mesh* getFogOfWar();
 	Mesh* getExploredFogOfWar();
+	Mesh* getPlayerRadius();
 
 	void setNewPlayerPos(float x, float y, float z);
 	void setNewExitPos(float x, float y, float z);
@@ -259,6 +261,7 @@ public:
 	int getScore();
 	int getCDTimer();
 	float getFPS();
+	bool isZoomed;
 	//sound
 	CSoundManager Sound;
 	virtual void Init();

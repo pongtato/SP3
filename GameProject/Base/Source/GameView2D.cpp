@@ -29,6 +29,10 @@ void GameView2D::Render()
 		RenderTileMap();
 		RenderMobs();
 		RenderFog();
+		if (model->isZoomed)
+		{
+			RenderPlayerRadius();
+		}
 		glEnable(GL_DEPTH_TEST);
 		RenderPlayerCharacter();
 		//Gameobjects
@@ -77,6 +81,16 @@ void GameView2D::Render()
 			RenderPrompt();
 		}
 	} 
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderPlayerRadius()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	modelStack.PushMatrix(); 
+	modelStack.Translate(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
+	modelStack.Scale(30,30,0);
+	RenderMesh(model->getPlayerRadius(), false);
 	modelStack.PopMatrix();
 }
 
