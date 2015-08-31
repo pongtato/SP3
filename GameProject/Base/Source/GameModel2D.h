@@ -166,6 +166,9 @@ protected:
 	float LockPickBoxBtm;
 	bool nearLockPick;
 
+	//limit walking
+	int walkingSoundLimit;
+
 	Model levelSet;
 
 public:

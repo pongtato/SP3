@@ -43,6 +43,9 @@ public:
 	void RenderPrompt();
 	void RenderExit();
 	void RenderFog();
+	void RenderPACount();
+	void RenderRACount();
+	void RenderSACount();
 };
 
 #endif

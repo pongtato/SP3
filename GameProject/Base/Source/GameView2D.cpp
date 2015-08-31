@@ -47,12 +47,18 @@ void GameView2D::Render()
 		case 0:
 			RenderPistolIcon();
 			RenderPistolAmmo();
+			RenderPACount();
+			break;
 		case 1:
 			RenderRifleIcon();
 			RenderRifleAmmo();
+			RenderRACount();
+			break;
 		case 2:
 			RenderShotgunIcon();
 			RenderShotgunAmmo();
+			RenderSACount();
+			break;
 		}
 		switch (model->m_CurrentLevel)
 		{
@@ -239,6 +245,20 @@ void GameView2D::RenderPlayerCharacter()
 			else if ( CCharacter_Player::GetInstance()->getAmmoType() == 2 )
 			{
 				RenderMeshSprite(model->getPlayerMesh(model->SHOTGUN_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+			break;
+		case 1:
+			if (CCharacter_Player::GetInstance()->getAmmoType() == 0)
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->PISTOL_RELOAD), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6);
+			}
+			else if (CCharacter_Player::GetInstance()->getAmmoType() == 1)
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->RIFLE_RELOAD), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6);
+			}
+			else if (CCharacter_Player::GetInstance()->getAmmoType() == 2)
+			{
+				RenderMeshSprite(model->getPlayerMesh(model->SHOTGUN_RELOAD), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6);
 			}
 			break;
 		case 2:
@@ -707,7 +727,7 @@ void GameView2D::RenderPrompt()
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
-	ss << "Press 'F'";
+	ss << "Press 'E'";
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 30, windowWidth / 5, windowHeight * 0.5);
 }
 
@@ -835,4 +855,34 @@ void GameView2D::RenderShotgunAmmo()
 		Render2DMesh(model->getShotgunAmmo(), false);
 	}
 	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderPACount()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << " x" << CPistol::GetInstance()->GetAmmo();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.89, windowHeight / 10.5);
+}
+
+void GameView2D::RenderRACount()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << " x" << CRifle::GetInstance()->GetAmmo();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.89, windowHeight / 10.5);
+}
+
+void GameView2D::RenderSACount()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << " x" << (CShotgun::GetInstance()->GetAmmo()) / 7;
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.89, windowHeight / 10.5);
 }

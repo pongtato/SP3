@@ -212,6 +212,7 @@ void GameModel2D::Init()
 	score = 0;
 	CDTimer = 60;
 	CDTimerLimit = 0;
+	walkingSoundLimit = 0;
 	ZoomIN = false;
 	SpawnReady = false;
 	newLevel = false;
@@ -231,8 +232,8 @@ void GameModel2D::Init()
 	nearLockPick = false;
 	LockPickY = 0;
 	LockPickUp = true;
-	LockPickBoxTop = 1;
-	LockPickBoxBtm = -1;
+	LockPickBoxTop = 2;
+	LockPickBoxBtm = -2;
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -307,7 +308,7 @@ int GameModel2D::VeryRealRaycasting(double dt)
 					if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
 					{
 						checker->active = false;
-						return -go->getGroupID();
+						return go->getGroupID();
 					}
 
 					if ( (CCharacter_Player::GetInstance()->getPosition() - checker->pos).Length() < 0.5f )
@@ -386,6 +387,11 @@ void GameModel2D::Update(double dt)
 		if (commands[MOVE_DOWN]) CCharacter_Player::GetInstance()->moveDown();
 		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
 		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
+
+		if (commands[MOVE_UP] || commands[MOVE_DOWN] || commands[MOVE_LEFT] || commands[MOVE_RIGHT])
+			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::RUNNING);
+		else
+			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::IDLE);
 	}
 	if (!InLockPick1 && !InLockPick2)
 	{
@@ -570,18 +576,25 @@ void GameModel2D::Update(double dt)
 	
 	if ( CollideWorldObject(LOCKPICK_ID_1,GameObject::GO_LOCKPICK_1,dt))
 	{
+		nearLockPick = true;
 		if (commands[INTERACT])
 		{
+			nearLockPick = false;
 			InLockPick1 = true;
 		}
 	}
-
-	if ( CollideWorldObject(LOCKPICK_ID_2,GameObject::GO_LOCKPICK_2,dt))
+	else if ( CollideWorldObject(LOCKPICK_ID_2,GameObject::GO_LOCKPICK_2,dt))
 	{
+		nearLockPick = true;
 		if (commands[INTERACT])
 		{
+			nearLockPick = false;
 			InLockPick2 = true;
 		}
+	}
+	else
+	{
+		nearLockPick = false;
 	}
 
 	for (int i = 0; i < CollectiblesList.size(); i++)
@@ -597,8 +610,19 @@ void GameModel2D::Update(double dt)
 		}
 	}
 
+	//walking sound
+	if (CCharacter_Player::GetInstance()->getState() == CCharacter_Player::RUNNING) //set sound if player is walking
+	{
+		walkingSoundLimit += 1;
+		if (walkingSoundLimit > 20)
+		{
+			cout << "working";
+			walkingSoundLimit = 0;
+			Sound.walkfloor();
+		}
+	}
 
-	//for testing
+	//for testing [load]
 	if (commands[CHECK])
 	{
 		string line;
@@ -617,7 +641,7 @@ void GameModel2D::Update(double dt)
 			cout << "unable to open file";
 	}
 	
-	//SAVE_ID waypoint
+	//SAVEPROG 
 	for (int i = 0; i < InteractionList.size(); i++)
 	{
 		if (InteractionList[i]->type == GameObject::GO_SAVE && InteractionList[i]->active)
@@ -625,15 +649,15 @@ void GameModel2D::Update(double dt)
 			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
 			{
 				cout << "player position saved! " << endl;
-				ofstream playerPos("savepoint.txt");
-				if (playerPos.is_open())
+				ofstream playerData("savepoint.txt");
+				if (playerData.is_open())
 				{
 					//playerPos << CCharacter_Player::GetInstance()->getPosition().Length();
-					playerPos << getNewPlayerPos().x << endl;
-					playerPos << getNewPlayerPos().y << endl;
-					playerPos << getNewPlayerPos().z << endl;
-
-					playerPos.close();
+					playerData << getNewPlayerPos().x << " ";
+					playerData << getNewPlayerPos().y << " ";
+					playerData << getNewPlayerPos().z << " ";
+					playerData << getCDTimer() << " ";
+					playerData.close();
 				}
 				break;
 			}
