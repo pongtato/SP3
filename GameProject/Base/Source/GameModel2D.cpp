@@ -229,8 +229,8 @@ void GameModel2D::Init()
 	nearLockPick = false;
 	LockPickY = 0;
 	LockPickUp = true;
-	LockPickBoxTop = 1;
-	LockPickBoxBtm = -1;
+	LockPickBoxTop = 2;
+	LockPickBoxBtm = -2;
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -575,8 +575,7 @@ void GameModel2D::Update(double dt)
 			InLockPick1 = true;
 		}
 	}
-
-	if ( CollideWorldObject(LOCKPICK_ID_2,GameObject::GO_LOCKPICK_2,dt))
+	else if ( CollideWorldObject(LOCKPICK_ID_2,GameObject::GO_LOCKPICK_2,dt))
 	{
 		nearLockPick = true;
 		if (commands[INTERACT])
@@ -584,6 +583,10 @@ void GameModel2D::Update(double dt)
 			nearLockPick = false;
 			InLockPick2 = true;
 		}
+	}
+	else
+	{
+		nearLockPick = false;
 	}
 
 	for (int i = 0; i < CollectiblesList.size(); i++)
