@@ -7,6 +7,7 @@ CPathfinding_Node::CPathfinding_Node(void)
 	fCost = 0;
 	gCost = 0;
 	hCost = 0;
+	m_WorldPosition.SetZero();
 }
 
 

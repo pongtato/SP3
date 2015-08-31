@@ -38,6 +38,7 @@ struct GameObject
 	int WDamage;
 	int SpriteRow;
 	int SpriteColumn;
+	float timer;
 
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_BULLET);
 	~GameObject();

@@ -15,8 +15,6 @@
 #include "Pistol.h"
 #include "Rifle.h"
 #include "Shotgun.h"
-//Enemy Weapons
-#include "EnemyPistol.h"
 
 #include <vector>
 #include <fstream>
@@ -36,6 +34,9 @@ public:
 		//Weapon changing
 		PREVWEAP,
 		NEXTWEAP,
+		WEAPON1,
+		WEAPON2,
+		WEAPON3,
 		//Shooting
 		SHOOT,
 		//Reload
@@ -91,6 +92,8 @@ public:
 
 		TOTAL_GEOMETRY,
 
+=======
+>>>>>>> origin/master
 	};
 
 	enum TILE_IDS
@@ -168,6 +171,8 @@ protected:
 	Model levelSet;
 
 public:
+	//Collision
+	void LaserCollisionCheck(double dt);
 	//Lock Picking
 	bool getLockPick1();
 	bool getLockPick2();
@@ -241,6 +246,7 @@ public:
 	void BulletUpdate(double dt);
 	void VeryRealRaycasting(double dt);
 	void GhettoFogOfWar(double dt);
+	void FogUpdate(double dt);
 	void SpawnBullet(int WeaponDamage,float Speed);
 	void SpawnSGBullets(int WeaponDamage, float Speed);
 	void SpawnEnemyBullet(Vector3 EnemyPos, Vector3 Vel);
@@ -260,6 +266,11 @@ public:
 	void cameraZoom(double dt);
 	void objective(void);
 	bool getObjectiveCleared(void);
+	void EnemyDecision(double dt);
+	bool CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goType,double dt);
+	void InteractWorldObject(TILE_IDS id,double dt);
+	void LockPicking(double dt);
+	void BulletHandle(double dt);
 };
 
 #endif

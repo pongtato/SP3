@@ -42,6 +42,7 @@ public:
 	void RenderLockBall();
 	void RenderPrompt();
 	void RenderExit();
+	void RenderFog();
 };
 
 #endif

@@ -22,8 +22,6 @@ public:
 		PISTOL,
 		MG,
 		SHOTGUN,
-		ROCKET,
-		GRENADE,
 		AMMO_TOTAL,
 	};
 

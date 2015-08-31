@@ -25,9 +25,10 @@ void GameView2D::Render()
 		glDisable(GL_DEPTH_TEST);
 		RenderRearTileMap();
 		RenderScene();
+		RenderMobsDetection();
 		RenderTileMap();
 		RenderMobs();
-		RenderMobsDetection();
+		RenderFog();
 		glEnable(GL_DEPTH_TEST);
 		RenderPlayerCharacter();
 		//Gameobjects
@@ -73,6 +74,24 @@ void GameView2D::Render()
 	modelStack.PopMatrix();
 }
 
+void GameView2D::RenderFog()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	std::vector<GameObject*> tempList = model->getGameObjectList();
+	std::vector<GameObject*> fogList = model->getFogList();
+	for (std::vector<GameObject *>::iterator it = fogList.begin(); it != fogList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			if ( go->type == go->GO_FOG )
+			{
+				RenderGO(go,tileMap);
+			}
+		}
+	}
+}
+
 void GameView2D::RenderScene()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
@@ -113,16 +132,13 @@ void GameView2D::RenderScene()
 		}
 	}
 
-	std::vector<GameObject*> fogList = model->getFogList();
+	std::vector<GameObject*> fogList = model->getFogCheckerList();
 	for (std::vector<GameObject *>::iterator it = fogList.begin(); it != fogList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
 		if (go->active)
 		{
-			if ( go->type == go->GO_FOG )
-			{
-			RenderGO(go,tileMap);
-			}
+				//RenderGO(go,tileMap);
 		}
 	}
 }
@@ -161,7 +177,7 @@ void GameView2D::RenderTileMap()
 		for (int rcount = 0; rcount < tileMap->getNumOfTilesHeight(); ++rcount)
 		{
 			modelStack.PushMatrix(); 
-			modelStack.Translate(ccount, rcount, 0.05f);
+			modelStack.Translate(ccount, rcount, 0.00f);
 			Vector3 tempPos;
 			tempPos.Set(ccount,rcount,0.1f);
 			Vector3 tempScale;
@@ -204,7 +220,7 @@ void GameView2D::RenderPlayerCharacter()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	float ANGLE = Math::RadianToDegree(atan2(model->getPos().y - CCharacter_Player::GetInstance()->getPosition().y, model->getPos().x - CCharacter_Player::GetInstance()->getPosition().x));
-	modelStack.Translate(0, 0, 1);
+	modelStack.Translate(0, 0, 0);
 	modelStack.PushMatrix(); {
 		modelStack.Translate(CCharacter_Player::GetInstance()->getPosition());
 		//modelStack.Translate(0.5, 0.5, 0);
@@ -266,7 +282,7 @@ void GameView2D::RenderMobsDetection()
 	{
 		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
 		modelStack.PushMatrix();
-		modelStack.Translate(go->DetectionCornerL.x,go->DetectionCornerL.y,0.01f);
+		modelStack.Translate(go->DetectionCornerL.x,go->DetectionCornerL.y,0.0f);
 		modelStack.Rotate(go->m_RotationArcMin,0,0,1);
 		modelStack.Scale(CCharacter_Enemy::FOVdistance,0.05,0.05);
 		if (go->getActive())
@@ -276,7 +292,7 @@ void GameView2D::RenderMobsDetection()
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->DetectionCornerR.x,go->DetectionCornerR.y,0.01f);
+		modelStack.Translate(go->DetectionCornerR.x,go->DetectionCornerR.y,0.0f);
 		modelStack.Rotate(go->m_RotationArcMax,0,0,1);
 		modelStack.Scale(CCharacter_Enemy::FOVdistance,0.05,0.05);
 		if (go->getActive())
@@ -286,7 +302,7 @@ void GameView2D::RenderMobsDetection()
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->DetectionCornerM.x,go->DetectionCornerM.y,0.01f);
+		modelStack.Translate(go->DetectionCornerM.x,go->DetectionCornerM.y,0.0f);
 		modelStack.Rotate(go->getRotation() + 90.f,0,0,1);
 		float tempCalc = (float)CCharacter_Enemy::FOVArc/30.f * (float)CCharacter_Enemy::FOVdistance;
 		modelStack.Scale(tempCalc,0.05,0.05);
@@ -306,7 +322,7 @@ void GameView2D::RenderMobs()
 	{
 		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
 		modelStack.PushMatrix();
-		modelStack.Translate(go->getPosition().x,go->getPosition().y,0.01f);
+		modelStack.Translate(go->getPosition().x,go->getPosition().y,0.0f);
 		modelStack.Rotate(go->getRotation(),0,0,1);
 		if (go->getActive())
 		{
@@ -387,12 +403,32 @@ void GameView2D::RenderMobs()
 					RenderMeshSprite(model->getEnemyMesh(model->ALERT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
 				break;
+				//attacking
+			case 3:
+				{
+					RenderMeshSprite(model->getEnemyMesh(model->ALERT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+				}
+				break;
 				// scanning
 			case 5:
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
 				}
 				break;
+				// tracking
+			case 6:
+				{
+					if ( CCharacter_Player::GetInstance()->getAlertState() == CCharacter_Player::DETECTED )
+					{
+						RenderMeshSprite(model->getEnemyMesh(model->ALERT), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+					}
+					else
+					{
+						RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+					}
+				}
+				break;
+				// checking
 			case 7:
 				{
 					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
@@ -405,7 +441,7 @@ void GameView2D::RenderMobs()
 		for ( int i = 0; i < go->PathFound.size(); ++i )
 		{
 			modelStack.PushMatrix();
-			modelStack.Translate(go->PathFound[i]->m_WorldPosition.x,go->PathFound[i]->m_WorldPosition.y,0.01f);
+			modelStack.Translate(go->PathFound[i]->m_WorldPosition.x,go->PathFound[i]->m_WorldPosition.y,0.0f);
 			if (go->getActive())
 			{
 				//RenderMeshSprite(model->getEnemyMesh(model->ENEMY_LIGHT_IDLE), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );		
