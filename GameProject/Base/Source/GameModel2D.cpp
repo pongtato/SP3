@@ -384,6 +384,11 @@ void GameModel2D::Update(double dt)
 		if (commands[MOVE_DOWN]) CCharacter_Player::GetInstance()->moveDown();
 		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
 		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
+
+		if (commands[MOVE_UP] || commands[MOVE_DOWN] || commands[MOVE_LEFT] || commands[MOVE_RIGHT])
+			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::RUNNING);
+		else
+			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::IDLE);
 	}
 	if (!InLockPick1 && !InLockPick2)
 	{
@@ -599,6 +604,16 @@ void GameModel2D::Update(double dt)
 		}
 	}
 
+	//walking sound
+	if (CCharacter_Player::GetInstance()->getState() == CCharacter_Player::RUNNING) //set sound if player is walking
+	{
+		walkingSoundLimit += 1;
+		if (walkingSoundLimit > 20)
+		{
+			walkingSoundLimit = 0;
+			Sound.walkfloor();
+		}
+	}
 
 	//for testing
 	if (commands[CHECK])

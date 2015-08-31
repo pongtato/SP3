@@ -121,7 +121,7 @@ void CSoundManager::reloadSound()
 void CSoundManager::pistolShot()
 {
 	//firing a pistol
-	ISound* music = engine->play2D("../irrKlang/media/pistolShot.wav",
+	ISound* music = engine->play2D("../irrKlang/media/pistolSilent.wav",
 		false, false, true);
 
 	engine->setSoundVolume(0.4f);
