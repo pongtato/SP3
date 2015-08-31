@@ -84,7 +84,7 @@ void GameView2D::RenderFog()
 		GameObject *go = (GameObject *)*it;
 		if (go->active)
 		{
-			if ( go->type == go->GO_FOG )
+			if ( go->type == go->GO_FOG  || go->type == go->GO_EXPLORED_FOG)
 			{
 				RenderGO(go,tileMap);
 			}
@@ -617,6 +617,16 @@ void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 			RenderMesh(model->getFogOfWar(), false);
+			//RenderMesh(model->getFogOfWar(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_EXPLORED_FOG:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getExploredFogOfWar(), false);
 			//RenderMesh(model->getFogOfWar(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
 			modelStack.PopMatrix();
 		}

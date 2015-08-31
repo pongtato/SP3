@@ -67,6 +67,7 @@ public:
 		SHOTGUN_ICON,
 		SHOTGUN_AMMO,
 		FOG,
+		EXPLORED_FOG,
 
 		//Player
 		PISTOL_IDLE,
@@ -91,9 +92,6 @@ public:
 		LOCKPICKBALL,
 
 		TOTAL_GEOMETRY,
-
-=======
->>>>>>> origin/master
 	};
 
 	enum TILE_IDS
@@ -236,6 +234,7 @@ public:
 	Mesh* getRifleAmmo();
 	Mesh* getShotgunAmmo();
 	Mesh* getFogOfWar();
+	Mesh* getExploredFogOfWar();
 
 	void setNewPlayerPos(float x, float y, float z);
 	void setNewExitPos(float x, float y, float z);
@@ -244,8 +243,8 @@ public:
 	void setNewInteraction(Vector3 Pos,Vector3 Scale,GameObject::GAMEOBJECT_TYPE type, int spriteCol, int spriteRow);
 	void getMapData();
 	void BulletUpdate(double dt);
-	void VeryRealRaycasting(double dt);
-	void GhettoFogOfWar(double dt);
+	int VeryRealRaycasting(double dt);
+	void GhettoFogOfWar(void);
 	void FogUpdate(double dt);
 	void SpawnBullet(int WeaponDamage,float Speed);
 	void SpawnSGBullets(int WeaponDamage, float Speed);

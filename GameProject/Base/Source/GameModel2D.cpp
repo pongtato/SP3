@@ -38,6 +38,8 @@ void GameModel2D::Init()
 	meshList[CUBE] = MeshBuilder::GenerateCube("Bullet", Color(1, 0, 0),1.0f);
 	meshList[FOG] = MeshBuilder::GenerateSpriteAnimation("FOG", 1, 1);
 	meshList[FOG]->textureID[0] = LoadTGA("Image\\FOG.tga");
+	meshList[EXPLORED_FOG] = MeshBuilder::GenerateSpriteAnimation("EXPLORED_FOG", 1, 1);
+	meshList[EXPLORED_FOG]->textureID[0] = LoadTGA("Image\\DEBUG_FOG.tga");
 
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
@@ -905,7 +907,7 @@ void GameModel2D::EnemyDecision(double dt)
 			//Looking for player
 			else if ( CCharacter_Player::GetInstance()->getAlertState() == CCharacter_Player::CAUTION && 
 				go->detectPlayer(CCharacter_Player::GetInstance()->getPosition(),getTileMap()) &&
-				go->getAmmoType() != go->CAMERA)
+				go->getAmmoType() != go->CAMERA && go->getGroupID() == toCompare)
 			{
 				CCharacter_Player::GetInstance()->TrackedPosition = CCharacter_Player::GetInstance()->getPosition();
 				go->setTargetPosition(CCharacter_Player::GetInstance()->getPosition());
@@ -1498,6 +1500,11 @@ Mesh* GameModel2D::getFogOfWar()
 	return meshList[FOG];
 }
 
+Mesh* GameModel2D::getExploredFogOfWar()
+{
+	return meshList[EXPLORED_FOG];
+}
+
 void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 {
 	for ( unsigned i = 0; i < EnemyList.size(); ++i)
@@ -1844,6 +1851,7 @@ void GameModel2D::FogUpdate(double dt)
 								go2->SpriteRow == go->SpriteRow && 
 								go2->SpriteColumn == go->SpriteColumn )
 							{
+								go2->type = GameObject::GO_EXPLORED_FOG;
 								go2->active = false;
 							}
 						}
