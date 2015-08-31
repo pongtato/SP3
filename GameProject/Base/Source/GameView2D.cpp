@@ -685,7 +685,7 @@ void GameView2D::RenderPrompt()
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
-	ss << "Press 'F'";
+	ss << "Press 'E'";
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 30, windowWidth / 5, windowHeight * 0.5);
 }
 

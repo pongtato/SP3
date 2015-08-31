@@ -568,16 +568,20 @@ void GameModel2D::Update(double dt)
 	
 	if ( CollideWorldObject(LOCKPICK_ID_1,GameObject::GO_LOCKPICK_1,dt))
 	{
+		nearLockPick = true;
 		if (commands[INTERACT])
 		{
+			nearLockPick = false;
 			InLockPick1 = true;
 		}
 	}
 
 	if ( CollideWorldObject(LOCKPICK_ID_2,GameObject::GO_LOCKPICK_2,dt))
 	{
+		nearLockPick = true;
 		if (commands[INTERACT])
 		{
+			nearLockPick = false;
 			InLockPick2 = true;
 		}
 	}
