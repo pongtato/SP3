@@ -457,7 +457,19 @@ void GameView2D::RenderCountDownTimer()
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 
 	std::ostringstream ss;
-	ss << "Time Left: " << model->getCDTimer();
+	switch ( CCharacter_Player::GetInstance()->getAlertState() )
+	{
+	case 0:
+		ss << "Undetected: " << CCharacter_Player::GetInstance()->getDetectionLevel();
+		break;
+	case 1:
+		ss << "Caution: " << CCharacter_Player::GetInstance()->getDetectionLevel();
+		break;
+	case 2:
+		ss << "Detected: " << CCharacter_Player::GetInstance()->getDetectionLevel();
+		break;
+	}
+		//ss << "Time Left: " << model->getCDTimer();
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, 150, 725);
 }
 

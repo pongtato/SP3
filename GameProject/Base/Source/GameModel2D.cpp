@@ -691,7 +691,10 @@ void GameModel2D::Update(double dt)
 	cameraZoom(dt);
 	BulletHandle(dt);
 	BulletUpdate(dt);
-	FogUpdate(dt);
+	if ( !CCharacter_Player::GetInstance()->getVelocity().IsZero() )
+	{
+		FogUpdate(dt);
+	}
 	for (int count = 0; count < NUM_COMMANDS; ++count)
 	{
 		commands[count] = false;
@@ -965,8 +968,8 @@ void GameModel2D::EnemyDecision(double dt)
 								{
 									go->setRotation(270);
 									go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
-									//go->setCameraDelay(rand() % 4 + 1);
-									go->setCameraDelay(2);
+									go->setCameraDelay(rand() % 4 + 1);
+									//go->setCameraDelay(2);
 									go->setCameraState(go->BRBL);
 									go->setNewState(go->SCANNING);
 									break;
@@ -975,8 +978,8 @@ void GameModel2D::EnemyDecision(double dt)
 								{
 									go->setRotation(180);
 									go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
-									//go->setCameraDelay(rand() % 4 + 1);
-									go->setCameraDelay(2);
+									go->setCameraDelay(rand() % 4 + 1);
+									//go->setCameraDelay(2);
 									go->setCameraState(go->BLUL);
 									go->setNewState(go->SCANNING);
 									break;
@@ -985,8 +988,8 @@ void GameModel2D::EnemyDecision(double dt)
 								{
 									go->setRotation(0);
 									go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
-									//go->setCameraDelay(rand() % 4 + 1);
-									go->setCameraDelay(2);
+									go->setCameraDelay(rand() % 4 + 1);
+									//go->setCameraDelay(2);
 									go->setCameraState(go->URBR);
 									go->setNewState(go->SCANNING);
 									break;
@@ -995,8 +998,8 @@ void GameModel2D::EnemyDecision(double dt)
 								{
 									go->setRotation(90);
 									go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
-									//go->setCameraDelay(rand() % 4 + 1);
-									go->setCameraDelay(2);
+									go->setCameraDelay(rand() % 4 + 1);
+									//go->setCameraDelay(2);
 									go->setCameraState(go->ULUR);
 									go->setNewState(go->SCANNING);
 									break;
@@ -1817,7 +1820,7 @@ void GameModel2D::FogUpdate(double dt)
 		{
 			if ( go->active )
 			{
-				go->pos += (go->vel.Normalized() * float(dt) * 50.f);
+				go->pos += (go->vel.Normalized() * float(dt) * 20.f);
 
 				if ( (CCharacter_Player::GetInstance()->getPosition() - go->pos).Length() < 1.f )
 				{
