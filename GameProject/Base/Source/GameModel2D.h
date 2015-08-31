@@ -15,8 +15,6 @@
 #include "Pistol.h"
 #include "Rifle.h"
 #include "Shotgun.h"
-//Enemy Weapons
-#include "EnemyPistol.h"
 
 #include <vector>
 #include <fstream>
@@ -60,6 +58,7 @@ public:
 		CUBE,
 		TEXT_PROMPT,
 		HEALTH,
+		HEALTH_DYING,
 		HEALTH_BAR,
 		PISTOL_ICON,
 		PISTOL_AMMO,
@@ -92,6 +91,9 @@ public:
 		LOCKPICKBALL,
 
 		TOTAL_GEOMETRY,
+
+=======
+>>>>>>> origin/master
 	};
 
 	enum TILE_IDS
@@ -164,6 +166,7 @@ protected:
 	bool LockPickUp;
 	float LockPickBoxTop;
 	float LockPickBoxBtm;
+	bool nearLockPick;
 
 	Model levelSet;
 
@@ -173,12 +176,13 @@ public:
 	//Lock Picking
 	bool getLockPick1();
 	bool getLockPick2();
+	bool getNearLock();
 	bool hasReadLoc;
 	Mesh* getLockPickBG();
 	Mesh* getLockPickBar();
 	Mesh* getLockPickBall();
 	float getLockPickY();
-
+	
 	int AniToUpdate;
 	bool ZoomIN;
 	int m_CurrentLevel;
@@ -221,6 +225,7 @@ public:
 	Mesh* getTextPrompt();
 	//Health Bar
 	Mesh* getHealth();
+	Mesh* getHealthDying();
 	Mesh* getHealthBar();
 	//Weapon Icon
 	Mesh* getPistolIcon();
@@ -239,8 +244,8 @@ public:
 	void setNewInteraction(Vector3 Pos,Vector3 Scale,GameObject::GAMEOBJECT_TYPE type, int spriteCol, int spriteRow);
 	void getMapData();
 	void BulletUpdate(double dt);
-	int VeryRealRaycasting(double dt);
-	void GhettoFogOfWar(void);
+	void VeryRealRaycasting(double dt);
+	void GhettoFogOfWar(double dt);
 	void FogUpdate(double dt);
 	void SpawnBullet(int WeaponDamage,float Speed);
 	void SpawnSGBullets(int WeaponDamage, float Speed);

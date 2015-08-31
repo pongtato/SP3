@@ -79,7 +79,11 @@ void GameModel2D::Init()
 
 	//UI - Health
 	meshList[HEALTH] = MeshBuilder::GenerateQuad("HEALTH", 1, 20);
-	meshList[HEALTH]->textureID[0] = LoadTGA("Image\\HealthBar.tga");
+	meshList[HEALTH]->textureID[0] = LoadTGA("Image\\Health.tga");
+
+	//UI - Health when dying
+	meshList[HEALTH_DYING] = MeshBuilder::GenerateQuad("HEALTH_DYING", 1, 20);
+	meshList[HEALTH_DYING]->textureID[0] = LoadTGA("Image\\HealthDying.tga");
 
 	//UI - Health Bar
 	meshList[HEALTH_BAR] = MeshBuilder::GenerateQuad("HEALTH_BAR", 0, 20);
@@ -222,6 +226,7 @@ void GameModel2D::Init()
 	LaserActive = true;
 	InLockPick1 = false;
 	InLockPick2 = false;
+	nearLockPick = false;
 	LockPickY = 0;
 	LockPickUp = true;
 	LockPickBoxTop = 1;
@@ -409,7 +414,6 @@ void GameModel2D::Update(double dt)
 	CPistol::GetInstance()->FireCooldownTick(dt);
 	CShotgun::GetInstance()->FireCooldownTick(dt);
 	CRifle::GetInstance()->FireCooldownTick(dt);
-	EPistol::GetInstance()->FireCooldownTick(dt);
 
 	//Shooting (Bullet spawning)
 	if (commands[SHOOT])
@@ -1075,13 +1079,17 @@ void GameModel2D::EnemyDecision(double dt)
 				{
 					if (go->getAmmoType() != 0)
 					{
+						
 						//Enemy Shooting (EBullet spawning)
-						//if (EPistol::GetInstance()->GetFireCooldown() <= 0.0f)
+						for (int i = 0; i < EnemyList.size(); i++)
 						{
-							//Spawn bullet
-							SpawnEnemyBullet(go->getPosition(),(CCharacter_Player::GetInstance()->getPosition()-go->getPosition()).Normalized() * EPistol::GetInstance()->GetBulletSpeed());
-							//Reset fire cooldown
-							//EPistol::GetInstance()->ResetCooldown();
+							if (EnemyList[i]->getFirecooldown() <= 0.0f)
+							{
+								//Spawn bullet
+								SpawnEnemyBullet(go->getPosition(), (CCharacter_Player::GetInstance()->getPosition() - go->getPosition()).Normalized() * 5.0f);
+								//Reset fire cooldown
+								EnemyList[i]->ResetCooldown();
+							}
 						}
 					}
 					break;
@@ -1112,14 +1120,7 @@ void GameModel2D::EnemyDecision(double dt)
 	{
 		if (EnemyList[i]->getActive())
 		{
-			/*
-			if (CCharacter_Player::GetInstance()->getPosition().x < EnemyList[i]->getPosition().x + 0.5f &&
-			CCharacter_Player::GetInstance()->getPosition().x  > EnemyList[i]->getPosition().x - 0.5f &&
-			CCharacter_Player::GetInstance()->getPosition().y  < EnemyList[i]->getPosition().y + 0.5f &&
-			CCharacter_Player::GetInstance()->getPosition().y > EnemyList[i]->getPosition().y - 0.5f)
-			{
-			EnemyList[i]->setPosition(EnemyList[i]->getPosition().x + 0.1f, EnemyList[i]->getPosition().y + 0.1f, 0);
-			}*/
+			EnemyList[i]->FireCooldownTick(dt);
 			for (unsigned j = i; j < EnemyList.size() - j; j++)
 			{
 				if (EnemyList[j]->getPosition().x < EnemyList[j + 1]->getPosition().x + 0.5f &&
@@ -1452,6 +1453,11 @@ Mesh* GameModel2D::getHealth()
 	return meshList[HEALTH];
 }
 
+Mesh* GameModel2D::getHealthDying()
+{
+	return meshList[HEALTH_DYING];
+}
+
 Mesh* GameModel2D::getHealthBar()
 {
 	return meshList[HEALTH_BAR];
@@ -1730,6 +1736,11 @@ bool GameModel2D::getLockPick1()
 bool GameModel2D::getLockPick2()
 {
 	return InLockPick2;
+}
+
+bool GameModel2D::getNearLock()
+{
+	return nearLockPick;
 }
 
 float GameModel2D::getLockPickY()

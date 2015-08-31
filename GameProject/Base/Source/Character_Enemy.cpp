@@ -13,6 +13,8 @@ CCharacter_Enemy::CCharacter_Enemy(void)
 	m_RotateDirection = false;
 	delayTicking = false;
 	m_RotationCompare = 0.f;
+	AttackSpeed = 1.0f;
+	FireCooldown = 0.0f;
 }
 
 
@@ -20,7 +22,18 @@ CCharacter_Enemy::~CCharacter_Enemy(void)
 {
 	delete PATHFIND;
 }
-
+void CCharacter_Enemy::ResetCooldown(void)
+{
+	FireCooldown = AttackSpeed;
+}
+float CCharacter_Enemy::getFirecooldown(void)
+{
+	return FireCooldown;
+}
+void CCharacter_Enemy::FireCooldownTick(float time)
+{
+	FireCooldown -= time;
+}
 void CCharacter_Enemy::setMesh(ENEMY_TYPE newMesh)
 {
 	m_enemyMesh = newMesh;

@@ -29,6 +29,7 @@ public:
 	void RenderScene();
 	void RenderHelpText();
 	void RenderHealth();
+	void RenderHDying();
 	void RenderHBar();
 	void RenderShotgunIcon();
 	void RenderPistolIcon();
@@ -39,6 +40,7 @@ public:
 	void RenderLockPick();
 	void RenderLockBar();
 	void RenderLockBall();
+	void RenderPrompt();
 	void RenderExit();
 	void RenderFog();
 };
