@@ -210,6 +210,7 @@ void GameModel2D::Init()
 	score = 0;
 	CDTimer = 60;
 	CDTimerLimit = 0;
+	walkingSoundLimit = 0;
 	ZoomIN = false;
 	SpawnReady = false;
 	newLevel = false;
@@ -610,12 +611,13 @@ void GameModel2D::Update(double dt)
 		walkingSoundLimit += 1;
 		if (walkingSoundLimit > 20)
 		{
+			cout << "working";
 			walkingSoundLimit = 0;
 			Sound.walkfloor();
 		}
 	}
 
-	//for testing
+	//for testing [load]
 	if (commands[CHECK])
 	{
 		string line;
@@ -634,7 +636,7 @@ void GameModel2D::Update(double dt)
 			cout << "unable to open file";
 	}
 	
-	//SAVE_ID waypoint
+	//SAVEPROG 
 	for (int i = 0; i < InteractionList.size(); i++)
 	{
 		if (InteractionList[i]->type == GameObject::GO_SAVE && InteractionList[i]->active)
@@ -642,15 +644,15 @@ void GameModel2D::Update(double dt)
 			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
 			{
 				cout << "player position saved! " << endl;
-				ofstream playerPos("savepoint.txt");
-				if (playerPos.is_open())
+				ofstream playerData("savepoint.txt");
+				if (playerData.is_open())
 				{
 					//playerPos << CCharacter_Player::GetInstance()->getPosition().Length();
-					playerPos << getNewPlayerPos().x << endl;
-					playerPos << getNewPlayerPos().y << endl;
-					playerPos << getNewPlayerPos().z << endl;
-
-					playerPos.close();
+					playerData << getNewPlayerPos().x << " ";
+					playerData << getNewPlayerPos().y << " ";
+					playerData << getNewPlayerPos().z << " ";
+					playerData << getCDTimer() << " ";
+					playerData.close();
 				}
 				break;
 			}
