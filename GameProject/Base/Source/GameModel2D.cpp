@@ -243,6 +243,9 @@ void GameModel2D::Init()
 
 	isZoomed = false;
 
+	ammoInPistol = 6;
+	ammoInRifle = 15;
+	ammoInShotgun = 49;
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -504,23 +507,38 @@ void GameModel2D::Update(double dt)
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() == 0)
 			{
-				Sound.reloadSound();
-				CPistol::GetInstance()->SetAmmo(10);
+				if (ammoInPistol != 0)
+				{
+					Sound.reloadSound();
+					CPistol::GetInstance()->SetAmmo(1);
+					ammoInPistol--;
+					CPistol::GetInstance()->UseableAmmoLeft(1);
+				}
 			}
 			break;
 		case 1:
 			if (CRifle::GetInstance()->GetAmmo() == 0)
 			{
-				Sound.reloadSound();
-				CRifle::GetInstance()->SetAmmo(50);
+				if (ammoInRifle != 0)
+				{
+					Sound.reloadSound();
+					CRifle::GetInstance()->SetAmmo(15);
+					ammoInRifle -= 15;
+					CRifle::GetInstance()->UseableAmmoLeft(15);
+				}
 			}
 
 			break;
 		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() == 0)
 			{
-				Sound.reloadSound();
-				CShotgun::GetInstance()->SetAmmo(70);
+				if (ammoInShotgun != 0)
+				{
+					Sound.reloadSound();
+					CShotgun::GetInstance()->SetAmmo(7);
+					ammoInShotgun -= 7;
+					CShotgun::GetInstance()->UseableAmmoLeft(7);
+				}
 			}
 			break;
 		}
@@ -754,8 +772,25 @@ void GameModel2D::BulletHandle(double dt)
 				{
 					if (go->pos.x < EnemyList[i]->getPosition().x + 0.5f && go->pos.x > EnemyList[i]->getPosition().x - 0.5f && go->pos.y < EnemyList[i]->getPosition().y + 0.5f && go->pos.y > EnemyList[i]->getPosition().y - 0.5f)
 					{
-						go->active = false;
-						EnemyList[i]->setActive(false);
+						if (CCharacter_Player::GetInstance()->getAmmoType() == 0)
+						{
+							EnemyList[i]->setEnemyHP(EnemyList[i]->getEnemyHP() - CPistol::GetInstance()->GetDamage());
+							go->active = false;
+						}
+						else if (CCharacter_Player::GetInstance()->getAmmoType() == 1)
+						{
+							EnemyList[i]->setEnemyHP(EnemyList[i]->getEnemyHP() - CRifle::GetInstance()->GetDamage());
+							go->active = false;
+						}
+						else if (CCharacter_Player::GetInstance()->getAmmoType() == 2)
+						{
+							EnemyList[i]->setEnemyHP(EnemyList[i]->getEnemyHP() - CShotgun::GetInstance()->GetDamage());
+							go->active = false;
+						}
+						if (EnemyList[i]->getEnemyHP() <= 0)
+						{
+							EnemyList[i]->setActive(false);
+						}
 					}
 				}
 

@@ -154,6 +154,10 @@ protected:
 	int GroupToSpawn;
 	float FPS;
 
+	int ammoInPistol;
+	int ammoInRifle;
+	int ammoInShotgun;
+
 	//Lock Key
 	int KEYCOUNT;
 	//Computer Laser

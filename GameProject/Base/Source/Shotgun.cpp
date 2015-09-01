@@ -14,8 +14,9 @@ CShotgun* CShotgun::GetInstance()
 CShotgun::CShotgun(void)
 {
 	//Unlimited for Shotgun
-	Ammo = 70;
-	Damage = 1;
+	Ammo = 7;
+	AmmoStored = 49;
+	Damage = 20;
 	FireCooldown = 0.0f;
 	AttackSpeed = 1.5f;
 	BulletSpeed = 2.f;

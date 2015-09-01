@@ -47,6 +47,9 @@ public:
 	void RenderPACount();
 	void RenderRACount();
 	void RenderSACount();
+	void RenderPAStored();
+	void RenderRAStored();
+	void RenderSAStored();
 	void RenderPlayerRadius();
 };
 
