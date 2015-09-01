@@ -38,6 +38,11 @@ void GameModel2D::Init()
 	meshList[CUBE] = MeshBuilder::GenerateCube("Bullet", Color(1, 0, 0),1.0f);
 	meshList[FOG] = MeshBuilder::GenerateSpriteAnimation("FOG", 1, 1);
 	meshList[FOG]->textureID[0] = LoadTGA("Image\\FOG.tga");
+	meshList[EXPLORED_FOG] = MeshBuilder::GenerateSpriteAnimation("EXPLORED_FOG", 1, 1);
+	meshList[EXPLORED_FOG]->textureID[0] = LoadTGA("Image\\DEBUG_FOG.tga");
+
+	meshList[PLAYER_RADIUS] = MeshBuilder::GenerateQuad("RADIUS", Color());
+	meshList[PLAYER_RADIUS]->textureID[0] = LoadTGA("Image\\RADIUS.tga");
 
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
@@ -230,10 +235,14 @@ void GameModel2D::Init()
 	nearLockPick = false;
 	LockPickY = 0;
 	LockPickUp = true;
+
 	LockPickBoxTop1 = 2;
 	LockPickBoxBtm1 = -2;
 	LockPickBoxTop2 = 1;
 	LockPickBoxBtm2 = -1;
+
+	isZoomed = false;
+
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -721,7 +730,10 @@ void GameModel2D::Update(double dt)
 	cameraZoom(dt);
 	BulletHandle(dt);
 	BulletUpdate(dt);
-	FogUpdate(dt);
+	if ( !CCharacter_Player::GetInstance()->getVelocity().IsZero() )
+	{
+		FogUpdate(dt);
+	}
 	for (int count = 0; count < NUM_COMMANDS; ++count)
 	{
 		commands[count] = false;
@@ -928,7 +940,7 @@ void GameModel2D::EnemyDecision(double dt)
 			//Looking for player
 			else if ( CCharacter_Player::GetInstance()->getAlertState() == CCharacter_Player::CAUTION && 
 				go->detectPlayer(CCharacter_Player::GetInstance()->getPosition(),getTileMap()) &&
-				go->getAmmoType() != go->CAMERA)
+				go->getAmmoType() != go->CAMERA && go->getGroupID() == toCompare)
 			{
 				CCharacter_Player::GetInstance()->TrackedPosition = CCharacter_Player::GetInstance()->getPosition();
 				go->setTargetPosition(CCharacter_Player::GetInstance()->getPosition());
@@ -995,8 +1007,8 @@ void GameModel2D::EnemyDecision(double dt)
 								{
 									go->setRotation(270);
 									go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
-									//go->setCameraDelay(rand() % 4 + 1);
-									go->setCameraDelay(2);
+									go->setCameraDelay(rand() % 4 + 1);
+									//go->setCameraDelay(2);
 									go->setCameraState(go->BRBL);
 									go->setNewState(go->SCANNING);
 									break;
@@ -1005,8 +1017,8 @@ void GameModel2D::EnemyDecision(double dt)
 								{
 									go->setRotation(180);
 									go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
-									//go->setCameraDelay(rand() % 4 + 1);
-									go->setCameraDelay(2);
+									go->setCameraDelay(rand() % 4 + 1);
+									//go->setCameraDelay(2);
 									go->setCameraState(go->BLUL);
 									go->setNewState(go->SCANNING);
 									break;
@@ -1015,8 +1027,8 @@ void GameModel2D::EnemyDecision(double dt)
 								{
 									go->setRotation(0);
 									go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
-									//go->setCameraDelay(rand() % 4 + 1);
-									go->setCameraDelay(2);
+									go->setCameraDelay(rand() % 4 + 1);
+									//go->setCameraDelay(2);
 									go->setCameraState(go->URBR);
 									go->setNewState(go->SCANNING);
 									break;
@@ -1025,8 +1037,8 @@ void GameModel2D::EnemyDecision(double dt)
 								{
 									go->setRotation(90);
 									go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
-									//go->setCameraDelay(rand() % 4 + 1);
-									go->setCameraDelay(2);
+									go->setCameraDelay(rand() % 4 + 1);
+									//go->setCameraDelay(2);
 									go->setCameraState(go->ULUR);
 									go->setNewState(go->SCANNING);
 									break;
@@ -1168,10 +1180,14 @@ void GameModel2D::cameraZoom(double dt)
 	
 	if (camera.position.Length() != 0 && ZoomIN)
 	{
-		if (!(playerPos - initialCam).IsZero())
+		if ((playerPos - initialCam).LengthSquared() > 0.1f)
 		{
 			camera.position += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
 			camera.target += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
+		}
+		else if ( !isZoomed)
+		{
+			isZoomed = true;
 		}
 	}
 	//Camera zoom in to player
@@ -1521,6 +1537,16 @@ Mesh* GameModel2D::getFogOfWar()
 	return meshList[FOG];
 }
 
+Mesh* GameModel2D::getExploredFogOfWar()
+{
+	return meshList[EXPLORED_FOG];
+}
+
+Mesh* GameModel2D::getPlayerRadius()
+{
+	return meshList[PLAYER_RADIUS];
+}
+
 void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 {
 	for ( unsigned i = 0; i < EnemyList.size(); ++i)
@@ -1821,7 +1847,7 @@ void GameModel2D::FogUpdate(double dt)
 		{
 			go->timer -= float(dt);
 
-			if ( go->timer <= 0.0f )
+			if ( go->timer <= 0.0f)
 			{
 				//spawn checker
 				for (std::vector<GameObject *>::iterator it2 = m_fogCheckerList.begin(); it2 != m_fogCheckerList.end(); ++it2)
@@ -1854,7 +1880,7 @@ void GameModel2D::FogUpdate(double dt)
 		{
 			if ( go->active )
 			{
-				go->pos += (go->vel.Normalized() * float(dt) * 50.f);
+				go->pos += (go->vel.Normalized() * float(dt) * 20.f);
 
 				if ( (CCharacter_Player::GetInstance()->getPosition() - go->pos).Length() < 1.f )
 				{
@@ -1867,6 +1893,7 @@ void GameModel2D::FogUpdate(double dt)
 								go2->SpriteRow == go->SpriteRow && 
 								go2->SpriteColumn == go->SpriteColumn )
 							{
+								go2->type = GameObject::GO_EXPLORED_FOG;
 								go2->active = false;
 							}
 						}
@@ -1877,7 +1904,7 @@ void GameModel2D::FogUpdate(double dt)
 				float tempY = go->pos.y + 0.5f;
 
 
-				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
+				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 || (CCharacter_Player::GetInstance()->getPosition() - go->pos).LengthSquared() >= 20 )
 				{
 					go->active = false;
 					for (std::vector<GameObject *>::iterator it = m_fogList.begin(); it != m_fogList.end(); ++it)
@@ -1897,3 +1924,5 @@ void GameModel2D::FogUpdate(double dt)
 		}
 	}
 }
+
+

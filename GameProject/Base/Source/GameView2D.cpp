@@ -29,6 +29,10 @@ void GameView2D::Render()
 		RenderTileMap();
 		RenderMobs();
 		RenderFog();
+		if (model->isZoomed)
+		{
+			RenderPlayerRadius();
+		}
 		glEnable(GL_DEPTH_TEST);
 		RenderPlayerCharacter();
 		//Gameobjects
@@ -86,6 +90,16 @@ void GameView2D::Render()
 	modelStack.PopMatrix();
 }
 
+void GameView2D::RenderPlayerRadius()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	modelStack.PushMatrix(); 
+	modelStack.Translate(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
+	modelStack.Scale(30,30,0);
+	RenderMesh(model->getPlayerRadius(), false);
+	modelStack.PopMatrix();
+}
+
 void GameView2D::RenderFog()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
@@ -96,7 +110,7 @@ void GameView2D::RenderFog()
 		GameObject *go = (GameObject *)*it;
 		if (go->active)
 		{
-			if ( go->type == go->GO_FOG )
+			if ( go->type == go->GO_FOG  || go->type == go->GO_EXPLORED_FOG)
 			{
 				RenderGO(go,tileMap);
 			}
@@ -492,8 +506,20 @@ void GameView2D::RenderCountDownTimer()
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
-	ss << "Time Left: " << model->getCDTimer();
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, windowWidth / 150, windowHeight / 725);
+	switch ( CCharacter_Player::GetInstance()->getAlertState() )
+	{
+	case 0:
+		ss << "Undetected: " << CCharacter_Player::GetInstance()->getDetectionLevel();
+		break;
+	case 1:
+		ss << "Caution: " << CCharacter_Player::GetInstance()->getDetectionLevel();
+		break;
+	case 2:
+		ss << "Detected: " << CCharacter_Player::GetInstance()->getDetectionLevel();
+		break;
+	}
+		//ss << "Time Left: " << model->getCDTimer();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, 150, 725);
 }
 
 #define player model->getPlayer()
@@ -631,6 +657,16 @@ void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 			RenderMesh(model->getFogOfWar(), false);
+			//RenderMesh(model->getFogOfWar(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_EXPLORED_FOG:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getExploredFogOfWar(), false);
 			//RenderMesh(model->getFogOfWar(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
 			modelStack.PopMatrix();
 		}
