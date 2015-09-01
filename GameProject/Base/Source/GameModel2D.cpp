@@ -1097,7 +1097,7 @@ void GameModel2D::EnemyDecision(double dt)
 				}
 			case CCharacter_Enemy::RUNNING:
 				{
-					if ( go->Strategy_Pathfind(go->getInitPosition(),getAITileMap()) )
+					if ( go->Strategy_Pathfind(go->getInitPosition(),getAITileMap(),dt) )
 					{
 						go->setRotation(go->getRotation() + 180.f);
 						if ( go->getRotation() < 0 )
@@ -1162,7 +1162,7 @@ void GameModel2D::EnemyDecision(double dt)
 				}
 			case CCharacter_Enemy::CHECKING:
 				{
-					if ( go->Strategy_Pathfind(CCharacter_Player::GetInstance()->TrackedPosition,getAITileMap()) )
+					if ( go->Strategy_Pathfind(CCharacter_Player::GetInstance()->TrackedPosition,getAITileMap(),dt) )
 					{
 						go->resetTimer();
 						go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
@@ -1906,7 +1906,7 @@ void GameModel2D::FogUpdate(double dt)
 		{
 			if ( go->active )
 			{
-				go->pos += (go->vel.Normalized() * float(dt) * 20.f);
+				go->pos += (go->vel.Normalized() * float(dt) * 10.f);
 
 				if ( (CCharacter_Player::GetInstance()->getPosition() - go->pos).Length() < 1.f )
 				{
@@ -1930,7 +1930,7 @@ void GameModel2D::FogUpdate(double dt)
 				float tempY = go->pos.y + 0.5f;
 
 
-				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 || (CCharacter_Player::GetInstance()->getPosition() - go->pos).LengthSquared() >= 20 )
+				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 || (CCharacter_Player::GetInstance()->getPosition() - go->pos).LengthSquared() >= 25 )
 				{
 					go->active = false;
 					for (std::vector<GameObject *>::iterator it = m_fogList.begin(); it != m_fogList.end(); ++it)

@@ -95,7 +95,7 @@ void GameView2D::RenderPlayerRadius()
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	modelStack.PushMatrix(); 
 	modelStack.Translate(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
-	modelStack.Scale(30,30,0);
+	modelStack.Scale(40,40,0);
 	RenderMesh(model->getPlayerRadius(), false);
 	modelStack.PopMatrix();
 }

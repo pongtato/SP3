@@ -103,7 +103,7 @@ public:
 	void Strategy_Chaseplayer(Vector3 playerPos,TileMap* tileMap);
 	void Strategy_Return(void);
 	void Strategy_Scan(double dt);
-	bool Strategy_Pathfind(Vector3 playerPos,TileMap* tileMap);
+	bool Strategy_Pathfind(Vector3 playerPos,TileMap* tileMap,double dt);
 	void Strategy_Track(double dt);
 	void Strategy_Patrol(double dt);
 	void Strategy_Camera(double dt);
