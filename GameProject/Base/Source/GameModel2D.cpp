@@ -33,6 +33,10 @@ void GameModel2D::Init()
 	meshList[MOBS]->textureID[0] = LoadTGA("Image//mobs.tga");
 	meshList[CROSSHAIR] = MeshBuilder::GenerateQuad("Crosshair", Color());
 	meshList[CROSSHAIR]->textureID[0] = LoadTGA("Image\\Crosshair.tga");
+	meshList[KEY] = MeshBuilder::GenerateQuad("Key", Color());
+	meshList[KEY]->textureID[0] = LoadTGA("Image\\Key.tga");
+	meshList[TIMER_ICON] = MeshBuilder::GenerateQuad("Timer", Color());
+	meshList[TIMER_ICON]->textureID[0] = LoadTGA("Image\\Timer.tga");
 	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0, 0),10,10,1.0f);
 	meshList[EBULLET] = MeshBuilder::GenerateSphere("EnemyBullet", Color(0, 0, 1), 10, 10, 1.0f);
 	meshList[CUBE] = MeshBuilder::GenerateCube("Bullet", Color(1, 0, 0),1.0f);
@@ -43,6 +47,14 @@ void GameModel2D::Init()
 
 	meshList[PLAYER_RADIUS] = MeshBuilder::GenerateQuad("RADIUS", Color());
 	meshList[PLAYER_RADIUS]->textureID[0] = LoadTGA("Image\\RADIUS.tga");
+
+	//Player face
+	meshList[PLAYER_UNDETECTED] = MeshBuilder::GenerateQuad("man undetected state", Color());
+	meshList[PLAYER_UNDETECTED]->textureID[0] = LoadTGA("Image\\man_undetected.tga");
+	meshList[PLAYER_DETECTED] = MeshBuilder::GenerateQuad("man detected state", Color());
+	meshList[PLAYER_DETECTED]->textureID[0] = LoadTGA("Image\\man_detected.tga");
+	meshList[PLAYER_CAUTION] = MeshBuilder::GenerateQuad("man caution state", Color());
+	meshList[PLAYER_CAUTION]->textureID[0] = LoadTGA("Image\\man_caution.tga");
 
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
@@ -213,7 +225,8 @@ void GameModel2D::Init()
 	newPlayerPos.Set(0,0,0);
 	newExitPos.Set(0,0,0);
 	score = 0;
-	CDTimer = 60;
+	bulletUsed = 0;
+	CDTimer = 300;
 	CDTimerLimit = 0;
 	walkingSoundLimit = 0;
 	ZoomIN = false;
@@ -223,7 +236,7 @@ void GameModel2D::Init()
 	hasReadLoc = false;
 	AniToUpdate = PISTOL_IDLE;
 	srand (time(NULL));
-	GroupToSpawn = rand() % 3 + 0;
+	GroupToSpawn = rand() % 2 + 0;
 	m_EnemySpawnCount = 0;
 
 	WeaponChangeCooldown = 0.5f;
@@ -280,7 +293,7 @@ int GameModel2D::VeryRealRaycasting(double dt)
 		CCharacter_Player::GetInstance()->ManipulateDetectionFadeTimer(-float(dt));
 	}
 
-	if ( CCharacter_Player::GetInstance()->getDetectionFadeTimer() <= 0 )
+	if ( CCharacter_Player::GetInstance()->getDetectionFadeTimer() <= 0 && CCharacter_Player::GetInstance()->getAlertState() != CCharacter_Player::DETECTED )
 	{
 		CCharacter_Player::GetInstance()->ManipulateDetectionLevel(-float(dt));
 	}
@@ -320,7 +333,8 @@ int GameModel2D::VeryRealRaycasting(double dt)
 					if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
 					{
 						checker->active = false;
-						return go->getGroupID();
+						//return something urnelated
+						return -go->getGroupID();
 					}
 
 					if ( (CCharacter_Player::GetInstance()->getPosition() - checker->pos).Length() < 0.5f )
@@ -354,7 +368,6 @@ void GameModel2D::LaserCollisionCheck(double dt)
 	{
 		if (CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI && CollectiblesList[i]->active)
 		{
-			//Lock collision
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
 			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
 			position.x += velocity.x * dt;
@@ -364,7 +377,8 @@ void GameModel2D::LaserCollisionCheck(double dt)
 				getTileMap()->getTile(position.x, ceil(position.y)) >= LASER_HORI_ID && getTileMap()->getTile(position.x, ceil(position.y)) <= LASER_VERTI_ID &&
 				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
-				std::cout << "ALARM" << std::endl;
+				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
+				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 			}
 			position = CCharacter_Player::GetInstance()->getPosition();
 		
@@ -373,67 +387,126 @@ void GameModel2D::LaserCollisionCheck(double dt)
 				getTileMap()->getTile(ceil(position.x), position.y) >= LASER_HORI_ID && getTileMap()->getTile(ceil(position.x), position.y) <= LASER_VERTI_ID &&
 				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
-				std::cout << "ALARM" << std::endl;
+				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
+				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 			}
 			position += velocity * dt;
 		}
 	}
 }
-void GameModel2D::Update(double dt)
+void GameModel2D::KeyCollisionCheck(double dt)
 {
-	//Collision Checks
-	LaserCollisionCheck(dt);
-	float fps = (1 / dt);
-	//countdown timer
-	CDTimerLimit += 1;
+	//KEY
+	for (int i = 0; i < CollectiblesList.size(); i++)
+	{
+		if ((CollectiblesList[i]->type == GameObject::GO_KEY_ID) && CollectiblesList[i]->active && (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+		{
+			{
+				CollectiblesList[i]->active = false;
+				KEYCOUNT++;
+				break;
+			}
+		}
+	}
+}
+void GameModel2D::LockCollisionCheck(double dt)
+{
+	//YELLOW LOCK
+	if (KEYCOUNT > 0)
+	{
+		for (int i = 0; i < InteractionList.size(); i++)
+		{
+			if ((InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID) && InteractionList[i]->active && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				{
+					InteractionList[i]->active = false;
+					KEYCOUNT--;
+				}
+			}
+		}
+	}
+	else
+	{
+		CollideWorldObject(KEYUNLOCK_ID, GameObject::GO_LOCK_KEY_ID, dt);
+	}
+}
+void GameModel2D::ExitCollisionCheck(double dt)
+{
+	if (CollideWorldObject(EXIT_ID, GameObject::GO_EXIT, dt))
+	{
+		switch (m_CurrentLevel)
+		{
+		case 1:
+			Sound.engine->stopAllSounds();
+			m_CurrentLevel = 2;
+			throw m_CurrentLevel - 1;
+			break;
+		case 2:
+			Sound.engine->stopAllSounds();
+			m_CurrentLevel = 3;
+			throw m_CurrentLevel - 1;
+			break;
+		case 3:
+			Sound.engine->stopAllSounds();
+			m_CurrentLevel = 4;
+			throw m_CurrentLevel - 1;
+			break;
+		}
+	}
+}
+void GameModel2D::ComputerCollisionCheck(double dt)
+{
+	if (CollideWorldObject(PC_ID, GameObject::GO_PC, dt))
+	{
+		//Laser Deactivation
+		for (int i = 0; i < CollectiblesList.size(); i++)
+		{
+			if ((CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI) && CollectiblesList[i]->active)
+			{
+				{
+					CollectiblesList[i]->active = false;
+					LaserActive = true;
+				}
+			}
+		}
 
-	if (CDTimerLimit > fps)
-	{
-		CDTimerLimit = 0;
-		CDTimer -= 1;
+		if (LaserActive)
+		{
+			Sound.PCON();
+			LaserActive = false;
+		}
 	}
-	//allow gameplay after zoom in
-	if (ZoomIN)
+}
+void GameModel2D::LockPickCollisionCheck(double dt)
+{
+	if (CollideWorldObject(LOCKPICK_ID_1, GameObject::GO_LOCKPICK_1, dt))
 	{
-		if (commands[MOVE_UP]) CCharacter_Player::GetInstance()->moveUp();
-		if (commands[MOVE_DOWN]) CCharacter_Player::GetInstance()->moveDown();
-		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
-		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
+		nearLockPick = true;
+		if (commands[INTERACT])
+		{
+			nearLockPick = false;
+			InLockPick1 = true;
+		}
+	}
+	else if (CollideWorldObject(LOCKPICK_ID_2, GameObject::GO_LOCKPICK_2, dt))
+	{
+		nearLockPick = true;
+		if (commands[INTERACT])
+		{
+			nearLockPick = false;
+			InLockPick2 = true;
+		}
+	}
+	else
+	{
+		nearLockPick = false;
+	}
 
-		if (commands[MOVE_UP] || commands[MOVE_DOWN] || commands[MOVE_LEFT] || commands[MOVE_RIGHT])
-			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::RUNNING);
-		else
-			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::IDLE);
-	}
-	if (!InLockPick1 && !InLockPick2)
-	{
-		CCharacter_Player::GetInstance()->Update(dt, getTileMap());
-	}
-	//Weapon changing
-	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
+}
+//Weapon update
 
-	if ( commands[WEAPON1] && WeaponChangeCooldown < 0)
-	{
-		CurrentWeapon = 0;
-		WeaponChangeCooldown = 0.5f;
-	}
-	if ( commands[WEAPON2] && WeaponChangeCooldown < 0)
-	{
-		CurrentWeapon = 1;
-		WeaponChangeCooldown = 0.5f;
-	}
-	if ( commands[WEAPON3] && WeaponChangeCooldown < 0)
-	{
-		CurrentWeapon = 2;
-		WeaponChangeCooldown = 0.5f;
-	}
-	WeaponChangeCooldown -= dt;
-	CCharacter_Player::GetInstance()->setAmmoType(CurrentWeapon);
-
-	//Weapons firecooldown
-	CPistol::GetInstance()->FireCooldownTick(dt);
-	CShotgun::GetInstance()->FireCooldownTick(dt);
-	CRifle::GetInstance()->FireCooldownTick(dt);
+void GameModel2D::WeaponShooting(double dt)
+{
 
 	//Shooting (Bullet spawning)
 	if (commands[SHOOT])
@@ -443,6 +516,7 @@ void GameModel2D::Update(double dt)
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() > 0 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				bulletUsed++;
 				//Pistol fire sound
 				Sound.pistolShot();
 				//Spawn Bullet
@@ -460,10 +534,13 @@ void GameModel2D::Update(double dt)
 		case 1:
 			if (CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				bulletUsed++;
 				//rifle fire sound
 				Sound.rifleShot();
 				//Spawn Bullet
 				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
+				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
+				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 				//Ammo decrease
 				CRifle::GetInstance()->UseAmmo(1);
 				CRifle::GetInstance()->ResetCooldown();
@@ -477,6 +554,7 @@ void GameModel2D::Update(double dt)
 		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				bulletUsed += 7;
 				//Shotgun fire sound
 				Sound.shotgunShot();
 				//Spawn Bullet
@@ -484,6 +562,8 @@ void GameModel2D::Update(double dt)
 				{
 					SpawnSGBullets(CShotgun::GetInstance()->GetDamage(), 1.0f);
 				}
+				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
+				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 				//Ammo decrease
 				CShotgun::GetInstance()->UseAmmo(7);
 				CShotgun::GetInstance()->ResetCooldown();
@@ -497,6 +577,14 @@ void GameModel2D::Update(double dt)
 			break;
 		}
 	}
+
+}
+void GameModel2D::WeaponReload(double dt)
+{
+	//Weapons firecooldown
+	CPistol::GetInstance()->FireCooldownTick(dt);
+	CShotgun::GetInstance()->FireCooldownTick(dt);
+	CRifle::GetInstance()->FireCooldownTick(dt);
 
 	//Reload
 	if (commands[RELOAD])
@@ -543,131 +631,81 @@ void GameModel2D::Update(double dt)
 			break;
 		}
 	}
+}
+void GameModel2D::WeaponChanging(double dt)
+{
+	//Weapon changing
+	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
 
-	for (int i = 0; i < CollectiblesList.size(); i++)
+	if (commands[WEAPON1] && WeaponChangeCooldown < 0)
 	{
-		if (CollectiblesList[i]->type == GameObject::GO_KEY_ID && CollectiblesList[i]->active)
-		{
-			if((CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
-			{
-				CollectiblesList[i]->active = false;
-				KEYCOUNT++;
-				break;
-			}
-		}
+		CurrentWeapon = 0;
+		WeaponChangeCooldown = 0.5f;
 	}
+	if (commands[WEAPON2] && WeaponChangeCooldown < 0)
+	{
+		CurrentWeapon = 1;
+		WeaponChangeCooldown = 0.5f;
+	}
+	if (commands[WEAPON3] && WeaponChangeCooldown < 0)
+	{
+		CurrentWeapon = 2;
+		WeaponChangeCooldown = 0.5f;
+	}
+	WeaponChangeCooldown -= dt;
+	CCharacter_Player::GetInstance()->setAmmoType(CurrentWeapon);
+}
+void GameModel2D::Update(double dt)
+{
+	//Collision Checks
+	LaserCollisionCheck(dt);
+	KeyCollisionCheck(dt);
+	LockCollisionCheck(dt);
+	ExitCollisionCheck(dt);
+	ComputerCollisionCheck(dt);
+	LockPickCollisionCheck(dt);
+	//Weapon update
+	WeaponShooting(dt);
+	WeaponReload(dt);
+	WeaponChanging(dt);
+	float fps = (1 / dt);
+	//countdown timer
+	CDTimerLimit += 1;
 
-	CollideWorldObject(KEYUNLOCK_ID,GameObject::GO_LOCK_KEY_ID,dt);
-	InteractWorldObject(KEY_ID,dt);
-	if ( CollideWorldObject(EXIT_ID,GameObject::GO_EXIT,dt) )
+	if (CDTimerLimit > fps)
 	{
-		switch ( m_CurrentLevel)
-		{
-		case 1:
-			Sound.engine->stopAllSounds();
-			m_CurrentLevel = 2;	
-			throw m_CurrentLevel - 1;
-			break;
-		case 2:
-			Sound.engine->stopAllSounds();
-			m_CurrentLevel = 3;
-			throw m_CurrentLevel - 1;
-			break;
-		case 3:
-			Sound.engine->stopAllSounds();
-			m_CurrentLevel = 4;
-			throw m_CurrentLevel - 1;
-			break;
-		}
+		CDTimerLimit = 0;
+		CDTimer -= 1;
 	}
-	if ( CollideWorldObject(PC_ID,GameObject::GO_PC,dt))
+	//allow gameplay after zoom in
+	if (ZoomIN)
 	{
-		//Laser Deactivation
-		for (int i = 0; i < CollectiblesList.size(); i++)
-		{
-			if ((CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI) && CollectiblesList[i]->active)
-			{
-				{
-					CollectiblesList[i]->active = false;
-					LaserActive = true;
-				}
-			}
-		}
+		if (commands[MOVE_UP]) CCharacter_Player::GetInstance()->moveUp();
+		if (commands[MOVE_DOWN]) CCharacter_Player::GetInstance()->moveDown();
+		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
+		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
 
-		if ( LaserActive )
-		{
-			Sound.PCON();
-			LaserActive = false;
-		}
+		if (commands[MOVE_UP] || commands[MOVE_DOWN] || commands[MOVE_LEFT] || commands[MOVE_RIGHT])
+			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::RUNNING);
+		else
+			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::IDLE);
 	}
-	
-	if ( CollideWorldObject(LOCKPICK_ID_1,GameObject::GO_LOCKPICK_1,dt))
+	if (!InLockPick1 && !InLockPick2)
 	{
-		nearLockPick = true;
-		if (commands[INTERACT])
-		{
-			nearLockPick = false;
-			InLockPick1 = true;
-		}
+		CCharacter_Player::GetInstance()->Update(dt, getTileMap());
 	}
-	else if ( CollideWorldObject(LOCKPICK_ID_2,GameObject::GO_LOCKPICK_2,dt))
-	{
-		nearLockPick = true;
-		if (commands[INTERACT])
-		{
-			nearLockPick = false;
-			InLockPick2 = true;
-		}
-	}
-	else
-	{
-		nearLockPick = false;
-	}
-
-	for (int i = 0; i < CollectiblesList.size(); i++)
-	{
-		if (CollectiblesList[i]->type == GameObject::GO_KEY_ID && CollectiblesList[i]->active)
-		{
-			if((CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
-			{
-				CollectiblesList[i]->active = false;
-				KEYCOUNT++;
-				break;
-			}
-		}
-	}
-
+	//calculate score
+	score = (CDTimer * 100- (10 * bulletUsed));
 	//walking sound
 	if (CCharacter_Player::GetInstance()->getState() == CCharacter_Player::RUNNING) //set sound if player is walking
 	{
 		walkingSoundLimit += 1;
 		if (walkingSoundLimit > 20)
 		{
-			cout << "working";
 			walkingSoundLimit = 0;
 			Sound.walkfloor();
 		}
 	}
-
-	//for testing [load]
-	if (commands[CHECK])
-	{
-		string line;
-		float x, y, z;
-		ifstream playerPos("savepoint.txt");
-
-		if (playerPos.is_open())
-		{
-			while (getline(playerPos, line))
-			{
-				cout << line << '\n';
-			}
-			playerPos.close();
-		}
-		else
-			cout << "unable to open file";
-	}
-	
 	//SAVEPROG 
 	for (int i = 0; i < InteractionList.size(); i++)
 	{
@@ -690,7 +728,7 @@ void GameModel2D::Update(double dt)
 			}
 		}
 	}
-
+	//Animation update
 	switch ( CCharacter_Player::GetInstance()->getState())
 	{
 	case 0:
@@ -861,7 +899,7 @@ void GameModel2D::LockPicking(double dt)
 			InLockPick1 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
 			{
-				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1)
+				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1 && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 				{
 					InteractionList[i]->active = false;
 				}
@@ -879,7 +917,7 @@ void GameModel2D::LockPicking(double dt)
 			InLockPick2 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
 			{
-				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2)
+				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2 && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 				{
 					InteractionList[i]->active = false;
 				}
@@ -892,13 +930,14 @@ void GameModel2D::LockPicking(double dt)
 	}
 }
 
-bool GameModel2D::CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goType,double dt)
+bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE goType, double dt)
 {
 	for (int i = 0; i < InteractionList.size(); i++)
 	{
 		if (InteractionList[i]->active && InteractionList[i]->type == goType)
 		{
 			//Lock collision
+
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
 			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
 			//position.x += velocity.x * dt;
@@ -908,11 +947,14 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goT
 			else if (velocity.x > 0)
 				position.x = ceil(position.x);
 
-			if (getTileMap()->getTile(position.x, floor(position.y)) == id && getTileMap()->getTile(position.x, floor(position.y)) == id || 
-				getTileMap()->getTile(position.x, ceil(position.y)) == id && getTileMap()->getTile(position.x, ceil(position.y)) == id )
+			if (getTileMap()->getTile(position.x, floor(position.y)) == id && getTileMap()->getTile(position.x, floor(position.y)) == id &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) == id && getTileMap()->getTile(position.x, ceil(position.y)) == id
+				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
-				CCharacter_Player::GetInstance()->setVelocity(0,CCharacter_Player::GetInstance()->getVelocity().y,0);
+				CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
+				std::cout << "COLLIDING" << std::endl;
 				return true;
 			}
 
@@ -924,11 +966,61 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goT
 			else if (velocity.y > 0)
 				position.y = ceil(position.y);
 
-			if (getTileMap()->getTile(floor(position.x), position.y) == id && getTileMap()->getTile(floor(position.x), position.y) == id || 
-				getTileMap()->getTile(ceil(position.x), position.y) == id && getTileMap()->getTile(ceil(position.x), position.y) == id )
+			if (getTileMap()->getTile(floor(position.x), position.y) == id && getTileMap()->getTile(floor(position.x), position.y) == id &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) == id && getTileMap()->getTile(ceil(position.x), position.y) == id
+				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
-				CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x,0,0);
+				CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
+				std::cout << "COLLIDING" << std::endl;
+				return true;
+			}
+			//position += velocity * dt;
+		}
+	}
+	for (int i = 0; i < CollectiblesList.size(); i++)
+	{
+		if (CollectiblesList[i]->active && CollectiblesList[i]->type == goType)
+		{
+			//Lock collision
+
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			//position.x += velocity.x * dt;
+
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+
+			if (getTileMap()->getTile(position.x, floor(position.y)) == id && getTileMap()->getTile(position.x, floor(position.y)) == id &&
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) == id && getTileMap()->getTile(position.x, ceil(position.y)) == id
+				&& (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+				CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
+				std::cout << "COLLIDING" << std::endl;
+				return true;
+			}
+
+			position = CCharacter_Player::GetInstance()->getPosition();
+			//position.y += velocity.y * dt;
+
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+
+			if (getTileMap()->getTile(floor(position.x), position.y) == id && getTileMap()->getTile(floor(position.x), position.y) == id &&
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) == id && getTileMap()->getTile(ceil(position.x), position.y) == id
+				&& (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
+				std::cout << "COLLIDING" << std::endl;
 				return true;
 			}
 			//position += velocity * dt;
@@ -936,19 +1028,6 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goT
 	}
 
 	return false;
-}
-
-void GameModel2D::InteractWorldObject(TILE_IDS id,double dt)
-{
-	for (int i = 0; i < InteractionList.size(); i++)
-	{
-		if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f && KEYCOUNT > 0)
-		{
-			InteractionList[i]->active = false;
-			KEYCOUNT--;
-			break;
-		}
-	}
 }
 
 void GameModel2D::EnemyDecision(double dt)
@@ -981,8 +1060,9 @@ void GameModel2D::EnemyDecision(double dt)
 				go->setTargetPosition(CCharacter_Player::GetInstance()->getPosition());
 				go->setNewState(go->TRACKING);
 			}
+
 			// raycasting check
-			if ( go->getGroupID() == toCompare )
+			if ( go->getGroupID() == VeryRealRaycasting(dt) )
 			{		
 				if ( go->getAmmoType() == go->CAMERA )
 				{
@@ -1166,7 +1246,19 @@ void GameModel2D::EnemyDecision(double dt)
 				}
 			case CCharacter_Enemy::TRACKING:
 				{
-					go->Strategy_Track(dt);
+					if ( go->getGroupID() == VeryRealRaycasting(dt) )
+					{
+						go->Strategy_Track(dt);
+					}
+					else
+					{
+						go->ReduceTrackTimer(float(dt));
+						if ( go->getTrackTimer() <= 0.0f )
+						{
+							go->setNewState(go->RUNNING);
+							go->ResetTrackTimer();
+						}
+					}
 					break;
 				}
 			case CCharacter_Enemy::CHECKING:
@@ -1487,6 +1579,11 @@ int GameModel2D::getCDTimer()
 	return CDTimer;
 }
 
+int GameModel2D::getKeyCount()
+{
+	return KEYCOUNT;
+}
+
 Vector3 GameModel2D::getNewPlayerPos()
 {
 	return newPlayerPos;
@@ -1526,7 +1623,29 @@ Mesh* GameModel2D::getHealth()
 {
 	return meshList[HEALTH];
 }
-
+Mesh* GameModel2D::getKeys()
+{
+	return meshList[KEY];
+}
+Mesh* GameModel2D::getPlayerFace()
+{
+	switch (CCharacter_Player::GetInstance()->getAlertState())
+	{
+	case 0:
+		return meshList[PLAYER_UNDETECTED];
+		break;
+	case 1:
+		return meshList[PLAYER_CAUTION];
+		break;
+	case 2:
+		return meshList[PLAYER_DETECTED];
+		break;
+	}
+}
+Mesh* GameModel2D::getCountDownTimerIcon()
+{
+	return meshList[TIMER_ICON];
+}
 Mesh* GameModel2D::getHealthDying()
 {
 	return meshList[HEALTH_DYING];
@@ -1708,7 +1827,7 @@ void GameModel2D::getMapData()
 				break;
 			case GameModel2D::ENEMY_ID:
 				{
-					if ( ccount%4 == GroupToSpawn || rcount%4 == GroupToSpawn )
+					if ( ccount%2 == GroupToSpawn || rcount%2 == GroupToSpawn )
 					{
 					setNewEnemy(ccount,rcount,0,1);
 					}

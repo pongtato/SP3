@@ -4,6 +4,7 @@
 
 #include "View.h"
 #include "GameModel2D.h"
+#include "HighScore.h"
 #include "TileMap.h"
 
 class GameView2D : public View
@@ -22,9 +23,15 @@ public:
 	void RenderPlayerCharacter();
 	void RenderMobs();
 	void RenderMobsDetection();
+	void RenderScore();
 	void RenderCountDownTimer();
+	void RenderCountDownTimerIcon();
+	void RenderPlayerDetectStatus();
+	void RenderPlayerFace();
 	void RenderUI();
 	void RenderCrosshair();
+	void RenderKeysIcon();
+	void RenderKeys();
 	void RenderGO(GameObject *go, TileMap* tileMap);
 	void RenderScene();
 	void RenderHelpText();
@@ -51,6 +58,7 @@ public:
 	void RenderRAStored();
 	void RenderSAStored();
 	void RenderPlayerRadius();
+	void RenderHighScore();
 };
 
 #endif

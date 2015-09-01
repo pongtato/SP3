@@ -15,7 +15,11 @@ CCharacter_Enemy::CCharacter_Enemy(void)
 	m_RotationCompare = 0.f;
 	AttackSpeed = 1.0f;
 	FireCooldown = 0.0f;
+
 	m_enemyHP = 100;
+
+	TrackTimer = 0.0f;
+	TrackTimerReset = 3.0f;
 }
 
 
@@ -126,16 +130,19 @@ void CCharacter_Enemy::Strategy_Return(void)
 
 void CCharacter_Enemy::Strategy_Track(double dt)
 {
-	Vector3 tempDirection = ( getTargetPosition() - getPosition());
-	setRotation(Math::RadianToDegree(atan2f(tempDirection.y,tempDirection.x)));
-	
-	if ( getRotation() < 0 )
+	if ( m_weaponChoice != CAMERA )
 	{
-		setRotation(getRotation() + 360);
-	}
-	if ( getRotation() > 360 )
-	{
-		setRotation(getRotation() - 360);
+		Vector3 tempDirection = ( getTargetPosition() - getPosition());
+		setRotation(Math::RadianToDegree(atan2f(tempDirection.y,tempDirection.x)));
+
+		if ( getRotation() < 0 )
+		{
+			setRotation(getRotation() + 360);
+		}
+		if ( getRotation() > 360 )
+		{
+			setRotation(getRotation() - 360);
+		}
 	}
 }
 
@@ -422,4 +429,20 @@ void CCharacter_Enemy::setCameraDelay(float newDelay)
 {
 	m_CameraDelay = newDelay;
 	m_CameraDelayReset = newDelay;
+}
+
+
+void CCharacter_Enemy::ReduceTrackTimer(float timer)
+{
+	TrackTimer -= timer;
+}
+
+void CCharacter_Enemy::ResetTrackTimer(void)
+{
+	TrackTimer = TrackTimerReset;
+}
+
+float CCharacter_Enemy::getTrackTimer(void)
+{
+	return TrackTimer;
 }
