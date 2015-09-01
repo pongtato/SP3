@@ -23,6 +23,15 @@ struct GameObject
 		GO_EXIT,
 		GO_FOG,
 		GO_EXPLORED_FOG,
+		GO_BAGGAGE,
+		GO_BLUE,
+		GO_GREEN,
+		GO_RED,
+		GO_YELLOW,
+		GO_BLUE_CAR,
+		GO_GREEN_CAR,
+		GO_RED_CAR,
+		GO_YELLOW_CAR,
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;

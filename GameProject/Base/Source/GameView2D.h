@@ -59,6 +59,7 @@ public:
 	void RenderSAStored();
 	void RenderPlayerRadius();
 	void RenderHighScore();
+	void RenderOverlay();
 };
 
 #endif

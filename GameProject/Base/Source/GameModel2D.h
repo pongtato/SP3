@@ -70,6 +70,8 @@ public:
 		EXPLORED_FOG,
 		KEY,
 		TIMER_ICON,
+		WIN,
+		LOSE,
 
 		//Player
 		PISTOL_IDLE,
@@ -90,6 +92,11 @@ public:
 		CAUTION,
 		ENEMY_LIGHT_IDLE,
 		ENEMY_CAMERA,
+		BOSS,
+		CAR_RED,
+		CAR_BLUE,
+		CAR_YELLOW,
+		CAR_GREEN,
 
 		//Lock Pick
 		LOCKPICKBG,
@@ -114,6 +121,16 @@ public:
 		KEY_ID			= 17,
 		LASER_HORI_ID	= 18,
 		LASER_VERTI_ID	= 19,
+		BOSS_ID			= 61,
+		CAR_BLUE_ID		= 62,
+		CAR_GREEN_ID	= 63,
+		CAR_RED_ID		= 64,
+		CAR_YELLOW_ID	= 65,
+		BAGGAGE			= 66,
+		CAR_BLUE_S		= 67,
+		CAR_GREEN_S		= 68,
+		CAR_RED_S		= 69,
+		CAR_YELLOW_S	= 70,
 		TOTAL_ID,
 	};
 
@@ -204,6 +221,8 @@ public:
 	Mesh* getLockPickBar();
 	Mesh* getLockPickBall();
 	float getLockPickY();
+	float Lv2Objective;
+	float Lv2ObjectiveCompare;
 	
 	int AniToUpdate;
 	bool ZoomIN;
@@ -230,6 +249,10 @@ public:
 	Mesh* getPlayerMesh(GEOMETRY_TYPE meshToTake);
 	//Enemy
 	Mesh* getEnemyMesh(GEOMETRY_TYPE meshToTake);
+	//CAR
+	Mesh* getCarMesh(GEOMETRY_TYPE meshToTake);
+	//mehs taker
+	Mesh* getMeshTaker(GEOMETRY_TYPE meshToTake);
 	//Weapon
 	Mesh* getWeaponMesh();
 	//Guards, camera
@@ -289,6 +312,8 @@ public:
 	int getKeyCount();
 	float getFPS();
 	bool isZoomed;
+	bool m_resultScreen;
+	bool m_GameLost;
 	//sound
 	CSoundManager Sound;
 	virtual void Init();
@@ -302,6 +327,7 @@ public:
 	bool CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goType,double dt);
 	void LockPicking(double dt);
 	void BulletHandle(double dt);
+	void GameEnd();
 
 
 };

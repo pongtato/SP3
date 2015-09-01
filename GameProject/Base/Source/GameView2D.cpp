@@ -26,30 +26,22 @@ void GameView2D::Render()
 		RenderMobsDetection();
 		RenderTileMap();
 		RenderMobs();
-		RenderFog();
+		//RenderFog();
 		if (model->isZoomed)
 		{
 			RenderPlayerRadius();
 		}
-		glEnable(GL_DEPTH_TEST);
-		RenderPlayerCharacter();
-		//Gameobjects
-		RenderCrosshair();
+		//RenderHealth();
+		RenderKeysIcon();
+		RenderKeys();
+		//RenderHBar();
 		RenderCountDownTimer();
 		RenderCountDownTimerIcon();
 		RenderPlayerFace();
 		RenderPlayerDetectStatus();
 		RenderUI();
 		RenderScore();
-		//RenderHealth();
-		RenderKeysIcon();
-		RenderKeys();
-		//RenderHBar();
-		if (CCharacter_Player::GetInstance()->getHP() <= 25)
-		{
-		//	RenderHDying();
-		}
-		switch (CCharacter_Player::GetInstance()->getAmmoType())
+			switch (CCharacter_Player::GetInstance()->getAmmoType())
 		{
 		case 0:
 			RenderPistolIcon();
@@ -70,12 +62,6 @@ void GameView2D::Render()
 			RenderSAStored();
 			break;
 		}
-		switch (model->m_CurrentLevel)
-		{
-		case 1:
-			//RenderHelpText();
-			break;
-		}
 		if (model->getLockPick1())
 		{
 			RenderLockBall();
@@ -91,6 +77,15 @@ void GameView2D::Render()
 		if (model->getNearLock())
 		{
 			RenderPrompt();
+		}
+		RenderCrosshair();
+		glEnable(GL_DEPTH_TEST);
+		RenderPlayerCharacter();
+		//Gameobjects
+
+		if (model->m_resultScreen)
+		{
+			RenderOverlay();
 		}
 	}
 	modelStack.PopMatrix();
@@ -431,6 +426,11 @@ void GameView2D::RenderMobs()
 				break;
 			}
 
+			if (go->getAmmoType() == CCharacter_Enemy::BOSS)
+			{
+				RenderMeshSprite(model->getEnemyMesh(model->BOSS), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+			}
+
 			if ( go->getAmmoType() == CCharacter_Enemy::CAMERA)
 			{
 				RenderMeshSprite(model->getEnemyMesh(model->ENEMY_CAMERA), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
@@ -439,7 +439,7 @@ void GameView2D::RenderMobs()
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->getPosition().x,go->getPosition().y + (model->getTileMap()->GetTileSize()/model->getTileMap()->GetTileSize()),0.01f);
+		modelStack.Translate(go->getPosition().x,go->getPosition().y + (model->getTileMap()->GetTileSize()/model->getTileMap()->GetTileSize()),0.00f);
 		if (go->getActive())
 		{
 			switch ( go->getState())
@@ -505,9 +505,11 @@ void GameView2D::RenderUI()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 
+	modelStack.PushMatrix();
 	std::ostringstream ss;
 	ss << "FPS: " << model->getFPS();
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 0, 0.5), 30, 10, 770);
+	modelStack.PopMatrix();
 }
 
 void GameView2D::RenderScore()
@@ -516,7 +518,6 @@ void GameView2D::RenderScore()
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
-
 	ss << "Score: " << model->getScore();
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 40, windowWidth * 0.1, 50);
 }
@@ -547,7 +548,7 @@ void GameView2D::RenderCountDownTimerIcon()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth * -.425, windowHeight * -0.325, 2);
+		modelStack.Translate(windowWidth * -.425, windowHeight * -0.325, 0);
 		modelStack.Scale(50, 50, 1);
 		Render2DMesh(model->getCountDownTimerIcon(), false);
 
@@ -583,7 +584,7 @@ void GameView2D::RenderPlayerFace()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth * -0.425, -200, 3);
+		modelStack.Translate(windowWidth * -0.425, -200, 0);
 		modelStack.Scale(50, 50, 1);
 		Render2DMesh(model->getPlayerFace(), false);
 	}
@@ -614,7 +615,7 @@ void GameView2D::RenderKeysIcon()
 
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth * -.425, windowHeight / 5, 2);
+		modelStack.Translate(windowWidth * -.425, windowHeight / 5, 0);
 		modelStack.Scale(50, 50, 1);
 		Render2DMesh(model->getKeys(), false);
 	
@@ -746,6 +747,91 @@ void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 			modelStack.PopMatrix();
 		}
 		break;
+	case GameObject::GO_BAGGAGE:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_BLUE:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_GREEN:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_RED:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_YELLOW:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getTileMesh(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_BLUE_CAR:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Rotate(90,0,0,1);
+			modelStack.Scale(go->scale.x, go->scale.y * 2.f, go->scale.z);
+			RenderMesh(model->getCarMesh(model->CAR_BLUE), false);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_GREEN_CAR:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Rotate(90,0,0,1);
+			modelStack.Scale(go->scale.x, go->scale.y * 2.f, go->scale.z);
+			RenderMesh(model->getCarMesh(model->CAR_GREEN), false);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_RED_CAR:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Rotate(90,0,0,1);
+			modelStack.Scale(go->scale.x, go->scale.y * 2.f, go->scale.z);
+			RenderMesh(model->getCarMesh(model->CAR_RED), false);
+			modelStack.PopMatrix();
+		}
+		break;
+	case GameObject::GO_YELLOW_CAR:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Rotate(90,0,0,1);
+			modelStack.Scale(go->scale.x, go->scale.y * 2.f, go->scale.z);
+			RenderMesh(model->getCarMesh(model->CAR_YELLOW), false);
+			modelStack.PopMatrix();
+		}
+		break;
 	case GameObject::GO_FOG:
 		{
 			modelStack.PushMatrix();
@@ -787,7 +873,7 @@ void GameView2D::RenderHelpText()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth / 17, windowHeight / 26, 1);
+		modelStack.Translate(windowWidth / 17, windowHeight / 26, 0);
 		modelStack.Scale(windowWidth / 50, windowHeight / 65, 1);
 		Render2DMesh(model->getTextPrompt(), false);
 	}
@@ -801,7 +887,7 @@ void GameView2D::RenderHealth()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth * -0.296, windowHeight / 2.23, 1);
+		modelStack.Translate(windowWidth * -0.296, windowHeight / 2.23, 0);
 		modelStack.Scale(windowWidth / 56.99, windowHeight / 105, 1);
 		Render2DMesh(model->getHealth(), false);
 	}
@@ -815,7 +901,7 @@ void GameView2D::RenderHDying()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth * -0.296, windowHeight / 2.23, 2);
+		modelStack.Translate(windowWidth * -0.296, windowHeight / 2.23, 0);
 		modelStack.Scale(windowWidth / 56.99, windowHeight / 105, 1);
 		Render2DMesh(model->getHealthDying(), false);
 	}
@@ -829,7 +915,7 @@ void GameView2D::RenderHBar()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate((windowWidth * -0.35) + CCharacter_Player::GetInstance()->getHP() * 0.999, windowHeight / 2.2, 2);
+		modelStack.Translate((windowWidth * -0.35) + CCharacter_Player::GetInstance()->getHP() * 0.999, windowHeight / 2.2, 0);
 		modelStack.Scale(0.20 * CCharacter_Player::GetInstance()->getHP()*0.5, 1.4, 1);
 		Render2DMesh(model->getHealthBar(), false);
 	}
@@ -909,7 +995,7 @@ void GameView2D::RenderPistolIcon()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth / 2.7, windowHeight / -3, 1);
+		modelStack.Translate(windowWidth / 2.7, windowHeight / -3, 0);
 		modelStack.Scale(windowWidth / 250, windowHeight / 165, 1);
 		Render2DMesh(model->getPistolIcon(), false);
 	}
@@ -923,7 +1009,7 @@ void GameView2D::RenderRifleIcon()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth / 2.75, windowHeight / -2.95, 1);
+		modelStack.Translate(windowWidth / 2.75, windowHeight / -2.95, 0);
 		modelStack.Scale(windowWidth / 250, windowHeight / 165, 1);
 		Render2DMesh(model->getRifleIcon(), false);
 	}
@@ -937,7 +1023,7 @@ void GameView2D::RenderShotgunIcon()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth / 2.75, windowHeight / -2.95, 1);
+		modelStack.Translate(windowWidth / 2.75, windowHeight / -2.95, 0);
 		modelStack.Scale(windowWidth / 250, windowHeight / 165, 1);
 		Render2DMesh(model->getShotgunIcon(), false);
 	}
@@ -951,7 +1037,7 @@ void GameView2D::RenderPistolAmmo()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth / 2.4, windowHeight / -2.75, 2);
+		modelStack.Translate(windowWidth / 2.4, windowHeight / -2.75, 0);
 		modelStack.Scale(windowWidth / 550, windowHeight / 465, 1);
 		Render2DMesh(model->getPistolAmmo(), false);
 	}
@@ -965,7 +1051,7 @@ void GameView2D::RenderRifleAmmo()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth / 2.4, windowHeight / -2.75, 2);
+		modelStack.Translate(windowWidth / 2.4, windowHeight / -2.75, 0);
 		modelStack.Scale(windowWidth / 550, windowHeight / 465, 1);
 		Render2DMesh(model->getRifleAmmo(), false);
 	}
@@ -979,7 +1065,7 @@ void GameView2D::RenderShotgunAmmo()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Translate(windowWidth / 2.4, windowHeight / -2.75, 2);
+		modelStack.Translate(windowWidth / 2.4, windowHeight / -2.75, 0);
 		modelStack.Scale(windowWidth / 550, windowHeight / 465, 1);
 		Render2DMesh(model->getShotgunAmmo(), false);
 	}
@@ -1044,4 +1130,26 @@ void GameView2D::RenderSAStored()
 	std::ostringstream ss;
 	ss << " Stored:" << (CShotgun::GetInstance()->GetAmmoStored()) / 7;
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.76, windowHeight / 22);
+}
+
+void GameView2D::RenderOverlay()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		//modelStack.Translate(windowWidth / 2, windowHeight / 2, 0);
+		//modelStack.Scale(windowWidth / 550, windowHeight / 465, 1);
+		modelStack.Scale(windowWidth, windowHeight, 1);
+		if ( !model->m_GameLost )
+		{
+			Render2DMesh(model->getMeshTaker(model->WIN), false);
+		}
+		else
+		{
+			Render2DMesh(model->getMeshTaker(model->LOSE), false);
+		}
+	}
+	modelStack.PopMatrix();
 }

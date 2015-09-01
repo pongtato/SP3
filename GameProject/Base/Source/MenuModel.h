@@ -19,6 +19,8 @@ private:
 	Mesh *arrow;
 	Mesh *choice;
 	Mesh *startBtn;
+	Mesh *loadBtn;
+	Mesh *creditsBtn;
 	Mesh *settingsBtn;
 	Mesh *exitBtn;
 
@@ -44,6 +46,8 @@ public:
 
 	Mesh* getstartBtn();
 	Mesh* getsettingsBtn();
+	Mesh* getloadBtn();
+	Mesh* getcreditsBtn();
 	Mesh* getexitBtn();
 
 	Mesh* getLv1();
@@ -52,6 +56,7 @@ public:
 	Mesh* getLv4();
 	int getArrowPosition();
 	bool getIsSelectingLevels();
+	bool m_credits;
 
 	CSoundManager Sound;
 };

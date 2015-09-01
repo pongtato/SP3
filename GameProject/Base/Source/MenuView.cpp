@@ -25,23 +25,32 @@ void MenuView::Render()
 
 	if ( !model->getIsSelectingLevels() )
 	{
-		modelStack.PushMatrix(); 
-		modelStack.Translate( 0.284f * windowWidth, 0.3f * windowHeight, 1);
-		modelStack.Scale(384, 33, 1);
-		Render2DMesh(model->getstartBtn(), false);
-		modelStack.PopMatrix();
+		if ( !model->m_credits )
+		{
+			modelStack.PushMatrix(); 
+			modelStack.Translate( 0.284f * windowWidth, 0.3f * windowHeight, 1);
+			modelStack.Scale(384, 33, 1);
+			Render2DMesh(model->getstartBtn(), false);
+			modelStack.PopMatrix();
 
-		modelStack.PushMatrix(); 
-		modelStack.Translate( 0.284f * windowWidth, 0.25f * windowHeight, 1);
-		modelStack.Scale(384, 33, 1);
-		Render2DMesh(model->getsettingsBtn(), false);
-		modelStack.PopMatrix();
+			modelStack.PushMatrix(); 
+			modelStack.Translate( 0.284f * windowWidth, 0.25f * windowHeight, 1);
+			modelStack.Scale(384, 33, 1);
+			Render2DMesh(model->getloadBtn(), false);
+			modelStack.PopMatrix();
 
-		modelStack.PushMatrix(); 
-		modelStack.Translate( 0.284f * windowWidth, 0.2f * windowHeight, 1);
-		modelStack.Scale(384, 33, 1);
-		Render2DMesh(model->getexitBtn(), false);
-		modelStack.PopMatrix();
+			modelStack.PushMatrix(); 
+			modelStack.Translate( 0.284f * windowWidth, 0.2f * windowHeight, 1);
+			modelStack.Scale(384, 33, 1);
+			Render2DMesh(model->getcreditsBtn(), false);
+			modelStack.PopMatrix();
+
+			modelStack.PushMatrix(); 
+			modelStack.Translate( 0.284f * windowWidth, 0.15f * windowHeight, 1);
+			modelStack.Scale(384, 33, 1);
+			Render2DMesh(model->getexitBtn(), false);
+			modelStack.PopMatrix();
+		}
 	}
 	else
 	{
