@@ -137,6 +137,7 @@ public:
 	void ReduceTrackTimer(float timer);
 	void ResetTrackTimer(void);
 	float getTrackTimer(void);
+	bool m_Render;
 
 private:
 	ENEMY_TYPE m_enemyMesh;

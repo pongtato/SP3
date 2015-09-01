@@ -328,7 +328,7 @@ void GameView2D::RenderMobsDetection()
 		modelStack.Translate(go->DetectionCornerL.x,go->DetectionCornerL.y,0.0f);
 		modelStack.Rotate(go->m_RotationArcMin,0,0,1);
 		modelStack.Scale(CCharacter_Enemy::FOVdistance,0.05,0.05);
-		if (go->getActive())
+		if (go->getActive() && go->m_Render)
 		{
 			RenderMesh(model->getWallMesh(), false);
 		}
@@ -338,7 +338,7 @@ void GameView2D::RenderMobsDetection()
 		modelStack.Translate(go->DetectionCornerR.x,go->DetectionCornerR.y,0.0f);
 		modelStack.Rotate(go->m_RotationArcMax,0,0,1);
 		modelStack.Scale(CCharacter_Enemy::FOVdistance,0.05,0.05);
-		if (go->getActive())
+		if (go->getActive() && go->m_Render)
 		{
 			RenderMesh(model->getWallMesh(), false);
 		}
@@ -349,7 +349,7 @@ void GameView2D::RenderMobsDetection()
 		modelStack.Rotate(go->getRotation() + 90.f,0,0,1);
 		float tempCalc = (float)CCharacter_Enemy::FOVArc/30.f * (float)CCharacter_Enemy::FOVdistance;
 		modelStack.Scale(tempCalc,0.05,0.05);
-		if (go->getActive())
+		if (go->getActive() && go->m_Render)
 		{
 			RenderMesh(model->getWallMesh(), false);
 		}
@@ -367,7 +367,7 @@ void GameView2D::RenderMobs()
 		modelStack.PushMatrix();
 		modelStack.Translate(go->getPosition().x,go->getPosition().y,0.0f);
 		modelStack.Rotate(go->getRotation(),0,0,1);
-		if (go->getActive())
+		if (go->getActive() && go->m_Render)
 		{
 			switch ( go->getState())
 			{

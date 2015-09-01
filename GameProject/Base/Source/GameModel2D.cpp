@@ -2001,7 +2001,7 @@ void GameModel2D::FogUpdate(double dt)
 				float tempY = go->pos.y + 0.5f;
 
 
-				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 || (CCharacter_Player::GetInstance()->getPosition() - go->pos).LengthSquared() >= 25 )
+				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 || (CCharacter_Player::GetInstance()->getPosition() - go->pos).LengthSquared() >= 75 )
 				{
 					go->active = false;
 					for (std::vector<GameObject *>::iterator it = m_fogList.begin(); it != m_fogList.end(); ++it)
@@ -2014,6 +2014,30 @@ void GameModel2D::FogUpdate(double dt)
 							{
 								go2->active = true;
 							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	for (std::vector<CCharacter_Enemy *>::iterator it2 = EnemyList.begin(); it2 != EnemyList.end(); ++it2)
+	{
+		CCharacter_Enemy *go2 = (CCharacter_Enemy *)*it2;
+		{
+			for (std::vector<GameObject *>::iterator it = m_fogList.begin(); it != m_fogList.end(); ++it)
+			{
+				GameObject *go = (GameObject *)*it;
+				{
+					if ( (go->pos - go2->getPosition()).Length() < 1.f )
+					{
+						if ( go->active )
+						{
+							go2->m_Render = false;
+						}
+						else if ( !go->active )		
+						{
+							go2->m_Render = true;
 						}
 					}
 				}

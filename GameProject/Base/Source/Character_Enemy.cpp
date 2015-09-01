@@ -17,6 +17,7 @@ CCharacter_Enemy::CCharacter_Enemy(void)
 	FireCooldown = 0.0f;
 	TrackTimer = 0.0f;
 	TrackTimerReset = 3.0f;
+	m_Render = true;
 }
 
 
