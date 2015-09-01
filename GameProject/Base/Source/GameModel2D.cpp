@@ -952,9 +952,11 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 				getTileMap()->getTile(position.x, ceil(position.y)) == id && getTileMap()->getTile(position.x, ceil(position.y)) == id
 				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
-				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
-				CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
-				std::cout << "COLLIDING" << std::endl;
+				if (id != PC_ID)
+				{
+					CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+					CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
+				}
 				return true;
 			}
 
@@ -971,9 +973,11 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 				getTileMap()->getTile(ceil(position.x), position.y) == id && getTileMap()->getTile(ceil(position.x), position.y) == id
 				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
-				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
-				CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
-				std::cout << "COLLIDING" << std::endl;
+				if (id != PC_ID)
+				{
+					CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+					CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
+				}
 				return true;
 			}
 			//position += velocity * dt;
