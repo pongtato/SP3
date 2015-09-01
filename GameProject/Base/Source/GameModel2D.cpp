@@ -228,7 +228,7 @@ void GameModel2D::Init()
 
 	WeaponChangeCooldown = 0.5f;
 
-	KEYCOUNT = 0;
+	KEYCOUNT = 1;
 	LaserActive = true;
 	InLockPick1 = false;
 	InLockPick2 = false;
@@ -408,17 +408,17 @@ void GameModel2D::Update(double dt)
 	//Weapon changing
 	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
 
-	if ( commands[WEAPON1] && WeaponChangeCooldown < 0)
+	if (commands[WEAPON1] && WeaponChangeCooldown < 0)
 	{
 		CurrentWeapon = 0;
 		WeaponChangeCooldown = 0.5f;
 	}
-	if ( commands[WEAPON2] && WeaponChangeCooldown < 0)
+	if (commands[WEAPON2] && WeaponChangeCooldown < 0)
 	{
 		CurrentWeapon = 1;
 		WeaponChangeCooldown = 0.5f;
 	}
-	if ( commands[WEAPON3] && WeaponChangeCooldown < 0)
+	if (commands[WEAPON3] && WeaponChangeCooldown < 0)
 	{
 		CurrentWeapon = 2;
 		WeaponChangeCooldown = 0.5f;
@@ -524,12 +524,11 @@ void GameModel2D::Update(double dt)
 			break;
 		}
 	}
-
+	//KEY
 	for (int i = 0; i < CollectiblesList.size(); i++)
 	{
-		if (CollectiblesList[i]->type == GameObject::GO_KEY_ID && CollectiblesList[i]->active)
+		if ((CollectiblesList[i]->type == GameObject::GO_KEY_ID) && CollectiblesList[i]->active && (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 		{
-			if((CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
 			{
 				CollectiblesList[i]->active = false;
 				KEYCOUNT++;
@@ -538,8 +537,25 @@ void GameModel2D::Update(double dt)
 		}
 	}
 
-	CollideWorldObject(KEYUNLOCK_ID,GameObject::GO_LOCK_KEY_ID,dt);
-	InteractWorldObject(KEY_ID,dt);
+	//YELLOW LOCK
+	std::cout << KEYCOUNT << std::endl;
+	if (KEYCOUNT > 0)
+	{
+		for (int i = 0; i < InteractionList.size(); i++)
+		{
+			if ((InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID) && InteractionList[i]->active && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				{
+					InteractionList[i]->active = false;
+					KEYCOUNT--;
+				}
+			}
+		}
+	}
+	else
+	{
+		CollideWorldObject(KEYUNLOCK_ID, GameObject::GO_LOCK_KEY_ID, dt);
+	}
 	if ( CollideWorldObject(EXIT_ID,GameObject::GO_EXIT,dt) )
 	{
 		switch ( m_CurrentLevel)
@@ -603,19 +619,6 @@ void GameModel2D::Update(double dt)
 	else
 	{
 		nearLockPick = false;
-	}
-
-	for (int i = 0; i < CollectiblesList.size(); i++)
-	{
-		if (CollectiblesList[i]->type == GameObject::GO_KEY_ID && CollectiblesList[i]->active)
-		{
-			if((CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
-			{
-				CollectiblesList[i]->active = false;
-				KEYCOUNT++;
-				break;
-			}
-		}
 	}
 
 	//walking sound
@@ -825,7 +828,7 @@ void GameModel2D::LockPicking(double dt)
 			InLockPick1 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
 			{
-				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1)
+				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1 && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 				{
 					InteractionList[i]->active = false;
 				}
@@ -843,7 +846,7 @@ void GameModel2D::LockPicking(double dt)
 			InLockPick2 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
 			{
-				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2)
+				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2 && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 				{
 					InteractionList[i]->active = false;
 				}
@@ -856,13 +859,14 @@ void GameModel2D::LockPicking(double dt)
 	}
 }
 
-bool GameModel2D::CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goType,double dt)
+bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE goType, double dt)
 {
 	for (int i = 0; i < InteractionList.size(); i++)
 	{
 		if (InteractionList[i]->active && InteractionList[i]->type == goType)
 		{
 			//Lock collision
+
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
 			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
 			//position.x += velocity.x * dt;
@@ -872,11 +876,14 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goT
 			else if (velocity.x > 0)
 				position.x = ceil(position.x);
 
-			if (getTileMap()->getTile(position.x, floor(position.y)) == id && getTileMap()->getTile(position.x, floor(position.y)) == id || 
-				getTileMap()->getTile(position.x, ceil(position.y)) == id && getTileMap()->getTile(position.x, ceil(position.y)) == id )
+			if (getTileMap()->getTile(position.x, floor(position.y)) == id && getTileMap()->getTile(position.x, floor(position.y)) == id &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) == id && getTileMap()->getTile(position.x, ceil(position.y)) == id
+				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
-				CCharacter_Player::GetInstance()->setVelocity(0,CCharacter_Player::GetInstance()->getVelocity().y,0);
+				CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
+				std::cout << "COLLIDING" << std::endl;
 				return true;
 			}
 
@@ -888,11 +895,61 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goT
 			else if (velocity.y > 0)
 				position.y = ceil(position.y);
 
-			if (getTileMap()->getTile(floor(position.x), position.y) == id && getTileMap()->getTile(floor(position.x), position.y) == id || 
-				getTileMap()->getTile(ceil(position.x), position.y) == id && getTileMap()->getTile(ceil(position.x), position.y) == id )
+			if (getTileMap()->getTile(floor(position.x), position.y) == id && getTileMap()->getTile(floor(position.x), position.y) == id &&
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) == id && getTileMap()->getTile(ceil(position.x), position.y) == id
+				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
-				CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x,0,0);
+				CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
+				std::cout << "COLLIDING" << std::endl;
+				return true;
+			}
+			//position += velocity * dt;
+		}
+	}
+	for (int i = 0; i < CollectiblesList.size(); i++)
+	{
+		if (CollectiblesList[i]->active && CollectiblesList[i]->type == goType)
+		{
+			//Lock collision
+
+			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
+			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
+			//position.x += velocity.x * dt;
+
+			if (velocity.x < 0)
+				position.x = floor(position.x);
+			else if (velocity.x > 0)
+				position.x = ceil(position.x);
+
+			if (getTileMap()->getTile(position.x, floor(position.y)) == id && getTileMap()->getTile(position.x, floor(position.y)) == id &&
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(position.x, ceil(position.y)) == id && getTileMap()->getTile(position.x, ceil(position.y)) == id
+				&& (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+				CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
+				std::cout << "COLLIDING" << std::endl;
+				return true;
+			}
+
+			position = CCharacter_Player::GetInstance()->getPosition();
+			//position.y += velocity.y * dt;
+
+			if (velocity.y < 0)
+				position.y = floor(position.y);
+			else if (velocity.y > 0)
+				position.y = ceil(position.y);
+
+			if (getTileMap()->getTile(floor(position.x), position.y) == id && getTileMap()->getTile(floor(position.x), position.y) == id &&
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				getTileMap()->getTile(ceil(position.x), position.y) == id && getTileMap()->getTile(ceil(position.x), position.y) == id
+				&& (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+				CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
+				std::cout << "COLLIDING" << std::endl;
 				return true;
 			}
 			//position += velocity * dt;
@@ -900,27 +957,6 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goT
 	}
 
 	return false;
-}
-
-void GameModel2D::InteractWorldObject(TILE_IDS id,double dt)
-{
-	for (int i = 0; i < InteractionList.size(); i++)
-	{
-		if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f && KEYCOUNT > 0)
-		{
-			InteractionList[i]->active = false;
-			break;
-		}
-	}
-	switch (id)
-	{
-	case KEY_ID:
-		KEYCOUNT++;
-		break;
-	case KEYUNLOCK_ID:
-		KEYCOUNT--;
-		break;
-	}
 }
 
 void GameModel2D::EnemyDecision(double dt)

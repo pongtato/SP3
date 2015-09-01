@@ -1,7 +1,5 @@
 #include "GameView2D.h"
 
-#define false true
-#define true false
 
 GameView2D::GameView2D(Model* model) : View(model)
 {

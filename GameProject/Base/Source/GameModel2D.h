@@ -275,7 +275,6 @@ public:
 	bool getObjectiveCleared(void);
 	void EnemyDecision(double dt);
 	bool CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goType,double dt);
-	void InteractWorldObject(TILE_IDS id,double dt);
 	void LockPicking(double dt);
 	void BulletHandle(double dt);
 };
