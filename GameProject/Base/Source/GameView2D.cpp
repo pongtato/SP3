@@ -29,6 +29,10 @@ void GameView2D::Render()
 		RenderTileMap();
 		RenderMobs();
 		RenderFog();
+		if (model->isZoomed)
+		{
+			RenderPlayerRadius();
+		}
 		glEnable(GL_DEPTH_TEST);
 		RenderPlayerCharacter();
 		//Gameobjects
@@ -66,10 +70,16 @@ void GameView2D::Render()
 			//RenderHelpText();
 			break;
 		}
-		if (model->getLockPick1() || model->getLockPick2())
+		if (model->getLockPick1())
 		{
 			RenderLockBall();
-			RenderLockBar();
+			RenderLockBarRed();
+			RenderLockPick();
+		}
+		if (model->getLockPick2())
+		{
+			RenderLockBall();
+			RenderLockBarBlue();
 			RenderLockPick();
 		}
 		if (model->getNearLock())
@@ -77,6 +87,16 @@ void GameView2D::Render()
 			RenderPrompt();
 		}
 	} 
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderPlayerRadius()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	modelStack.PushMatrix(); 
+	modelStack.Translate(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
+	modelStack.Scale(30,30,0);
+	RenderMesh(model->getPlayerRadius(), false);
 	modelStack.PopMatrix();
 }
 
@@ -745,7 +765,7 @@ void GameView2D::RenderLockPick()
 	modelStack.PopMatrix();
 }
 
-void GameView2D::RenderLockBar()
+void GameView2D::RenderLockBarRed()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	int windowWidth, windowHeight;
@@ -753,6 +773,20 @@ void GameView2D::RenderLockBar()
 	modelStack.PushMatrix();
 	{
 		modelStack.Scale(windowWidth / 32, windowHeight / 32, 1);
+		modelStack.Translate(4.8f, 0, 0);
+		Render2DMesh(model->getLockPickBar(), false);
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderLockBarBlue()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Scale(windowWidth / 32, windowHeight / 64, 1);
 		modelStack.Translate(4.8f, 0, 0);
 		Render2DMesh(model->getLockPickBar(), false);
 	}

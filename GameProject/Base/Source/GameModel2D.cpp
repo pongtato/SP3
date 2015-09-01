@@ -41,6 +41,9 @@ void GameModel2D::Init()
 	meshList[EXPLORED_FOG] = MeshBuilder::GenerateSpriteAnimation("EXPLORED_FOG", 1, 1);
 	meshList[EXPLORED_FOG]->textureID[0] = LoadTGA("Image\\DEBUG_FOG.tga");
 
+	meshList[PLAYER_RADIUS] = MeshBuilder::GenerateQuad("RADIUS", Color());
+	meshList[PLAYER_RADIUS]->textureID[0] = LoadTGA("Image\\RADIUS.tga");
+
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
 	meshList[PISTOL_IDLE]->textureID[0] = LoadTGA("Image\\Player\\PISTOL_IDLE.tga");
@@ -232,8 +235,14 @@ void GameModel2D::Init()
 	nearLockPick = false;
 	LockPickY = 0;
 	LockPickUp = true;
-	LockPickBoxTop = 2;
-	LockPickBoxBtm = -2;
+
+	LockPickBoxTop1 = 2;
+	LockPickBoxBtm1 = -2;
+	LockPickBoxTop2 = 1;
+	LockPickBoxBtm2 = -1;
+
+	isZoomed = false;
+
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -342,7 +351,6 @@ void GameModel2D::LaserCollisionCheck(double dt)
 	{
 		if (CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI && CollectiblesList[i]->active)
 		{
-			//Lock collision
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
 			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
 			position.x += velocity.x * dt;
@@ -795,7 +803,7 @@ void GameModel2D::LockPicking(double dt)
 {
 	if (LockPickUp)
 	{
-		LockPickY += static_cast<float>(dt * 10);
+		LockPickY += static_cast<float>(dt * 20);
 		if (LockPickY > 12)
 		{
 			LockPickUp = false;
@@ -803,7 +811,7 @@ void GameModel2D::LockPicking(double dt)
 	}
 	else if (!LockPickUp)
 	{
-		LockPickY -= static_cast<float>(dt * 10);
+		LockPickY -= static_cast<float>(dt * 20);
 		if (LockPickY < -12)
 		{
 			LockPickUp = true;
@@ -812,7 +820,7 @@ void GameModel2D::LockPicking(double dt)
 
 	if (commands[UNLOCK] && InLockPick1 == true)
 	{
-		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
+		if (LockPickY <= LockPickBoxTop1 && LockPickY >= LockPickBoxBtm1)
 		{
 			InLockPick1 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
@@ -823,14 +831,14 @@ void GameModel2D::LockPicking(double dt)
 				}
 			}
 		}
-		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
+		else if (LockPickY > LockPickBoxTop1 || LockPickY < LockPickBoxBtm1)
 		{
 			InLockPick1= false;
 		}
 	}
 	if (commands[UNLOCK] && InLockPick2 == true)
 	{
-		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
+		if (LockPickY <= LockPickBoxTop2 && LockPickY >= LockPickBoxBtm2)
 		{
 			InLockPick2 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
@@ -841,7 +849,7 @@ void GameModel2D::LockPicking(double dt)
 				}
 			}
 		}
-		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
+		else if (LockPickY > LockPickBoxTop2 || LockPickY < LockPickBoxBtm2)
 		{
 			InLockPick2 = false;
 		}
@@ -901,9 +909,17 @@ void GameModel2D::InteractWorldObject(TILE_IDS id,double dt)
 		if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f && KEYCOUNT > 0)
 		{
 			InteractionList[i]->active = false;
-			KEYCOUNT--;
 			break;
 		}
+	}
+	switch (id)
+	{
+	case KEY_ID:
+		KEYCOUNT++;
+		break;
+	case KEYUNLOCK_ID:
+		KEYCOUNT--;
+		break;
 	}
 }
 
@@ -1171,10 +1187,14 @@ void GameModel2D::cameraZoom(double dt)
 	
 	if (camera.position.Length() != 0 && ZoomIN)
 	{
-		if (!(playerPos - initialCam).IsZero())
+		if ((playerPos - initialCam).LengthSquared() > 0.1f)
 		{
 			camera.position += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
 			camera.target += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
+		}
+		else if ( !isZoomed)
+		{
+			isZoomed = true;
 		}
 	}
 	//Camera zoom in to player
@@ -1529,6 +1549,11 @@ Mesh* GameModel2D::getExploredFogOfWar()
 	return meshList[EXPLORED_FOG];
 }
 
+Mesh* GameModel2D::getPlayerRadius()
+{
+	return meshList[PLAYER_RADIUS];
+}
+
 void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 {
 	for ( unsigned i = 0; i < EnemyList.size(); ++i)
@@ -1829,7 +1854,7 @@ void GameModel2D::FogUpdate(double dt)
 		{
 			go->timer -= float(dt);
 
-			if ( go->timer <= 0.0f )
+			if ( go->timer <= 0.0f)
 			{
 				//spawn checker
 				for (std::vector<GameObject *>::iterator it2 = m_fogCheckerList.begin(); it2 != m_fogCheckerList.end(); ++it2)
@@ -1886,7 +1911,7 @@ void GameModel2D::FogUpdate(double dt)
 				float tempY = go->pos.y + 0.5f;
 
 
-				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
+				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 || (CCharacter_Player::GetInstance()->getPosition() - go->pos).LengthSquared() >= 20 )
 				{
 					go->active = false;
 					for (std::vector<GameObject *>::iterator it = m_fogList.begin(); it != m_fogList.end(); ++it)
@@ -1906,3 +1931,5 @@ void GameModel2D::FogUpdate(double dt)
 		}
 	}
 }
+
+
