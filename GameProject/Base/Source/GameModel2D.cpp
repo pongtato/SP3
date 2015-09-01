@@ -223,7 +223,7 @@ void GameModel2D::Init()
 	hasReadLoc = false;
 	AniToUpdate = PISTOL_IDLE;
 	srand (time(NULL));
-	GroupToSpawn = rand() % 3 + 0;
+	GroupToSpawn = rand() % 2 + 0;
 	m_EnemySpawnCount = 0;
 
 	WeaponChangeCooldown = 0.5f;
@@ -277,7 +277,7 @@ int GameModel2D::VeryRealRaycasting(double dt)
 		CCharacter_Player::GetInstance()->ManipulateDetectionFadeTimer(-float(dt));
 	}
 
-	if ( CCharacter_Player::GetInstance()->getDetectionFadeTimer() <= 0 )
+	if ( CCharacter_Player::GetInstance()->getDetectionFadeTimer() <= 0 && CCharacter_Player::GetInstance()->getAlertState() != CCharacter_Player::DETECTED )
 	{
 		CCharacter_Player::GetInstance()->ManipulateDetectionLevel(-float(dt));
 	}
@@ -317,7 +317,8 @@ int GameModel2D::VeryRealRaycasting(double dt)
 					if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
 					{
 						checker->active = false;
-						return go->getGroupID();
+						//return something urnelated
+						return -go->getGroupID();
 					}
 
 					if ( (CCharacter_Player::GetInstance()->getPosition() - checker->pos).Length() < 0.5f )
@@ -360,7 +361,8 @@ void GameModel2D::LaserCollisionCheck(double dt)
 				getTileMap()->getTile(position.x, ceil(position.y)) >= LASER_HORI_ID && getTileMap()->getTile(position.x, ceil(position.y)) <= LASER_VERTI_ID &&
 				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
-				std::cout << "ALARM" << std::endl;
+				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
+				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 			}
 			position = CCharacter_Player::GetInstance()->getPosition();
 		
@@ -369,7 +371,8 @@ void GameModel2D::LaserCollisionCheck(double dt)
 				getTileMap()->getTile(ceil(position.x), position.y) >= LASER_HORI_ID && getTileMap()->getTile(ceil(position.x), position.y) <= LASER_VERTI_ID &&
 				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
 			{
-				std::cout << "ALARM" << std::endl;
+				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
+				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 			}
 			position += velocity * dt;
 		}
@@ -460,6 +463,8 @@ void GameModel2D::Update(double dt)
 				Sound.rifleShot();
 				//Spawn Bullet
 				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
+				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
+				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 				//Ammo decrease
 				CRifle::GetInstance()->UseAmmo(1);
 				CRifle::GetInstance()->ResetCooldown();
@@ -480,6 +485,8 @@ void GameModel2D::Update(double dt)
 				{
 					SpawnSGBullets(CShotgun::GetInstance()->GetDamage(), 1.0f);
 				}
+				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
+				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 				//Ammo decrease
 				CShotgun::GetInstance()->UseAmmo(7);
 				CShotgun::GetInstance()->ResetCooldown();
@@ -624,7 +631,6 @@ void GameModel2D::Update(double dt)
 		walkingSoundLimit += 1;
 		if (walkingSoundLimit > 20)
 		{
-			cout << "working";
 			walkingSoundLimit = 0;
 			Sound.walkfloor();
 		}
@@ -953,8 +959,9 @@ void GameModel2D::EnemyDecision(double dt)
 				go->setTargetPosition(CCharacter_Player::GetInstance()->getPosition());
 				go->setNewState(go->TRACKING);
 			}
+
 			// raycasting check
-			if ( go->getGroupID() == toCompare )
+			if ( go->getGroupID() == VeryRealRaycasting(dt) )
 			{		
 				if ( go->getAmmoType() == go->CAMERA )
 				{
@@ -1138,7 +1145,19 @@ void GameModel2D::EnemyDecision(double dt)
 				}
 			case CCharacter_Enemy::TRACKING:
 				{
-					go->Strategy_Track(dt);
+					if ( go->getGroupID() == VeryRealRaycasting(dt) )
+					{
+						go->Strategy_Track(dt);
+					}
+					else
+					{
+						go->ReduceTrackTimer(float(dt));
+						if ( go->getTrackTimer() <= 0.0f )
+						{
+							go->setNewState(go->RUNNING);
+							go->ResetTrackTimer();
+						}
+					}
 					break;
 				}
 			case CCharacter_Enemy::CHECKING:
@@ -1680,7 +1699,7 @@ void GameModel2D::getMapData()
 				break;
 			case GameModel2D::ENEMY_ID:
 				{
-					if ( ccount%4 == GroupToSpawn || rcount%4 == GroupToSpawn )
+					if ( ccount%2 == GroupToSpawn || rcount%2 == GroupToSpawn )
 					{
 					setNewEnemy(ccount,rcount,0,1);
 					}

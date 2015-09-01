@@ -80,7 +80,8 @@ void CCharacter_Player::moveRight()
 
 void CCharacter_Player::ManipulateDetectionLevel(float toAddTo)
 {
-	m_DetectionLevel += toAddTo;
+	m_DetectionLevel = Math::Clamp(m_DetectionLevel + toAddTo,0.f,99.f);
+	//m_DetectionLevel += toAddTo;
 
 	if ( m_DetectionLevel >= DETECTIONMAX && !DetectionFading)
 	{
