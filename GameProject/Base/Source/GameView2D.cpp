@@ -38,11 +38,11 @@ void GameView2D::Render()
 		RenderCountDownTimer();
 		RenderUI();
 		//RenderScore();
-		RenderHealth();
-		RenderHBar();
+		//RenderHealth();
+		//RenderHBar();
 		if (CCharacter_Player::GetInstance()->getHP() <= 25)
 		{
-			RenderHDying();
+			//RenderHDying();
 		}
 		switch (CCharacter_Player::GetInstance()->getAmmoType())
 		{
@@ -450,7 +450,10 @@ void GameView2D::RenderMobs()
 				// scanning
 			case 5:
 				{
-					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+					if ( go->getAmmoType() != go->CAMERA)
+					{
+						RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+					}
 				}
 				break;
 				// tracking
