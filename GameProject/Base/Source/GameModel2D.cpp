@@ -33,6 +33,10 @@ void GameModel2D::Init()
 	meshList[MOBS]->textureID[0] = LoadTGA("Image//mobs.tga");
 	meshList[CROSSHAIR] = MeshBuilder::GenerateQuad("Crosshair", Color());
 	meshList[CROSSHAIR]->textureID[0] = LoadTGA("Image\\Crosshair.tga");
+	meshList[KEY] = MeshBuilder::GenerateQuad("Key", Color());
+	meshList[KEY]->textureID[0] = LoadTGA("Image\\Key.tga");
+	meshList[TIMER_ICON] = MeshBuilder::GenerateQuad("Timer", Color());
+	meshList[TIMER_ICON]->textureID[0] = LoadTGA("Image\\Timer.tga");
 	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0, 0),10,10,1.0f);
 	meshList[EBULLET] = MeshBuilder::GenerateSphere("EnemyBullet", Color(0, 0, 1), 10, 10, 1.0f);
 	meshList[CUBE] = MeshBuilder::GenerateCube("Bullet", Color(1, 0, 0),1.0f);
@@ -213,7 +217,8 @@ void GameModel2D::Init()
 	newPlayerPos.Set(0,0,0);
 	newExitPos.Set(0,0,0);
 	score = 0;
-	CDTimer = 60;
+	bulletUsed = 0;
+	CDTimer = 300;
 	CDTimerLimit = 0;
 	walkingSoundLimit = 0;
 	ZoomIN = false;
@@ -435,6 +440,7 @@ void GameModel2D::Update(double dt)
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() > 0 && CPistol::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				bulletUsed++;
 				//Pistol fire sound
 				Sound.pistolShot();
 				//Spawn Bullet
@@ -452,6 +458,7 @@ void GameModel2D::Update(double dt)
 		case 1:
 			if (CRifle::GetInstance()->GetAmmo() > 0 && CRifle::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				bulletUsed++;
 				//rifle fire sound
 				Sound.rifleShot();
 				//Spawn Bullet
@@ -469,6 +476,7 @@ void GameModel2D::Update(double dt)
 		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
+				bulletUsed += 7;
 				//Shotgun fire sound
 				Sound.shotgunShot();
 				//Spawn Bullet
@@ -614,13 +622,15 @@ void GameModel2D::Update(double dt)
 		}
 	}
 
+	//calculate score
+	score = (CDTimer * 100- (10 * bulletUsed));
+
 	//walking sound
 	if (CCharacter_Player::GetInstance()->getState() == CCharacter_Player::RUNNING) //set sound if player is walking
 	{
 		walkingSoundLimit += 1;
 		if (walkingSoundLimit > 20)
 		{
-			cout << "working";
 			walkingSoundLimit = 0;
 			Sound.walkfloor();
 		}
@@ -1447,6 +1457,11 @@ int GameModel2D::getCDTimer()
 	return CDTimer;
 }
 
+int GameModel2D::getKeyCount()
+{
+	return KEYCOUNT;
+}
+
 Vector3 GameModel2D::getNewPlayerPos()
 {
 	return newPlayerPos;
@@ -1486,7 +1501,15 @@ Mesh* GameModel2D::getHealth()
 {
 	return meshList[HEALTH];
 }
+Mesh* GameModel2D::getKeys()
+{
+	return meshList[KEY];
+}
 
+Mesh* GameModel2D::getCountDownTimerIcon()
+{
+	return meshList[TIMER_ICON];
+}
 Mesh* GameModel2D::getHealthDying()
 {
 	return meshList[HEALTH_DYING];

@@ -173,6 +173,9 @@
     <ClCompile Include="Source\EnemyPistol.cpp">
       <Filter>Weapons\Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\HighScore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Geometry.h">
@@ -303,6 +306,9 @@
     </ClInclude>
     <ClInclude Include="Source\EnemyPistol.h">
       <Filter>Weapons\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HighScore.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

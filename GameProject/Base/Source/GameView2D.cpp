@@ -38,13 +38,17 @@ void GameView2D::Render()
 		//Gameobjects
 		RenderCrosshair();
 		RenderCountDownTimer();
+		RenderCountDownTimerIcon();
+		RenderPlayerDetectStatus();
 		RenderUI();
-		//RenderScore();
-		RenderHealth();
-		RenderHBar();
+		RenderScore();
+		//RenderHealth();
+		RenderKeysIcon();
+		RenderKeys();
+		//RenderHBar();
 		if (CCharacter_Player::GetInstance()->getHP() <= 25)
 		{
-			RenderHDying();
+		//	RenderHDying();
 		}
 		switch (CCharacter_Player::GetInstance()->getAmmoType())
 		{
@@ -111,6 +115,7 @@ void GameView2D::RenderFog()
 		}
 	}
 }
+
 
 void GameView2D::RenderScene()
 {
@@ -494,13 +499,58 @@ void GameView2D::RenderUI()
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 0, 0.5), 30, 10, 770);
 }
 
+void GameView2D::RenderScore()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+
+	ss << "Score: " << model->getScore();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 40, windowWidth * 0.1, 50);
+}
+
+void GameView2D::RenderHighScore()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+
+}
+
 void GameView2D::RenderCountDownTimer()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
-	switch ( CCharacter_Player::GetInstance()->getAlertState() )
+	ss << "Time Left: " << model->getCDTimer();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 40, windowWidth * 0.1, 100);
+}
+
+void GameView2D::RenderCountDownTimerIcon()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(windowWidth * -.425, windowHeight * -0.325, 2);
+		modelStack.Scale(50, 50, 1);
+		Render2DMesh(model->getCountDownTimerIcon(), false);
+
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderPlayerDetectStatus()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	switch (CCharacter_Player::GetInstance()->getAlertState())
 	{
 	case 0:
 		ss << "Undetected: " << CCharacter_Player::GetInstance()->getDetectionLevel();
@@ -512,8 +562,7 @@ void GameView2D::RenderCountDownTimer()
 		ss << "Detected: " << CCharacter_Player::GetInstance()->getDetectionLevel();
 		break;
 	}
-		//ss << "Time Left: " << model->getCDTimer();
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, 150, 725);
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 40, windowWidth * 0.1, 150);
 }
 
 #define player model->getPlayer()
@@ -532,6 +581,33 @@ void GameView2D::RenderCrosshair()
 }
 #undef player
 
+void GameView2D::RenderKeysIcon()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(windowWidth * -.425, windowHeight / 5, 2);
+		modelStack.Scale(50, 50, 1);
+		Render2DMesh(model->getKeys(), false);
+	
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderKeys()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << " x" << model->getKeyCount();
+
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 30, windowWidth * 0.08, windowHeight * .65);
+
+}
 void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
