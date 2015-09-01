@@ -228,7 +228,7 @@ void GameModel2D::Init()
 
 	WeaponChangeCooldown = 0.5f;
 
-	KEYCOUNT = 1;
+	KEYCOUNT = 0;
 	LaserActive = true;
 	InLockPick1 = false;
 	InLockPick2 = false;
@@ -378,61 +378,119 @@ void GameModel2D::LaserCollisionCheck(double dt)
 		}
 	}
 }
-void GameModel2D::Update(double dt)
+void GameModel2D::KeyCollisionCheck(double dt)
 {
-	//Collision Checks
-	LaserCollisionCheck(dt);
-	float fps = (1 / dt);
-	//countdown timer
-	CDTimerLimit += 1;
+	//KEY
+	for (int i = 0; i < CollectiblesList.size(); i++)
+	{
+		if ((CollectiblesList[i]->type == GameObject::GO_KEY_ID) && CollectiblesList[i]->active && (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+		{
+			{
+				CollectiblesList[i]->active = false;
+				KEYCOUNT++;
+				break;
+			}
+		}
+	}
+}
+void GameModel2D::LockCollisionCheck(double dt)
+{
+	//YELLOW LOCK
+	if (KEYCOUNT > 0)
+	{
+		for (int i = 0; i < InteractionList.size(); i++)
+		{
+			if ((InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID) && InteractionList[i]->active && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			{
+				{
+					InteractionList[i]->active = false;
+					KEYCOUNT--;
+				}
+			}
+		}
+	}
+	else
+	{
+		CollideWorldObject(KEYUNLOCK_ID, GameObject::GO_LOCK_KEY_ID, dt);
+	}
+}
+void GameModel2D::ExitCollisionCheck(double dt)
+{
+	if (CollideWorldObject(EXIT_ID, GameObject::GO_EXIT, dt))
+	{
+		switch (m_CurrentLevel)
+		{
+		case 1:
+			Sound.engine->stopAllSounds();
+			m_CurrentLevel = 2;
+			throw m_CurrentLevel - 1;
+			break;
+		case 2:
+			Sound.engine->stopAllSounds();
+			m_CurrentLevel = 3;
+			throw m_CurrentLevel - 1;
+			break;
+		case 3:
+			Sound.engine->stopAllSounds();
+			m_CurrentLevel = 4;
+			throw m_CurrentLevel - 1;
+			break;
+		}
+	}
+}
+void GameModel2D::ComputerCollisionCheck(double dt)
+{
+	if (CollideWorldObject(PC_ID, GameObject::GO_PC, dt))
+	{
+		//Laser Deactivation
+		for (int i = 0; i < CollectiblesList.size(); i++)
+		{
+			if ((CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI) && CollectiblesList[i]->active)
+			{
+				{
+					CollectiblesList[i]->active = false;
+					LaserActive = true;
+				}
+			}
+		}
 
-	if (CDTimerLimit > fps)
-	{
-		CDTimerLimit = 0;
-		CDTimer -= 1;
+		if (LaserActive)
+		{
+			Sound.PCON();
+			LaserActive = false;
+		}
 	}
-	//allow gameplay after zoom in
-	if (ZoomIN)
+}
+void GameModel2D::LockPickCollisionCheck(double dt)
+{
+	if (CollideWorldObject(LOCKPICK_ID_1, GameObject::GO_LOCKPICK_1, dt))
 	{
-		if (commands[MOVE_UP]) CCharacter_Player::GetInstance()->moveUp();
-		if (commands[MOVE_DOWN]) CCharacter_Player::GetInstance()->moveDown();
-		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
-		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
+		nearLockPick = true;
+		if (commands[INTERACT])
+		{
+			nearLockPick = false;
+			InLockPick1 = true;
+		}
+	}
+	else if (CollideWorldObject(LOCKPICK_ID_2, GameObject::GO_LOCKPICK_2, dt))
+	{
+		nearLockPick = true;
+		if (commands[INTERACT])
+		{
+			nearLockPick = false;
+			InLockPick2 = true;
+		}
+	}
+	else
+	{
+		nearLockPick = false;
+	}
 
-		if (commands[MOVE_UP] || commands[MOVE_DOWN] || commands[MOVE_LEFT] || commands[MOVE_RIGHT])
-			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::RUNNING);
-		else
-			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::IDLE);
-	}
-	if (!InLockPick1 && !InLockPick2)
-	{
-		CCharacter_Player::GetInstance()->Update(dt, getTileMap());
-	}
-	//Weapon changing
-	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
+}
+//Weapon update
 
-	if (commands[WEAPON1] && WeaponChangeCooldown < 0)
-	{
-		CurrentWeapon = 0;
-		WeaponChangeCooldown = 0.5f;
-	}
-	if (commands[WEAPON2] && WeaponChangeCooldown < 0)
-	{
-		CurrentWeapon = 1;
-		WeaponChangeCooldown = 0.5f;
-	}
-	if (commands[WEAPON3] && WeaponChangeCooldown < 0)
-	{
-		CurrentWeapon = 2;
-		WeaponChangeCooldown = 0.5f;
-	}
-	WeaponChangeCooldown -= dt;
-	CCharacter_Player::GetInstance()->setAmmoType(CurrentWeapon);
-
-	//Weapons firecooldown
-	CPistol::GetInstance()->FireCooldownTick(dt);
-	CShotgun::GetInstance()->FireCooldownTick(dt);
-	CRifle::GetInstance()->FireCooldownTick(dt);
+void GameModel2D::WeaponShooting(double dt)
+{
 
 	//Shooting (Bullet spawning)
 	if (commands[SHOOT])
@@ -501,6 +559,14 @@ void GameModel2D::Update(double dt)
 		}
 	}
 
+}
+void GameModel2D::WeaponReload(double dt)
+{
+	//Weapons firecooldown
+	CPistol::GetInstance()->FireCooldownTick(dt);
+	CShotgun::GetInstance()->FireCooldownTick(dt);
+	CRifle::GetInstance()->FireCooldownTick(dt);
+
 	//Reload
 	if (commands[RELOAD])
 	{
@@ -531,103 +597,70 @@ void GameModel2D::Update(double dt)
 			break;
 		}
 	}
-	//KEY
-	for (int i = 0; i < CollectiblesList.size(); i++)
-	{
-		if ((CollectiblesList[i]->type == GameObject::GO_KEY_ID) && CollectiblesList[i]->active && (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
-		{
-			{
-				CollectiblesList[i]->active = false;
-				KEYCOUNT++;
-				break;
-			}
-		}
-	}
+}
+void GameModel2D::WeaponChanging(double dt)
+{
+	//Weapon changing
+	int CurrentWeapon = CCharacter_Player::GetInstance()->getAmmoType();
 
-	//YELLOW LOCK
-	std::cout << KEYCOUNT << std::endl;
-	if (KEYCOUNT > 0)
+	if (commands[WEAPON1] && WeaponChangeCooldown < 0)
 	{
-		for (int i = 0; i < InteractionList.size(); i++)
-		{
-			if ((InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID) && InteractionList[i]->active && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
-			{
-				{
-					InteractionList[i]->active = false;
-					KEYCOUNT--;
-				}
-			}
-		}
+		CurrentWeapon = 0;
+		WeaponChangeCooldown = 0.5f;
 	}
-	else
+	if (commands[WEAPON2] && WeaponChangeCooldown < 0)
 	{
-		CollideWorldObject(KEYUNLOCK_ID, GameObject::GO_LOCK_KEY_ID, dt);
+		CurrentWeapon = 1;
+		WeaponChangeCooldown = 0.5f;
 	}
-	if ( CollideWorldObject(EXIT_ID,GameObject::GO_EXIT,dt) )
+	if (commands[WEAPON3] && WeaponChangeCooldown < 0)
 	{
-		switch ( m_CurrentLevel)
-		{
-		case 1:
-			Sound.engine->stopAllSounds();
-			m_CurrentLevel = 2;	
-			throw m_CurrentLevel - 1;
-			break;
-		case 2:
-			Sound.engine->stopAllSounds();
-			m_CurrentLevel = 3;
-			throw m_CurrentLevel - 1;
-			break;
-		case 3:
-			Sound.engine->stopAllSounds();
-			m_CurrentLevel = 4;
-			throw m_CurrentLevel - 1;
-			break;
-		}
+		CurrentWeapon = 2;
+		WeaponChangeCooldown = 0.5f;
 	}
-	if ( CollideWorldObject(PC_ID,GameObject::GO_PC,dt))
-	{
-		//Laser Deactivation
-		for (int i = 0; i < CollectiblesList.size(); i++)
-		{
-			if ((CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI) && CollectiblesList[i]->active)
-			{
-				{
-					CollectiblesList[i]->active = false;
-					LaserActive = true;
-				}
-			}
-		}
+	WeaponChangeCooldown -= dt;
+	CCharacter_Player::GetInstance()->setAmmoType(CurrentWeapon);
+}
+void GameModel2D::Update(double dt)
+{
+	//Collision Checks
+	LaserCollisionCheck(dt);
+	KeyCollisionCheck(dt);
+	LockCollisionCheck(dt);
+	ExitCollisionCheck(dt);
+	ComputerCollisionCheck(dt);
+	LockPickCollisionCheck(dt);
+	//Weapon update
+	WeaponShooting(dt);
+	WeaponReload(dt);
+	WeaponChanging(dt);
+	float fps = (1 / dt);
+	//countdown timer
+	CDTimerLimit += 1;
 
-		if ( LaserActive )
-		{
-			Sound.PCON();
-			LaserActive = false;
-		}
+	if (CDTimerLimit > fps)
+	{
+		CDTimerLimit = 0;
+		CDTimer -= 1;
+	}
+	//allow gameplay after zoom in
+	if (ZoomIN)
+	{
+		if (commands[MOVE_UP]) CCharacter_Player::GetInstance()->moveUp();
+		if (commands[MOVE_DOWN]) CCharacter_Player::GetInstance()->moveDown();
+		if (commands[MOVE_LEFT]) CCharacter_Player::GetInstance()->moveLeft();
+		if (commands[MOVE_RIGHT]) CCharacter_Player::GetInstance()->moveRight();
+
+		if (commands[MOVE_UP] || commands[MOVE_DOWN] || commands[MOVE_LEFT] || commands[MOVE_RIGHT])
+			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::RUNNING);
+		else
+			CCharacter_Player::GetInstance()->setNewState(CCharacter_Player::IDLE);
+	}
+	if (!InLockPick1 && !InLockPick2)
+	{
+		CCharacter_Player::GetInstance()->Update(dt, getTileMap());
 	}
 	
-	if ( CollideWorldObject(LOCKPICK_ID_1,GameObject::GO_LOCKPICK_1,dt))
-	{
-		nearLockPick = true;
-		if (commands[INTERACT])
-		{
-			nearLockPick = false;
-			InLockPick1 = true;
-		}
-	}
-	else if ( CollideWorldObject(LOCKPICK_ID_2,GameObject::GO_LOCKPICK_2,dt))
-	{
-		nearLockPick = true;
-		if (commands[INTERACT])
-		{
-			nearLockPick = false;
-			InLockPick2 = true;
-		}
-	}
-	else
-	{
-		nearLockPick = false;
-	}
-
 	//walking sound
 	if (CCharacter_Player::GetInstance()->getState() == CCharacter_Player::RUNNING) //set sound if player is walking
 	{
@@ -638,26 +671,6 @@ void GameModel2D::Update(double dt)
 			Sound.walkfloor();
 		}
 	}
-
-	//for testing [load]
-	if (commands[CHECK])
-	{
-		string line;
-		float x, y, z;
-		ifstream playerPos("savepoint.txt");
-
-		if (playerPos.is_open())
-		{
-			while (getline(playerPos, line))
-			{
-				cout << line << '\n';
-			}
-			playerPos.close();
-		}
-		else
-			cout << "unable to open file";
-	}
-	
 	//SAVEPROG 
 	for (int i = 0; i < InteractionList.size(); i++)
 	{
@@ -680,7 +693,7 @@ void GameModel2D::Update(double dt)
 			}
 		}
 	}
-
+	//Animation update
 	switch ( CCharacter_Player::GetInstance()->getState())
 	{
 	case 0:

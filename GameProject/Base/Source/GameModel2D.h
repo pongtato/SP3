@@ -177,6 +177,15 @@ protected:
 public:
 	//Collision
 	void LaserCollisionCheck(double dt);
+	void KeyCollisionCheck(double dt);
+	void LockCollisionCheck(double dt);
+	void ExitCollisionCheck(double dt);
+	void ComputerCollisionCheck(double dt);
+	void LockPickCollisionCheck(double dt);
+	//Weapon update
+	void WeaponShooting(double dt);
+	void WeaponReload(double dt);
+	void WeaponChanging(double dt);
 	//Lock Picking
 	bool getLockPick1();
 	bool getLockPick2();
