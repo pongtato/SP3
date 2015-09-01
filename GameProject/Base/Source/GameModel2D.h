@@ -68,6 +68,8 @@ public:
 		SHOTGUN_AMMO,
 		FOG,
 		EXPLORED_FOG,
+		KEY,
+		TIMER_ICON,
 
 		//Player
 		PISTOL_IDLE,
@@ -146,6 +148,7 @@ protected:
 
 
 	int score;
+	int bulletUsed;
 	int CDTimer;
 	int CDTimerLimit;
 	bool SpawnReady;
@@ -233,6 +236,10 @@ public:
 	std::vector<GameObject *> getFogList();
 	std::vector<GameObject *> getFogCheckerList();
 
+	//Keys
+	Mesh* getKeys();
+	//Timer
+	Mesh* getCountDownTimerIcon();
 	Mesh* getMobsMesh();
 	//Text Prompts
 	Mesh* getTextPrompt();
@@ -271,6 +278,7 @@ public:
 	Vector3 getNewExitPos();
 	int getScore();
 	int getCDTimer();
+	int getKeyCount();
 	float getFPS();
 	bool isZoomed;
 	//sound
@@ -286,6 +294,8 @@ public:
 	bool CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goType,double dt);
 	void LockPicking(double dt);
 	void BulletHandle(double dt);
+
+
 };
 
 #endif

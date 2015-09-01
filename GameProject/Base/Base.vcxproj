@@ -26,6 +26,7 @@
     <ClCompile Include="Source\GameModelLevel4.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\GameView2D.cpp" />
+    <ClCompile Include="Source\HighScore.cpp" />
     <ClCompile Include="Source\LoadHmap.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\GameView2D.h" />
     <ClInclude Include="Source\Geometry.h" />
+    <ClInclude Include="Source\HighScore.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\LoadHmap.h" />
     <ClInclude Include="Source\LoadOBJ.h" />
