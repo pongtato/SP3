@@ -340,7 +340,6 @@ void GameModel2D::LaserCollisionCheck(double dt)
 	{
 		if (CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI && CollectiblesList[i]->active)
 		{
-			//Lock collision
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
 			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
 			position.x += velocity.x * dt;
@@ -896,9 +895,17 @@ void GameModel2D::InteractWorldObject(TILE_IDS id,double dt)
 		if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f && KEYCOUNT > 0)
 		{
 			InteractionList[i]->active = false;
-			KEYCOUNT--;
 			break;
 		}
+	}
+	switch (id)
+	{
+	case KEY_ID:
+		KEYCOUNT++;
+		break;
+	case KEYUNLOCK_ID:
+		KEYCOUNT--;
+		break;
 	}
 }
 

@@ -155,4 +155,6 @@ private:
 	//Weapon
 	float AttackSpeed;
 	float FireCooldown;
+	//Health
+	int EnemyHealth;
 };
