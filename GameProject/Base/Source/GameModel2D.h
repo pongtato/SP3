@@ -82,7 +82,9 @@ public:
 		SHOTGUN_RELOAD,
 		SHOTGUN_SHOOT,
 		PLAYER_RADIUS,
-
+		PLAYER_UNDETECTED,
+		PLAYER_DETECTED,
+		PLAYER_CAUTION,
 		//Enemy
 		ALERT,
 		CAUTION,
@@ -156,6 +158,10 @@ protected:
 	bool m_ObjectiveCleared;
 	int GroupToSpawn;
 	float FPS;
+
+	int ammoInPistol;
+	int ammoInRifle;
+	int ammoInShotgun;
 
 	//Lock Key
 	int KEYCOUNT;
@@ -236,6 +242,8 @@ public:
 	std::vector<GameObject *> getFogList();
 	std::vector<GameObject *> getFogCheckerList();
 
+	//Player face
+	Mesh* getPlayerFace();
 	//Keys
 	Mesh* getKeys();
 	//Timer

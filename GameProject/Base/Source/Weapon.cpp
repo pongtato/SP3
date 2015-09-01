@@ -15,9 +15,19 @@ void CWeapon::SetAmmo(int NewAmmo)
 	Ammo = NewAmmo;
 }
 
+void CWeapon::SetAmmoStored(int NewAmmoStored)
+{
+	AmmoStored = NewAmmoStored;
+}
+
 void CWeapon::UseAmmo(int Consumption)
 {
 	Ammo -= Consumption;
+}
+
+void CWeapon::UseableAmmoLeft(int NewAmmoLeft)
+{
+	AmmoStored -= NewAmmoLeft;
 }
 
 void CWeapon::FireCooldownTick(float time)
@@ -33,6 +43,11 @@ void CWeapon::ResetCooldown(void)
 int CWeapon::GetAmmo(void)
 {
 	return Ammo;
+}
+
+int CWeapon::GetAmmoStored(void)
+{
+	return AmmoStored;
 }
 
 float CWeapon::GetCooldown(void)

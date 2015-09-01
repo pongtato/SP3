@@ -15,6 +15,9 @@ CCharacter_Enemy::CCharacter_Enemy(void)
 	m_RotationCompare = 0.f;
 	AttackSpeed = 1.0f;
 	FireCooldown = 0.0f;
+
+	m_enemyHP = 100;
+
 	TrackTimer = 0.0f;
 	TrackTimerReset = 3.0f;
 }
@@ -48,6 +51,10 @@ void CCharacter_Enemy::setNewState(EMEY_CURRENT_STATE newState)
 {
 	m_enemyState = newState;
 }
+void CCharacter_Enemy::setEnemyHP(int enemyHealth)
+{
+	m_enemyHP = enemyHealth;
+}
 int CCharacter_Enemy::getMesh()
 {
 	return m_enemyMesh;
@@ -59,6 +66,10 @@ int CCharacter_Enemy::getAmmoType()
 int CCharacter_Enemy::getState()
 {
 	return m_enemyState;
+}
+int CCharacter_Enemy::getEnemyHP()
+{
+	return m_enemyHP;
 }
 
 bool CCharacter_Enemy::detectPlayer(Vector3 playerPos, TileMap* tileMap)

@@ -27,6 +27,7 @@ public:
 	void RenderCountDownTimer();
 	void RenderCountDownTimerIcon();
 	void RenderPlayerDetectStatus();
+	void RenderPlayerFace();
 	void RenderUI();
 	void RenderCrosshair();
 	void RenderKeysIcon();
@@ -53,6 +54,9 @@ public:
 	void RenderPACount();
 	void RenderRACount();
 	void RenderSACount();
+	void RenderPAStored();
+	void RenderRAStored();
+	void RenderSAStored();
 	void RenderPlayerRadius();
 	void RenderHighScore();
 };

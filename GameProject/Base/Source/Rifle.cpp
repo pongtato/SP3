@@ -14,8 +14,9 @@ CRifle* CRifle::GetInstance()
 CRifle::CRifle(void)
 {
 	//Unlimited for Rifle
-	Ammo = 50;
-	Damage = 2;
+	Ammo = 15;
+	AmmoStored = 15;
+	Damage = 34;
 	FireCooldown = 0.0f;
 	AttackSpeed = 0.5f;
 	BulletSpeed = 3.f;

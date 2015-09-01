@@ -48,6 +48,14 @@ void GameModel2D::Init()
 	meshList[PLAYER_RADIUS] = MeshBuilder::GenerateQuad("RADIUS", Color());
 	meshList[PLAYER_RADIUS]->textureID[0] = LoadTGA("Image\\RADIUS.tga");
 
+	//Player face
+	meshList[PLAYER_UNDETECTED] = MeshBuilder::GenerateQuad("man undetected state", Color());
+	meshList[PLAYER_UNDETECTED]->textureID[0] = LoadTGA("Image\\man_undetected.tga");
+	meshList[PLAYER_DETECTED] = MeshBuilder::GenerateQuad("man detected state", Color());
+	meshList[PLAYER_DETECTED]->textureID[0] = LoadTGA("Image\\man_detected.tga");
+	meshList[PLAYER_CAUTION] = MeshBuilder::GenerateQuad("man caution state", Color());
+	meshList[PLAYER_CAUTION]->textureID[0] = LoadTGA("Image\\man_caution.tga");
+
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
 	meshList[PISTOL_IDLE]->textureID[0] = LoadTGA("Image\\Player\\PISTOL_IDLE.tga");
@@ -248,6 +256,9 @@ void GameModel2D::Init()
 
 	isZoomed = false;
 
+	ammoInPistol = 6;
+	ammoInRifle = 15;
+	ammoInShotgun = 49;
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -584,23 +595,38 @@ void GameModel2D::WeaponReload(double dt)
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() == 0)
 			{
-				Sound.reloadSound();
-				CPistol::GetInstance()->SetAmmo(10);
+				if (ammoInPistol != 0)
+				{
+					Sound.reloadSound();
+					CPistol::GetInstance()->SetAmmo(1);
+					ammoInPistol--;
+					CPistol::GetInstance()->UseableAmmoLeft(1);
+				}
 			}
 			break;
 		case 1:
 			if (CRifle::GetInstance()->GetAmmo() == 0)
 			{
-				Sound.reloadSound();
-				CRifle::GetInstance()->SetAmmo(50);
+				if (ammoInRifle != 0)
+				{
+					Sound.reloadSound();
+					CRifle::GetInstance()->SetAmmo(15);
+					ammoInRifle -= 15;
+					CRifle::GetInstance()->UseableAmmoLeft(15);
+				}
 			}
 
 			break;
 		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() == 0)
 			{
-				Sound.reloadSound();
-				CShotgun::GetInstance()->SetAmmo(70);
+				if (ammoInShotgun != 0)
+				{
+					Sound.reloadSound();
+					CShotgun::GetInstance()->SetAmmo(7);
+					ammoInShotgun -= 7;
+					CShotgun::GetInstance()->UseableAmmoLeft(7);
+				}
 			}
 			break;
 		}
@@ -784,8 +810,25 @@ void GameModel2D::BulletHandle(double dt)
 				{
 					if (go->pos.x < EnemyList[i]->getPosition().x + 0.5f && go->pos.x > EnemyList[i]->getPosition().x - 0.5f && go->pos.y < EnemyList[i]->getPosition().y + 0.5f && go->pos.y > EnemyList[i]->getPosition().y - 0.5f)
 					{
-						go->active = false;
-						EnemyList[i]->setActive(false);
+						if (CCharacter_Player::GetInstance()->getAmmoType() == 0)
+						{
+							EnemyList[i]->setEnemyHP(EnemyList[i]->getEnemyHP() - CPistol::GetInstance()->GetDamage());
+							go->active = false;
+						}
+						else if (CCharacter_Player::GetInstance()->getAmmoType() == 1)
+						{
+							EnemyList[i]->setEnemyHP(EnemyList[i]->getEnemyHP() - CRifle::GetInstance()->GetDamage());
+							go->active = false;
+						}
+						else if (CCharacter_Player::GetInstance()->getAmmoType() == 2)
+						{
+							EnemyList[i]->setEnemyHP(EnemyList[i]->getEnemyHP() - CShotgun::GetInstance()->GetDamage());
+							go->active = false;
+						}
+						if (EnemyList[i]->getEnemyHP() <= 0)
+						{
+							EnemyList[i]->setActive(false);
+						}
 					}
 				}
 
@@ -909,9 +952,11 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 				getTileMap()->getTile(position.x, ceil(position.y)) == id && getTileMap()->getTile(position.x, ceil(position.y)) == id
 				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 			{
-				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
-				CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
-				std::cout << "COLLIDING" << std::endl;
+				if (id != PC_ID)
+				{
+					CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
+					CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
+				}
 				return true;
 			}
 
@@ -928,9 +973,11 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 				getTileMap()->getTile(ceil(position.x), position.y) == id && getTileMap()->getTile(ceil(position.x), position.y) == id
 				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 			{
-				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
-				CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
-				std::cout << "COLLIDING" << std::endl;
+				if (id != PC_ID)
+				{
+					CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
+					CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
+				}
 				return true;
 			}
 			//position += velocity * dt;
@@ -1584,7 +1631,21 @@ Mesh* GameModel2D::getKeys()
 {
 	return meshList[KEY];
 }
-
+Mesh* GameModel2D::getPlayerFace()
+{
+	switch (CCharacter_Player::GetInstance()->getAlertState())
+	{
+	case 0:
+		return meshList[PLAYER_UNDETECTED];
+		break;
+	case 1:
+		return meshList[PLAYER_CAUTION];
+		break;
+	case 2:
+		return meshList[PLAYER_DETECTED];
+		break;
+	}
+}
 Mesh* GameModel2D::getCountDownTimerIcon()
 {
 	return meshList[TIMER_ICON];
