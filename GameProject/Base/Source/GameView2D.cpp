@@ -29,6 +29,10 @@ void GameView2D::Render()
 		RenderTileMap();
 		RenderMobs();
 		RenderFog();
+		if (model->isZoomed)
+		{
+			RenderPlayerRadius();
+		}
 		glEnable(GL_DEPTH_TEST);
 		RenderPlayerCharacter();
 		//Gameobjects
@@ -47,12 +51,18 @@ void GameView2D::Render()
 		case 0:
 			RenderPistolIcon();
 			RenderPistolAmmo();
+			RenderPACount();
+			break;
 		case 1:
 			RenderRifleIcon();
 			RenderRifleAmmo();
+			RenderRACount();
+			break;
 		case 2:
 			RenderShotgunIcon();
 			RenderShotgunAmmo();
+			RenderSACount();
+			break;
 		}
 		switch (model->m_CurrentLevel)
 		{
@@ -60,10 +70,16 @@ void GameView2D::Render()
 			//RenderHelpText();
 			break;
 		}
-		if (model->getLockPick1() || model->getLockPick2())
+		if (model->getLockPick1())
 		{
 			RenderLockBall();
-			RenderLockBar();
+			RenderLockBarRed();
+			RenderLockPick();
+		}
+		if (model->getLockPick2())
+		{
+			RenderLockBall();
+			RenderLockBarBlue();
 			RenderLockPick();
 		}
 		if (model->getNearLock())
@@ -71,6 +87,16 @@ void GameView2D::Render()
 			RenderPrompt();
 		}
 	} 
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderPlayerRadius()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	modelStack.PushMatrix(); 
+	modelStack.Translate(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
+	modelStack.Scale(30,30,0);
+	RenderMesh(model->getPlayerRadius(), false);
 	modelStack.PopMatrix();
 }
 
@@ -84,7 +110,7 @@ void GameView2D::RenderFog()
 		GameObject *go = (GameObject *)*it;
 		if (go->active)
 		{
-			if ( go->type == go->GO_FOG )
+			if ( go->type == go->GO_FOG  || go->type == go->GO_EXPLORED_FOG)
 			{
 				RenderGO(go,tileMap);
 			}
@@ -480,8 +506,20 @@ void GameView2D::RenderCountDownTimer()
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
-	ss << "Time Left: " << model->getCDTimer();
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, windowWidth / 150, windowHeight / 725);
+	switch ( CCharacter_Player::GetInstance()->getAlertState() )
+	{
+	case 0:
+		ss << "Undetected: " << CCharacter_Player::GetInstance()->getDetectionLevel();
+		break;
+	case 1:
+		ss << "Caution: " << CCharacter_Player::GetInstance()->getDetectionLevel();
+		break;
+	case 2:
+		ss << "Detected: " << CCharacter_Player::GetInstance()->getDetectionLevel();
+		break;
+	}
+		//ss << "Time Left: " << model->getCDTimer();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, 150, 725);
 }
 
 #define player model->getPlayer()
@@ -623,6 +661,16 @@ void GameView2D::RenderGO(GameObject *go, TileMap* tileMap)
 			modelStack.PopMatrix();
 		}
 		break;
+	case GameObject::GO_EXPLORED_FOG:
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(model->getExploredFogOfWar(), false);
+			//RenderMesh(model->getFogOfWar(), false, 6 * tileMap->getTile(go->SpriteColumn, go->SpriteRow), 6);
+			modelStack.PopMatrix();
+		}
+		break;
 	/*case GameObject::GO_WALL:
 		{
 			modelStack.PushMatrix();
@@ -717,7 +765,7 @@ void GameView2D::RenderLockPick()
 	modelStack.PopMatrix();
 }
 
-void GameView2D::RenderLockBar()
+void GameView2D::RenderLockBarRed()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	int windowWidth, windowHeight;
@@ -725,6 +773,20 @@ void GameView2D::RenderLockBar()
 	modelStack.PushMatrix();
 	{
 		modelStack.Scale(windowWidth / 32, windowHeight / 32, 1);
+		modelStack.Translate(4.8f, 0, 0);
+		Render2DMesh(model->getLockPickBar(), false);
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderLockBarBlue()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Scale(windowWidth / 32, windowHeight / 64, 1);
 		modelStack.Translate(4.8f, 0, 0);
 		Render2DMesh(model->getLockPickBar(), false);
 	}
@@ -827,4 +889,34 @@ void GameView2D::RenderShotgunAmmo()
 		Render2DMesh(model->getShotgunAmmo(), false);
 	}
 	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderPACount()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << " x" << CPistol::GetInstance()->GetAmmo();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.89, windowHeight / 10.5);
+}
+
+void GameView2D::RenderRACount()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << " x" << CRifle::GetInstance()->GetAmmo();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.89, windowHeight / 10.5);
+}
+
+void GameView2D::RenderSACount()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << " x" << (CShotgun::GetInstance()->GetAmmo()) / 7;
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.89, windowHeight / 10.5);
 }

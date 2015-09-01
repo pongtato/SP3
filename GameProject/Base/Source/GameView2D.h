@@ -38,11 +38,16 @@ public:
 	void RenderPistolAmmo();
 	void RenderRifleAmmo();
 	void RenderLockPick();
-	void RenderLockBar();
+	void RenderLockBarRed();
+	void RenderLockBarBlue();
 	void RenderLockBall();
 	void RenderPrompt();
 	void RenderExit();
 	void RenderFog();
+	void RenderPACount();
+	void RenderRACount();
+	void RenderSACount();
+	void RenderPlayerRadius();
 };
 
 #endif
