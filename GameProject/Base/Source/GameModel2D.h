@@ -161,8 +161,10 @@ protected:
 	bool InLockPick2;
 	float LockPickY;
 	bool LockPickUp;
-	float LockPickBoxTop;
-	float LockPickBoxBtm;
+	float LockPickBoxTop1;
+	float LockPickBoxBtm1;
+	float LockPickBoxTop2;
+	float LockPickBoxBtm2;
 	bool nearLockPick;
 
 	//limit walking

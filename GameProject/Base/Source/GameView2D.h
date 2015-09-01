@@ -38,7 +38,8 @@ public:
 	void RenderPistolAmmo();
 	void RenderRifleAmmo();
 	void RenderLockPick();
-	void RenderLockBar();
+	void RenderLockBarRed();
+	void RenderLockBarBlue();
 	void RenderLockBall();
 	void RenderPrompt();
 	void RenderExit();

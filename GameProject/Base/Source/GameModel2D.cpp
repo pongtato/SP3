@@ -230,8 +230,10 @@ void GameModel2D::Init()
 	nearLockPick = false;
 	LockPickY = 0;
 	LockPickUp = true;
-	LockPickBoxTop = 2;
-	LockPickBoxBtm = -2;
+	LockPickBoxTop1 = 2;
+	LockPickBoxBtm1 = -2;
+	LockPickBoxTop2 = 1;
+	LockPickBoxBtm2 = -1;
 
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
@@ -790,7 +792,7 @@ void GameModel2D::LockPicking(double dt)
 {
 	if (LockPickUp)
 	{
-		LockPickY += static_cast<float>(dt * 10);
+		LockPickY += static_cast<float>(dt * 20);
 		if (LockPickY > 12)
 		{
 			LockPickUp = false;
@@ -798,7 +800,7 @@ void GameModel2D::LockPicking(double dt)
 	}
 	else if (!LockPickUp)
 	{
-		LockPickY -= static_cast<float>(dt * 10);
+		LockPickY -= static_cast<float>(dt * 20);
 		if (LockPickY < -12)
 		{
 			LockPickUp = true;
@@ -807,7 +809,7 @@ void GameModel2D::LockPicking(double dt)
 
 	if (commands[UNLOCK] && InLockPick1 == true)
 	{
-		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
+		if (LockPickY <= LockPickBoxTop1 && LockPickY >= LockPickBoxBtm1)
 		{
 			InLockPick1 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
@@ -818,14 +820,14 @@ void GameModel2D::LockPicking(double dt)
 				}
 			}
 		}
-		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
+		else if (LockPickY > LockPickBoxTop1 || LockPickY < LockPickBoxBtm1)
 		{
 			InLockPick1= false;
 		}
 	}
 	if (commands[UNLOCK] && InLockPick2 == true)
 	{
-		if (LockPickY <= LockPickBoxTop && LockPickY >= LockPickBoxBtm)
+		if (LockPickY <= LockPickBoxTop2 && LockPickY >= LockPickBoxBtm2)
 		{
 			InLockPick2 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
@@ -836,7 +838,7 @@ void GameModel2D::LockPicking(double dt)
 				}
 			}
 		}
-		else if (LockPickY > LockPickBoxTop || LockPickY < LockPickBoxBtm)
+		else if (LockPickY > LockPickBoxTop2 || LockPickY < LockPickBoxBtm2)
 		{
 			InLockPick2 = false;
 		}
