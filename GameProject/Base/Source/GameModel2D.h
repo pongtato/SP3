@@ -68,6 +68,8 @@ public:
 		SHOTGUN_AMMO,
 		FOG,
 		EXPLORED_FOG,
+		KEY,
+		TIMER_ICON,
 
 		//Player
 		PISTOL_IDLE,
@@ -146,6 +148,7 @@ protected:
 
 
 	int score;
+	int bulletUsed;
 	int CDTimer;
 	int CDTimerLimit;
 	bool SpawnReady;
@@ -177,6 +180,15 @@ protected:
 public:
 	//Collision
 	void LaserCollisionCheck(double dt);
+	void KeyCollisionCheck(double dt);
+	void LockCollisionCheck(double dt);
+	void ExitCollisionCheck(double dt);
+	void ComputerCollisionCheck(double dt);
+	void LockPickCollisionCheck(double dt);
+	//Weapon update
+	void WeaponShooting(double dt);
+	void WeaponReload(double dt);
+	void WeaponChanging(double dt);
 	//Lock Picking
 	bool getLockPick1();
 	bool getLockPick2();
@@ -224,6 +236,10 @@ public:
 	std::vector<GameObject *> getFogList();
 	std::vector<GameObject *> getFogCheckerList();
 
+	//Keys
+	Mesh* getKeys();
+	//Timer
+	Mesh* getCountDownTimerIcon();
 	Mesh* getMobsMesh();
 	//Text Prompts
 	Mesh* getTextPrompt();
@@ -262,6 +278,7 @@ public:
 	Vector3 getNewExitPos();
 	int getScore();
 	int getCDTimer();
+	int getKeyCount();
 	float getFPS();
 	bool isZoomed;
 	//sound
@@ -275,9 +292,10 @@ public:
 	bool getObjectiveCleared(void);
 	void EnemyDecision(double dt);
 	bool CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goType,double dt);
-	void InteractWorldObject(TILE_IDS id,double dt);
 	void LockPicking(double dt);
 	void BulletHandle(double dt);
+
+
 };
 
 #endif
