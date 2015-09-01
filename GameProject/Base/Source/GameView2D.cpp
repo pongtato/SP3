@@ -17,7 +17,7 @@ void GameView2D::Render()
 
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 
-	modelStack.PushMatrix(); 
+	modelStack.PushMatrix();
 	{
 		//RenderBackground();
 		glDisable(GL_DEPTH_TEST);
@@ -37,6 +37,7 @@ void GameView2D::Render()
 		RenderCrosshair();
 		RenderCountDownTimer();
 		RenderCountDownTimerIcon();
+		RenderPlayerFace();
 		RenderPlayerDetectStatus();
 		RenderUI();
 		RenderScore();
@@ -54,16 +55,19 @@ void GameView2D::Render()
 			RenderPistolIcon();
 			RenderPistolAmmo();
 			RenderPACount();
+			RenderPAStored();
 			break;
 		case 1:
 			RenderRifleIcon();
 			RenderRifleAmmo();
 			RenderRACount();
+			RenderRAStored();
 			break;
 		case 2:
 			RenderShotgunIcon();
 			RenderShotgunAmmo();
 			RenderSACount();
+			RenderSAStored();
 			break;
 		}
 		switch (model->m_CurrentLevel)
@@ -88,7 +92,7 @@ void GameView2D::Render()
 		{
 			RenderPrompt();
 		}
-	} 
+	}
 	modelStack.PopMatrix();
 }
 
@@ -572,6 +576,20 @@ void GameView2D::RenderPlayerDetectStatus()
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 40, windowWidth * 0.1, 150);
 }
 
+void GameView2D::RenderPlayerFace()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(windowWidth * -0.425, -200, 3);
+		modelStack.Scale(50, 50, 1);
+		Render2DMesh(model->getPlayerFace(), false);
+	}
+	modelStack.PopMatrix();
+}
+
 #define player model->getPlayer()
 void GameView2D::RenderCrosshair()
 {
@@ -975,7 +993,7 @@ void GameView2D::RenderPACount()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
 	ss << " x" << CPistol::GetInstance()->GetAmmo();
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.89, windowHeight / 10.5);
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.91, windowHeight / 12);
 }
 
 void GameView2D::RenderRACount()
@@ -985,7 +1003,7 @@ void GameView2D::RenderRACount()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
 	ss << " x" << CRifle::GetInstance()->GetAmmo();
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.89, windowHeight / 10.5);
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.91, windowHeight / 12);
 }
 
 void GameView2D::RenderSACount()
@@ -995,5 +1013,35 @@ void GameView2D::RenderSACount()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
 	ss << " x" << (CShotgun::GetInstance()->GetAmmo()) / 7;
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.89, windowHeight / 10.5);
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.91, windowHeight / 12);
+}
+
+void GameView2D::RenderPAStored()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << " Stored:" << CPistol::GetInstance()->GetAmmoStored();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.76, windowHeight / 22);
+}
+
+void GameView2D::RenderRAStored()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << " Stored:" << CRifle::GetInstance()->GetAmmoStored();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.76, windowHeight / 22);
+}
+
+void GameView2D::RenderSAStored()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << " Stored:" << (CShotgun::GetInstance()->GetAmmoStored()) / 7;
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.76, windowHeight / 22);
 }
