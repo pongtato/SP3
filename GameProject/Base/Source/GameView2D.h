@@ -27,6 +27,7 @@ public:
 	void RenderCountDownTimer();
 	void RenderCountDownTimerIcon();
 	void RenderPlayerDetectStatus();
+	void RenderPlayerFace();
 	void RenderUI();
 	void RenderCrosshair();
 	void RenderKeysIcon();

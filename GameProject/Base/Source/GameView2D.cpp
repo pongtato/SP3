@@ -37,6 +37,7 @@ void GameView2D::Render()
 		RenderCrosshair();
 		RenderCountDownTimer();
 		RenderCountDownTimerIcon();
+		RenderPlayerFace();
 		RenderPlayerDetectStatus();
 		RenderUI();
 		RenderScore();
@@ -570,6 +571,20 @@ void GameView2D::RenderPlayerDetectStatus()
 		break;
 	}
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 40, windowWidth * 0.1, 150);
+}
+
+void GameView2D::RenderPlayerFace()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(windowWidth * -0.425, -200, 3);
+		modelStack.Scale(50, 50, 1);
+		Render2DMesh(model->getPlayerFace(), false);
+	}
+	modelStack.PopMatrix();
 }
 
 #define player model->getPlayer()

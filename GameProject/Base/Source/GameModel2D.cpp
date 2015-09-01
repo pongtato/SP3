@@ -48,6 +48,14 @@ void GameModel2D::Init()
 	meshList[PLAYER_RADIUS] = MeshBuilder::GenerateQuad("RADIUS", Color());
 	meshList[PLAYER_RADIUS]->textureID[0] = LoadTGA("Image\\RADIUS.tga");
 
+	//Player face
+	meshList[PLAYER_UNDETECTED] = MeshBuilder::GenerateQuad("man undetected state", Color());
+	meshList[PLAYER_UNDETECTED]->textureID[0] = LoadTGA("Image\\man_undetected.tga");
+	meshList[PLAYER_DETECTED] = MeshBuilder::GenerateQuad("man detected state", Color());
+	meshList[PLAYER_DETECTED]->textureID[0] = LoadTGA("Image\\man_detected.tga");
+	meshList[PLAYER_CAUTION] = MeshBuilder::GenerateQuad("man caution state", Color());
+	meshList[PLAYER_CAUTION]->textureID[0] = LoadTGA("Image\\man_caution.tga");
+
 	//Player
 	meshList[PISTOL_IDLE] = MeshBuilder::GenerateSpriteAnimation("PISTOL_IDLE", 4, 5);
 	meshList[PISTOL_IDLE]->textureID[0] = LoadTGA("Image\\Player\\PISTOL_IDLE.tga");
@@ -1584,7 +1592,21 @@ Mesh* GameModel2D::getKeys()
 {
 	return meshList[KEY];
 }
-
+Mesh* GameModel2D::getPlayerFace()
+{
+	switch (CCharacter_Player::GetInstance()->getAlertState())
+	{
+	case 0:
+		return meshList[PLAYER_UNDETECTED];
+		break;
+	case 1:
+		return meshList[PLAYER_CAUTION];
+		break;
+	case 2:
+		return meshList[PLAYER_DETECTED];
+		break;
+	}
+}
 Mesh* GameModel2D::getCountDownTimerIcon()
 {
 	return meshList[TIMER_ICON];
