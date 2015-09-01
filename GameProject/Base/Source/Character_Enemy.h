@@ -127,13 +127,16 @@ public:
 	void resetTimer(void);
 
 	bool InLineOfSight;
-
 	void setCameraDelay(float newDelay);
 
 	//Weapons
 	float getFirecooldown(void);
 	void ResetCooldown(void);
 	void FireCooldownTick(float time);
+
+	void ReduceTrackTimer(float timer);
+	void ResetTrackTimer(void);
+	float getTrackTimer(void);
 
 private:
 	ENEMY_TYPE m_enemyMesh;
@@ -155,4 +158,9 @@ private:
 	//Weapon
 	float AttackSpeed;
 	float FireCooldown;
+	//Health
+	int EnemyHealth;
+
+	float TrackTimer;
+	float TrackTimerReset;
 };

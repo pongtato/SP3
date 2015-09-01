@@ -1,7 +1,5 @@
 #include "GameView2D.h"
 
-#define false true
-#define true false
 
 GameView2D::GameView2D(Model* model) : View(model)
 {
@@ -74,10 +72,16 @@ void GameView2D::Render()
 			//RenderHelpText();
 			break;
 		}
-		if (model->getLockPick1() || model->getLockPick2())
+		if (model->getLockPick1())
 		{
 			RenderLockBall();
-			RenderLockBar();
+			RenderLockBarRed();
+			RenderLockPick();
+		}
+		if (model->getLockPick2())
+		{
+			RenderLockBall();
+			RenderLockBarBlue();
 			RenderLockPick();
 		}
 		if (model->getNearLock())
@@ -451,7 +455,10 @@ void GameView2D::RenderMobs()
 				// scanning
 			case 5:
 				{
-					RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+					if ( go->getAmmoType() != go->CAMERA)
+					{
+						RenderMeshSprite(model->getEnemyMesh(model->CAUTION), false, 6 * CCharacter_Player::GetInstance()->getSpriteID(), 6 );
+					}
 				}
 				break;
 				// tracking
@@ -835,7 +842,7 @@ void GameView2D::RenderLockPick()
 	modelStack.PopMatrix();
 }
 
-void GameView2D::RenderLockBar()
+void GameView2D::RenderLockBarRed()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	int windowWidth, windowHeight;
@@ -843,6 +850,20 @@ void GameView2D::RenderLockBar()
 	modelStack.PushMatrix();
 	{
 		modelStack.Scale(windowWidth / 32, windowHeight / 32, 1);
+		modelStack.Translate(4.8f, 0, 0);
+		Render2DMesh(model->getLockPickBar(), false);
+	}
+	modelStack.PopMatrix();
+}
+
+void GameView2D::RenderLockBarBlue()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	modelStack.PushMatrix();
+	{
+		modelStack.Scale(windowWidth / 32, windowHeight / 64, 1);
 		modelStack.Translate(4.8f, 0, 0);
 		Render2DMesh(model->getLockPickBar(), false);
 	}

@@ -166,8 +166,10 @@ protected:
 	bool InLockPick2;
 	float LockPickY;
 	bool LockPickUp;
-	float LockPickBoxTop;
-	float LockPickBoxBtm;
+	float LockPickBoxTop1;
+	float LockPickBoxBtm1;
+	float LockPickBoxTop2;
+	float LockPickBoxBtm2;
 	bool nearLockPick;
 
 	//limit walking
@@ -281,7 +283,6 @@ public:
 	bool getObjectiveCleared(void);
 	void EnemyDecision(double dt);
 	bool CollideWorldObject(TILE_IDS id,GameObject::GAMEOBJECT_TYPE goType,double dt);
-	void InteractWorldObject(TILE_IDS id,double dt);
 	void LockPicking(double dt);
 	void BulletHandle(double dt);
 
