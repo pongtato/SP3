@@ -292,7 +292,7 @@ void View::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float s
 	if (!mesh || mesh->textureID <= 0)
 		return;
 
-	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_DEPTH_TEST);
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	Mtx44 ortho;
@@ -326,7 +326,7 @@ void View::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float s
 	modelStack.PopMatrix();
 	viewStack.PopMatrix();
 	projectionStack.PopMatrix();
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 }
 
 Vector3 View::GetCursorPos()

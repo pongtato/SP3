@@ -40,6 +40,7 @@ public:
 	{
 		CAMERA,
 		FLASHLIGHT,
+		BOSS,
 		PISTOL,
 		MG,
 		SHOTGUN,

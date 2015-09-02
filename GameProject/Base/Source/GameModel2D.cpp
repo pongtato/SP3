@@ -20,10 +20,10 @@ void GameModel2D::Init()
 		meshList[count]->textureID[0] = 0;
 	}
 	meshList[TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[TEXT]->textureID[0] = LoadTGA("Image//calibri.tga");
+	meshList[TEXT]->textureID[0] = LoadTGA("Image//Font.tga");
 	meshList[BACKGROUND] = MeshBuilder::GenerateQuad("background", Color());
 	meshList[BACKGROUND]->textureID[0] = LoadTGA("Image\\background.tga");
-	meshList[TILE] = MeshBuilder::GenerateText("tile", 13, 5);
+	meshList[TILE] = MeshBuilder::GenerateText("tile", 15, 5);
 	meshList[TILE]->textureID[0] = LoadTGA("Image\\Maps\\World.tga");
 	meshList[TILEFLOOR] = MeshBuilder::GenerateText("tile", 12, 5);
 	meshList[TILEFLOOR]->textureID[0] = LoadTGA("Image\\Maps\\World.tga");
@@ -85,6 +85,9 @@ void GameModel2D::Init()
 	meshList[ENEMY_CAMERA] = MeshBuilder::GenerateSpriteAnimation("ENEMY_CAMERA", 1, 1);
 	meshList[ENEMY_CAMERA]->textureID[0] = LoadTGA("Image\\Enemy\\ENEMY_CAMERA.tga");
 
+	meshList[BOSS] = MeshBuilder::GenerateSpriteAnimation("BOSS", 1, 1);
+	meshList[BOSS]->textureID[0] = LoadTGA("Image\\Enemy\\BOSS.tga");
+
 	meshList[ALERT] = MeshBuilder::GenerateSpriteAnimation("ALERT", 1, 1);
 	meshList[ALERT]->textureID[0] = LoadTGA("Image\\Enemy\\ALERT.tga");
 
@@ -128,6 +131,25 @@ void GameModel2D::Init()
 	//Lock picking
 	meshList[LOCKPICKBG] = MeshBuilder::GenerateQuad("LPBG", 0, 1.0f);
 	meshList[LOCKPICKBG]->textureID[0] = LoadTGA("Image\\LockPickBG.tga");
+
+	meshList[CAR_RED] = MeshBuilder::GenerateQuad("CAR_RED", 0, 1.0f);
+	meshList[CAR_RED]->textureID[0] = LoadTGA("Image\\Car\\RED.tga");
+
+	meshList[CAR_BLUE] = MeshBuilder::GenerateQuad("CAR_BLUE", 0, 1.0f);
+	meshList[CAR_BLUE]->textureID[0] = LoadTGA("Image\\Car\\BLUE.tga");
+
+	meshList[CAR_YELLOW] = MeshBuilder::GenerateQuad("CAR_YELLOW", 0, 1.0f);
+	meshList[CAR_YELLOW]->textureID[0] = LoadTGA("Image\\Car\\YELLOW.tga");
+
+	meshList[CAR_GREEN] = MeshBuilder::GenerateQuad("CAR_GREEN", 0, 1.0f);
+	meshList[CAR_GREEN]->textureID[0] = LoadTGA("Image\\Car\\GREEN.tga");
+
+	meshList[WIN] = MeshBuilder::GenerateQuad("WIN", 0, 1.0f);
+	meshList[WIN]->textureID[0] = LoadTGA("Image\\Menu\\WIN.tga");
+
+	meshList[LOSE] = MeshBuilder::GenerateQuad("LOSE", 0, 1.0f);
+	meshList[LOSE]->textureID[0] = LoadTGA("Image\\Menu\\LOSE.tga");
+
 
 	meshList[LOCKPICKBAR] = MeshBuilder::GenerateQuad("LPBAR", Color(0, 0, 1), 1.0f);
 
@@ -237,7 +259,11 @@ void GameModel2D::Init()
 	AniToUpdate = PISTOL_IDLE;
 	srand (time(NULL));
 	GroupToSpawn = rand() % 2 + 0;
+	Lv2Objective = rand() % 3 + 62;
+	Lv2ObjectiveCompare = 0;
 	m_EnemySpawnCount = 0;
+	m_ObjectiveCleared = false;
+	m_GameLost = false;
 
 	WeaponChangeCooldown = 0.5f;
 
@@ -253,6 +279,7 @@ void GameModel2D::Init()
 	LockPickBoxBtm1 = -2;
 	LockPickBoxTop2 = 1;
 	LockPickBoxBtm2 = -1;
+	m_resultScreen = false;
 
 	isZoomed = false;
 
@@ -373,9 +400,9 @@ void GameModel2D::LaserCollisionCheck(double dt)
 			position.x += velocity.x * dt;
 		
 			if (getTileMap()->getTile(position.x, floor(position.y)) >= LASER_HORI_ID && getTileMap()->getTile(position.x, floor(position.y)) <= LASER_VERTI_ID &&
-				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f ||
 				getTileMap()->getTile(position.x, ceil(position.y)) >= LASER_HORI_ID && getTileMap()->getTile(position.x, ceil(position.y)) <= LASER_VERTI_ID &&
-				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 			{
 				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
 				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
@@ -383,9 +410,9 @@ void GameModel2D::LaserCollisionCheck(double dt)
 			position = CCharacter_Player::GetInstance()->getPosition();
 		
 			if (getTileMap()->getTile(floor(position.x), position.y) >= LASER_HORI_ID && getTileMap()->getTile(floor(position.x), position.y) <= LASER_VERTI_ID &&
-				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f ||
 				getTileMap()->getTile(ceil(position.x), position.y) >= LASER_HORI_ID && getTileMap()->getTile(ceil(position.x), position.y) <= LASER_VERTI_ID &&
-				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 			{
 				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
 				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
@@ -399,11 +426,20 @@ void GameModel2D::KeyCollisionCheck(double dt)
 	//KEY
 	for (int i = 0; i < CollectiblesList.size(); i++)
 	{
-		if ((CollectiblesList[i]->type == GameObject::GO_KEY_ID) && CollectiblesList[i]->active && (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+		if ((CollectiblesList[i]->type == GameObject::GO_KEY_ID) && CollectiblesList[i]->active && (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 		{
 			{
 				CollectiblesList[i]->active = false;
 				KEYCOUNT++;
+				break;
+			}
+		}
+
+		if ((CollectiblesList[i]->type == GameObject::GO_BAGGAGE) && CollectiblesList[i]->active && (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
+		{
+			{
+				CollectiblesList[i]->active = false;
+				m_ObjectiveCleared = true;
 				break;
 			}
 		}
@@ -416,7 +452,7 @@ void GameModel2D::LockCollisionCheck(double dt)
 	{
 		for (int i = 0; i < InteractionList.size(); i++)
 		{
-			if ((InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID) && InteractionList[i]->active && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+			if ((InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID) && InteractionList[i]->active && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 			{
 				{
 					InteractionList[i]->active = false;
@@ -432,28 +468,42 @@ void GameModel2D::LockCollisionCheck(double dt)
 }
 void GameModel2D::ExitCollisionCheck(double dt)
 {
-	if (CollideWorldObject(EXIT_ID, GameObject::GO_EXIT, dt))
+	if (CollideWorldObject(EXIT_ID, GameObject::GO_EXIT, dt) && m_ObjectiveCleared)
 	{
-		switch (m_CurrentLevel)
+		m_resultScreen = true;
+
+		if ( commands[ENTER] )
 		{
-		case 1:
-			Sound.engine->stopAllSounds();
-			m_CurrentLevel = 2;
-			throw m_CurrentLevel - 1;
-			break;
-		case 2:
-			Sound.engine->stopAllSounds();
-			m_CurrentLevel = 3;
-			throw m_CurrentLevel - 1;
-			break;
-		case 3:
-			Sound.engine->stopAllSounds();
-			m_CurrentLevel = 4;
-			throw m_CurrentLevel - 1;
-			break;
+
+			switch (m_CurrentLevel)
+			{
+			case 1:
+				Sound.engine->stopAllSounds();
+				m_CurrentLevel = 2;
+				throw m_CurrentLevel - 1;
+				break;
+			case 2:
+				Sound.engine->stopAllSounds();
+				m_CurrentLevel = 3;
+				if ( Lv2ObjectiveCompare != Lv2Objective )
+				{
+					throw m_CurrentLevel - 1;
+				}
+				else
+				{
+					throw m_CurrentLevel;
+				}
+				break;
+			case 3:
+				Sound.engine->stopAllSounds();
+				m_CurrentLevel = 4;
+				throw m_CurrentLevel - 1;
+				break;
+			}
 		}
 	}
 }
+
 void GameModel2D::ComputerCollisionCheck(double dt)
 {
 	if (CollideWorldObject(PC_ID, GameObject::GO_PC, dt))
@@ -477,6 +527,22 @@ void GameModel2D::ComputerCollisionCheck(double dt)
 		}
 	}
 }
+
+void GameModel2D::GameEnd()
+{
+	if ( CCharacter_Player::GetInstance()->getHP() <= 0.0f )
+	{
+		m_GameLost = true;
+		m_resultScreen = true;
+	}
+
+	if ( m_CurrentLevel == 4 && CCharacter_Player::GetInstance()->getAlertState() == CCharacter_Player::DETECTED )
+	{
+		m_GameLost = true;
+		m_resultScreen = true;
+	}
+}
+
 void GameModel2D::LockPickCollisionCheck(double dt)
 {
 	if (CollideWorldObject(LOCKPICK_ID_1, GameObject::GO_LOCKPICK_1, dt))
@@ -728,6 +794,43 @@ void GameModel2D::Update(double dt)
 			}
 		}
 	}
+
+	//car 
+	for (int i = 0; i < InteractionList.size(); i++)
+	{
+		if (InteractionList[i]->type == GameObject::GO_BLUE_CAR && InteractionList[i]->active)
+		{
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
+			{
+				Lv2ObjectiveCompare = CAR_BLUE_ID;
+			}
+		}
+
+		else if (InteractionList[i]->type == GameObject::GO_GREEN_CAR && InteractionList[i]->active)
+		{
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
+			{
+				Lv2ObjectiveCompare = CAR_GREEN_ID;
+			}
+		}
+
+		else if (InteractionList[i]->type == GameObject::GO_RED_CAR && InteractionList[i]->active)
+		{
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
+			{
+				Lv2ObjectiveCompare = CAR_RED_ID;
+			}
+		}
+
+		else if (InteractionList[i]->type == GameObject::GO_YELLOW_CAR && InteractionList[i]->active)
+		{
+			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
+			{
+				Lv2ObjectiveCompare = CAR_YELLOW_ID;
+			}
+		}
+	}
+
 	//Animation update
 	switch ( CCharacter_Player::GetInstance()->getState())
 	{
@@ -786,6 +889,8 @@ void GameModel2D::Update(double dt)
 	cameraZoom(dt);
 	BulletHandle(dt);
 	BulletUpdate(dt);
+	objective();
+	GameEnd();
 	if ( !CCharacter_Player::GetInstance()->getVelocity().IsZero() )
 	{
 		FogUpdate(dt);
@@ -828,6 +933,10 @@ void GameModel2D::BulletHandle(double dt)
 						if (EnemyList[i]->getEnemyHP() <= 0)
 						{
 							EnemyList[i]->setActive(false);
+							if ( EnemyList[i]->getAmmoType() == EnemyList[i]->BOSS )
+							{
+								m_ObjectiveCleared = true;
+							}
 						}
 					}
 				}
@@ -899,7 +1008,7 @@ void GameModel2D::LockPicking(double dt)
 			InLockPick1 = false;
 			for (int i = 0; i < InteractionList.size(); i++)
 			{
-				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1 && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1 && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 				{
 					InteractionList[i]->active = false;
 				}
@@ -948,11 +1057,11 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 				position.x = ceil(position.x);
 
 			if (getTileMap()->getTile(position.x, floor(position.y)) == id && getTileMap()->getTile(position.x, floor(position.y)) == id &&
-				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f ||
 				getTileMap()->getTile(position.x, ceil(position.y)) == id && getTileMap()->getTile(position.x, ceil(position.y)) == id
-				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 			{
-				if (id != PC_ID)
+				if (id != PC_ID && id != EXIT_ID)
 				{
 					CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
 					CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
@@ -969,11 +1078,11 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 				position.y = ceil(position.y);
 
 			if (getTileMap()->getTile(floor(position.x), position.y) == id && getTileMap()->getTile(floor(position.x), position.y) == id &&
-				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				(InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f ||
 				getTileMap()->getTile(ceil(position.x), position.y) == id && getTileMap()->getTile(ceil(position.x), position.y) == id
-				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+				&& (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 			{
-				if (id != PC_ID)
+				if (id != PC_ID && id != EXIT_ID)
 				{
 					CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
 					CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
@@ -999,9 +1108,9 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 				position.x = ceil(position.x);
 
 			if (getTileMap()->getTile(position.x, floor(position.y)) == id && getTileMap()->getTile(position.x, floor(position.y)) == id &&
-				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f ||
 				getTileMap()->getTile(position.x, ceil(position.y)) == id && getTileMap()->getTile(position.x, ceil(position.y)) == id
-				&& (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+				&& (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
 				CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
@@ -1018,9 +1127,9 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 				position.y = ceil(position.y);
 
 			if (getTileMap()->getTile(floor(position.x), position.y) == id && getTileMap()->getTile(floor(position.x), position.y) == id &&
-				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f ||
+				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f ||
 				getTileMap()->getTile(ceil(position.x), position.y) == id && getTileMap()->getTile(ceil(position.x), position.y) == id
-				&& (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.5f)
+				&& (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
 				CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
@@ -1500,6 +1609,19 @@ Mesh* GameModel2D::getFloorTileMesh()
 	return meshList[TILEFLOOR];
 }
 
+Mesh* GameModel2D::getMeshTaker(GEOMETRY_TYPE meshToTake)
+{
+	switch (meshToTake)
+	{
+	case WIN:
+		return meshList[WIN];
+		break;
+	case LOSE:
+		return meshList[LOSE];
+		break;
+	}
+}
+
 Mesh* GameModel2D::getPlayerMesh(GEOMETRY_TYPE meshToTake)
 {
 	switch (meshToTake)
@@ -1550,6 +1672,28 @@ Mesh* GameModel2D::getEnemyMesh(GEOMETRY_TYPE meshToTake)
 	case ENEMY_LIGHT_IDLE:
 		return meshList[ENEMY_LIGHT_IDLE];
 		break;
+	case BOSS:
+		return meshList[BOSS];
+		break;
+	}
+}
+
+Mesh* GameModel2D::getCarMesh(GEOMETRY_TYPE meshToTake)
+{
+	switch (meshToTake)
+	{
+	case CAR_BLUE:
+		return meshList[CAR_BLUE];
+		break;
+	case CAR_RED:
+		return meshList[CAR_RED];
+		break;
+	case CAR_YELLOW:
+		return meshList[CAR_YELLOW];
+		break;
+	case CAR_GREEN:
+		return meshList[CAR_GREEN];
+		break;		
 	}
 }
 
@@ -1728,6 +1872,10 @@ void GameModel2D::setNewEnemy(float x, float y, float z, int ID)
 				EnemyList[i]->setAmmoType(CCharacter_Enemy::FLASHLIGHT);
 				EnemyList[i]->setNewState(CCharacter_Enemy::IDLE);
 				break;
+			case 2:
+				EnemyList[i]->setAmmoType(CCharacter_Enemy::BOSS);
+				EnemyList[i]->setNewState(CCharacter_Enemy::IDLE);
+				break;
 			};
 			break;
 		}
@@ -1837,6 +1985,11 @@ void GameModel2D::getMapData()
 					}
 				}
 				break;
+			case GameModel2D::BOSS_ID:
+				{
+					setNewEnemy(ccount,rcount,0,2);
+				}
+				break;
 			case GameModel2D::CAMERA_ID:
 				{
 					setNewEnemy(ccount,rcount,0,0);
@@ -1877,6 +2030,11 @@ void GameModel2D::getMapData()
 					setNewCollectible(tempPos,tempScale,GameObject::GO_KEY_ID,ccount,rcount);
 				}
 				break;
+			case GameModel2D::BAGGAGE:
+				{
+					setNewCollectible(tempPos,tempScale,GameObject::GO_BAGGAGE,ccount,rcount);
+				}
+				break;
 			case GameModel2D::LASER_HORI_ID:
 				{
 					setNewCollectible(tempPos,tempScale,GameObject::GO_LASER_HORI,ccount,rcount);
@@ -1885,6 +2043,58 @@ void GameModel2D::getMapData()
 			case GameModel2D::LASER_VERTI_ID:
 				{
 					setNewCollectible(tempPos,tempScale,GameObject::GO_LASER_VERTI,ccount,rcount);
+				}
+				break;
+			case GameModel2D::CAR_BLUE_ID:
+				{
+					if ( Lv2Objective == CAR_BLUE_ID )
+					{
+						setNewInteraction(tempPos,tempScale,GameObject::GO_BLUE,ccount,rcount);
+					}
+				}
+				break;
+			case GameModel2D::CAR_GREEN_ID:
+				{
+					if ( Lv2Objective == CAR_GREEN_ID )
+					{
+						setNewInteraction(tempPos,tempScale,GameObject::GO_GREEN,ccount,rcount);
+					}
+				}
+				break;
+			case GameModel2D::CAR_RED_ID:
+				{
+					if ( Lv2Objective == CAR_RED_ID )
+					{
+						setNewInteraction(tempPos,tempScale,GameObject::GO_RED,ccount,rcount);
+					}
+				}
+				break;
+			case GameModel2D::CAR_YELLOW_ID:
+				{
+					if ( Lv2Objective == CAR_YELLOW_ID )
+					{
+						setNewInteraction(tempPos,tempScale,GameObject::GO_YELLOW,ccount,rcount);
+					}
+				}
+				break;
+			case GameModel2D::CAR_BLUE_S:
+				{
+					setNewInteraction(tempPos,tempScale,GameObject::GO_BLUE_CAR,ccount,rcount);
+				}
+				break;
+			case GameModel2D::CAR_GREEN_S:
+				{
+					setNewInteraction(tempPos,tempScale,GameObject::GO_GREEN_CAR,ccount,rcount);
+				}
+				break;
+			case GameModel2D::CAR_RED_S:
+				{
+					setNewInteraction(tempPos,tempScale,GameObject::GO_RED_CAR,ccount,rcount);
+				}
+				break;
+			case GameModel2D::CAR_YELLOW_S:
+				{
+					setNewInteraction(tempPos,tempScale,GameObject::GO_YELLOW_CAR,ccount,rcount);
 				}
 				break;
 			}
@@ -1901,15 +2111,18 @@ void GameModel2D::objective(void)
 		m_ObjectiveCleared = true;
 		break;
 	case 2:
-		m_ObjectiveCleared = true;
+		if ( Lv2ObjectiveCompare != 0 )
+		{
+			m_ObjectiveCleared = true;
+		}
 		//vehicle tracked
 		break;
 	case 3:
-		m_ObjectiveCleared = true;
+		//m_ObjectiveCleared = true;
 		//data got
 		break;
 	case 4:
-		m_ObjectiveCleared = true;
+		//m_ObjectiveCleared = true;
 		//boss died
 		break;
 	}

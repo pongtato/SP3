@@ -28,6 +28,10 @@ void MenuModel::Init()
 	startBtn->textureID[0] = LoadTGA("Image//Menu//Start.tga");
 	settingsBtn = MeshBuilder::GenerateQuad("settingsBtn", Color());
 	settingsBtn->textureID[0] = LoadTGA("Image//Menu//Settings.tga");
+	loadBtn = MeshBuilder::GenerateQuad("loadBtn", Color());
+	loadBtn->textureID[0] = LoadTGA("Image//Menu//Load.tga");
+	creditsBtn = MeshBuilder::GenerateQuad("creditsBtn", Color());
+	creditsBtn->textureID[0] = LoadTGA("Image//Menu//Credits.tga");
 	exitBtn = MeshBuilder::GenerateQuad("exitBtn", Color());
 	exitBtn->textureID[0] = LoadTGA("Image//Menu//Exit.tga");
 
@@ -43,6 +47,7 @@ void MenuModel::Init()
 	arrowPosition = 0;
 	menuTimer = false;
 	SelectingLevels = false;
+	m_credits = false;
 
 	commands = new bool[NUM_COMMANDS];
 	for (int count = 0; count < NUM_COMMANDS; ++count)
@@ -60,7 +65,7 @@ void MenuModel::Update(double dt)
 			Sound.SelectSound();
 			if ( !SelectingLevels )
 			{
-				arrowPosition = Math::Wrap(arrowPosition -= 1,0,2);
+				arrowPosition = Math::Wrap(arrowPosition -= 1,0,3);
 			}
 			else
 			{
@@ -73,7 +78,7 @@ void MenuModel::Update(double dt)
 			Sound.SelectSound();
 			if ( !SelectingLevels )
 			{
-				arrowPosition = Math::Wrap(arrowPosition += 1,0,2);
+				arrowPosition = Math::Wrap(arrowPosition += 1,0,3);
 			}
 			else
 			{
@@ -84,6 +89,15 @@ void MenuModel::Update(double dt)
 		if (commands[ENTER])
 		{
 			Sound.ConfirmSound();
+
+			if ( m_credits )
+			{
+				m_credits = false;
+				menuScreen->textureID[0] = LoadTGA("Image//Menu//BG.tga");
+				menuTimer = true;
+				return;
+			}
+
 			if ( SelectingLevels)
 			{
 				Sound.engine->stopAllSounds();
@@ -95,7 +109,13 @@ void MenuModel::Update(double dt)
 				SelectingLevels = true;
 				menuTimer = true;
 			}
-			else if (arrowPosition == 2 && !SelectingLevels)
+			else if ( arrowPosition == 2 && !SelectingLevels && !m_credits)
+			{
+				m_credits = true;
+				menuScreen->textureID[0] = LoadTGA("Image//Menu//BGCREDITS.tga");
+				menuTimer = true;
+			}
+			else if (arrowPosition == 3 && !SelectingLevels)
 			{
 				exit(0);
 			}
@@ -109,7 +129,9 @@ void MenuModel::Update(double dt)
 		case 0:
 			{
 				startBtn->textureID[0] = LoadTGA("Image//Menu//Start_H.tga");
-				settingsBtn->textureID[0] = LoadTGA("Image//Menu//Settings.tga");
+				//settingsBtn->textureID[0] = LoadTGA("Image//Menu//Settings.tga");
+				loadBtn->textureID[0] = LoadTGA("Image//Menu//Load.tga");
+				creditsBtn->textureID[0] = LoadTGA("Image//Menu//Credits.tga");
 				exitBtn->textureID[0] = LoadTGA("Image//Menu//Exit.tga");
 			}
 			break;
@@ -117,21 +139,27 @@ void MenuModel::Update(double dt)
 		case 1:
 			{
 				startBtn->textureID[0] = LoadTGA("Image//Menu//Start.tga");
-				settingsBtn->textureID[0] = LoadTGA("Image//Menu//Settings_H.tga");
+				//settingsBtn->textureID[0] = LoadTGA("Image//Menu//Settings_H.tga");
+				loadBtn->textureID[0] = LoadTGA("Image//Menu//Load_H.tga");
+				creditsBtn->textureID[0] = LoadTGA("Image//Menu//Credits.tga");
 				exitBtn->textureID[0] = LoadTGA("Image//Menu//Exit.tga");
 			}
 			break;
 		case 2:
 			{
 				startBtn->textureID[0] = LoadTGA("Image//Menu//Start.tga");
-				settingsBtn->textureID[0] = LoadTGA("Image//Menu//Settings.tga");
-				exitBtn->textureID[0] = LoadTGA("Image//Menu//Exit_H.tga");
+				//settingsBtn->textureID[0] = LoadTGA("Image//Menu//Settings.tga");
+				loadBtn->textureID[0] = LoadTGA("Image//Menu//Load.tga");
+				creditsBtn->textureID[0] = LoadTGA("Image//Menu//Credits_H.tga");
+				exitBtn->textureID[0] = LoadTGA("Image//Menu//Exit.tga");
 			}
 			break;
 		case 3:
 			{
 				startBtn->textureID[0] = LoadTGA("Image//Menu//Start.tga");
-				settingsBtn->textureID[0] = LoadTGA("Image//Menu//Settings.tga");
+				//settingsBtn->textureID[0] = LoadTGA("Image//Menu//Settings.tga");
+				loadBtn->textureID[0] = LoadTGA("Image//Menu//Load.tga");
+				creditsBtn->textureID[0] = LoadTGA("Image//Menu//Credits.tga");
 				exitBtn->textureID[0] = LoadTGA("Image//Menu//Exit_H.tga");
 			}
 			break;
@@ -213,6 +241,16 @@ Mesh* MenuModel::getstartBtn()
 Mesh* MenuModel::getsettingsBtn()
 {
 	return settingsBtn;
+}
+
+Mesh* MenuModel::getloadBtn()
+{
+	return loadBtn;
+}
+
+Mesh* MenuModel::getcreditsBtn()
+{
+	return creditsBtn;
 }
 
 Mesh* MenuModel::getexitBtn()
