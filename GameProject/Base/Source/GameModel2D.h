@@ -104,6 +104,11 @@ public:
 		LOCKPICKBAR,
 		LOCKPICKBALL,
 
+		LV1_LAYOUT,
+		LV2_LAYOUT,
+		LV3_LAYOUT,
+		LV4_LAYOUT,
+
 		TOTAL_GEOMETRY,
 	};
 
@@ -199,6 +204,10 @@ protected:
 	//limit walking
 	int walkingSoundLimit;
 
+	//limit totalscore update
+	bool totalScoreUpdate;
+	//limit alert sound
+	int alertSoundLimit;
 	Model levelSet;
 
 public:
@@ -310,6 +319,7 @@ public:
 	Vector3 getNewPlayerPos();
 	Vector3 getNewExitPos();
 	int getScore();
+	int getTotalScore();
 	int getCDTimer();
 	int getKeyCount();
 	float getFPS();

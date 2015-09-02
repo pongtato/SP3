@@ -95,7 +95,7 @@ void CSoundManager::guardAlert()
 {
 	//player alerted the alarm
 	ISound* music = engine->play2D("../irrKlang/media/alert.mp3",
-		true, false, true);
+		false, false, false);
 
 	engine->setSoundVolume(0.4f);
 }

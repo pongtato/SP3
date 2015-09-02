@@ -16,7 +16,7 @@
 
 const float m_worldHeight = 120;
 const float m_worldWidth = 160;
-
+int totalScore;
 void GameModel2D::Init()
 {
 	Model::Init();
@@ -156,6 +156,17 @@ void GameModel2D::Init()
 	meshList[LOSE] = MeshBuilder::GenerateQuad("LOSE", 0, 1.0f);
 	meshList[LOSE]->textureID[0] = LoadTGA("Image\\Menu\\LOSE.tga");
 
+	meshList[LV1_LAYOUT] = MeshBuilder::GenerateQuad("LV1_LAYOUT", 0, 1.0f);
+	meshList[LV1_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV1.tga");
+
+	meshList[LV2_LAYOUT] = MeshBuilder::GenerateQuad("LV2_LAYOUT", 0, 1.0f);
+	meshList[LV2_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV2.tga");
+
+	meshList[LV3_LAYOUT] = MeshBuilder::GenerateQuad("LV3_LAYOUT", 0, 1.0f);
+	meshList[LV3_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV3.tga");
+
+	meshList[LV4_LAYOUT] = MeshBuilder::GenerateQuad("LV4_LAYOUT", 0, 1.0f);
+	meshList[LV4_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV4.tga");
 
 	meshList[LOCKPICKBAR] = MeshBuilder::GenerateQuad("LPBAR", Color(0.2, 0.5, 1.0), 1.0f);
 	meshList[LOCKPICKBALL] = MeshBuilder::GenerateSphere("LPBALL", Color(1, 0.5, 0), 20, 20, 1.0f);
@@ -253,6 +264,8 @@ void GameModel2D::Init()
 	CDTimer = 300;
 	CDTimerLimit = 0;
 	walkingSoundLimit = 0;
+	totalScoreUpdate = false;
+	alertSoundLimit = 0;
 	ZoomIN = false;
 	SpawnReady = false;
 	newLevel = false;
@@ -508,10 +521,17 @@ void GameModel2D::ExitCollisionCheck(double dt)
 {
 	if (CollideWorldObject(EXIT_ID, GameObject::GO_EXIT, dt) && m_ObjectiveCleared)
 	{
+		if (totalScoreUpdate == false)
+		{
+			totalScore = totalScore + score;
+			totalScoreUpdate = true;
+		}
+		
 		m_resultScreen = true;
 
 		if ( commands[ENTER] )
 		{
+			totalScoreUpdate = false;
 
 			switch (m_CurrentLevel)
 			{
@@ -810,6 +830,18 @@ void GameModel2D::Update(double dt)
 			Sound.walkfloor();
 		}
 	}
+
+	//alert sound
+	if (CCharacter_Player::GetInstance()->getAlertState() == CCharacter_Player::DETECTED)
+	{
+		alertSoundLimit += 1;
+		if (alertSoundLimit > 100)
+		{
+			alertSoundLimit = 0;
+			Sound.guardAlert();
+		}
+	}
+
 	//SAVEPROG 
 	for (unsigned i = 0; i < InteractionList.size(); i++)
 	{
@@ -825,6 +857,7 @@ void GameModel2D::Update(double dt)
 					playerData << getNewPlayerPos().y << " ";
 					playerData << getNewPlayerPos().z << " ";
 					playerData << getCDTimer() << " ";
+					playerData << getScore();
 					playerData.close();
 				}
 				break;
@@ -1670,6 +1703,18 @@ Mesh* GameModel2D::getMeshTaker(GEOMETRY_TYPE meshToTake)
 	case ENEMY_CONE:
 		return meshList[ENEMY_CONE];
 		break;
+	case LV1_LAYOUT:
+		return meshList[LV1_LAYOUT];
+		break;
+	case LV2_LAYOUT:
+		return meshList[LV2_LAYOUT];
+		break;
+	case LV3_LAYOUT:
+		return meshList[LV3_LAYOUT];
+		break;
+	case LV4_LAYOUT:
+		return meshList[LV4_LAYOUT];
+		break;
 	}
 }
 
@@ -1773,6 +1818,10 @@ int GameModel2D::getScore()
 	return score;
 }
 
+int GameModel2D::getTotalScore()
+{
+	return totalScore;
+}
 int GameModel2D::getCDTimer()
 {
 	return CDTimer;
