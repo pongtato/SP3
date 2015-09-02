@@ -300,8 +300,8 @@ public:
 	int VeryRealRaycasting(double dt);
 	void GhettoFogOfWar(void);
 	void FogUpdate(double dt);
-	void SpawnBullet(int WeaponDamage,float Speed);
-	void SpawnSGBullets(int WeaponDamage, float Speed);
+	void SpawnBullet(float WeaponDamage,float Speed, double dt);
+	void SpawnSGBullets(float WeaponDamage, float Speed, double dt);
 	void SpawnEnemyBullet(Vector3 EnemyPos, Vector3 Vel);
 	//void checkCollision(float x, float y, float z, float scale, float VelX, float VelY, float VelZ, GameObject* go2);
 	bool checkCollision(Vector3 Pos, Vector3 scale, Vector3 Vel, GameObject* go2, double dt);

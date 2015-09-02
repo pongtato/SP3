@@ -29,7 +29,7 @@ void GameView2D::Render()
 		//RenderFog();
 		if (model->isZoomed)
 		{
-			RenderPlayerRadius();
+			//RenderPlayerRadius();
 		}
 		//RenderHealth();
 		RenderKeysIcon();
