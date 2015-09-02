@@ -1,9 +1,4 @@
-#ifdef _DEBUG
-#ifndef DBG_NEW
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#define new DBG_NEW
-#endif
-#endif  // _DEBUG
+
 #include "GameModel2D.h"
 
 #include "MeshBuilder.h"
@@ -406,8 +401,8 @@ int GameModel2D::VeryRealRaycasting(double dt)
 				{
 					checker->pos += checker->vel * (float)dt;
 
-					unsigned tempX = checker->pos.x + 0.5f;
-					unsigned tempY = checker->pos.y + 0.5f;
+					float tempX = checker->pos.x + 0.5f;
+					float tempY = checker->pos.y + 0.5f;
 					if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 )
 					{
 						checker->active = false;
