@@ -1,3 +1,4 @@
+
 #include "GameModel2D.h"
 
 #include "MeshBuilder.h"
@@ -7,6 +8,7 @@
 #include "Character_Enemy.h"
 #include "Weapon.h"
 
+
 const float m_worldHeight = 120;
 const float m_worldWidth = 160;
 int totalScore;
@@ -14,11 +16,6 @@ void GameModel2D::Init()
 {
 	Model::Init();
 	camera.Init(Vector3(20, 15, 50), Vector3(20, 15, 0), Vector3(0, 1, 0));
-	for (int count = 0; count < GEOMETRY_TYPE::TOTAL_GEOMETRY; ++count)
-	{
-		meshList[count] = new Mesh("null");
-		meshList[count]->textureID[0] = 0;
-	}
 	meshList[TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[TEXT]->textureID[0] = LoadTGA("Image//Font.tga");
 	meshList[BACKGROUND] = MeshBuilder::GenerateQuad("background", Color());
@@ -154,6 +151,17 @@ void GameModel2D::Init()
 	meshList[LOSE] = MeshBuilder::GenerateQuad("LOSE", 0, 1.0f);
 	meshList[LOSE]->textureID[0] = LoadTGA("Image\\Menu\\LOSE.tga");
 
+	meshList[LV1_LAYOUT] = MeshBuilder::GenerateQuad("LV1_LAYOUT", 0, 1.0f);
+	meshList[LV1_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV1.tga");
+
+	meshList[LV2_LAYOUT] = MeshBuilder::GenerateQuad("LV2_LAYOUT", 0, 1.0f);
+	meshList[LV2_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV2.tga");
+
+	meshList[LV3_LAYOUT] = MeshBuilder::GenerateQuad("LV3_LAYOUT", 0, 1.0f);
+	meshList[LV3_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV3.tga");
+
+	meshList[LV4_LAYOUT] = MeshBuilder::GenerateQuad("LV4_LAYOUT", 0, 1.0f);
+	meshList[LV4_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV4.tga");
 
 	meshList[LOCKPICKBAR] = MeshBuilder::GenerateQuad("LPBAR", Color(0.2, 0.5, 1.0), 1.0f);
 	meshList[LOCKPICKBALL] = MeshBuilder::GenerateSphere("LPBALL", Color(1, 0.5, 0), 20, 20, 1.0f);
@@ -166,7 +174,7 @@ void GameModel2D::Init()
 		eENEMY_LIGHT_IDLE->m_anim = new Animation();
 		//Start frame, end frame, repeat, time
 		eENEMY_LIGHT_IDLE->m_anim->Set(0, 19, 0, 2.0f);
-	} 
+	}
 
 	SpriteAnimation *ePISTOL_IDLE = dynamic_cast<SpriteAnimation*>(meshList[PISTOL_IDLE]);
 	if(ePISTOL_IDLE)
@@ -243,9 +251,6 @@ void GameModel2D::Init()
 	commands = new bool[NUM_COMMANDS];
 	for (int count = 0; count < NUM_COMMANDS; ++count)
 		commands[count] = false;
-
-	//m_mapOffset_x = 0;
-	//m_mapOffset_y = 0;
 	
 	newPlayerPos.Set(0,0,0);
 	newExitPos.Set(0,0,0);
@@ -262,7 +267,7 @@ void GameModel2D::Init()
 	//BulletShoot = false;
 	hasReadLoc = false;
 	AniToUpdate = PISTOL_IDLE;
-	srand (time(NULL));
+	srand (static_cast<unsigned int>(time(NULL)));
 	GroupToSpawn = rand() % 2 + 0;
 	Lv2Objective = rand() % 3 + 62;
 	Lv2ObjectiveCompare = 0;
@@ -297,12 +302,14 @@ void GameModel2D::Init()
 		GameObject * go = new GameObject(GameObject::GO_NONE);
 		m_goList.push_back(go);
 	}
+
+	
 	for ( unsigned i = 0; i < 3000; ++i)
 	{
 		GameObject * fog = new GameObject(GameObject::GO_NONE);
 		m_fogList.push_back(fog);
-		GameObject * fogcheck = new GameObject(GameObject::GO_NONE);
-		m_fogCheckerList.push_back(fogcheck);
+		//GameObject * fogcheck = new GameObject(GameObject::GO_NONE);
+		m_fogCheckerList.push_back(fog);
 	}
 	for ( unsigned i = 0; i < 100; ++i)
 	{
@@ -316,7 +323,41 @@ void GameModel2D::Init()
 		EnemyList.push_back(enemy);
 	}
 }
-
+void GameModel2D::Exit()
+{
+	for (unsigned i = 0; i < m_goList.size(); ++i)
+	{
+		delete m_goList[i];
+	}
+	for (unsigned i = 0; i < m_fogList.size(); ++i)
+	{
+		delete m_fogList[i];
+	}
+	for (unsigned i = 0; i < m_fogCheckerList.size(); ++i)
+	{
+		delete m_fogCheckerList[i];
+	}
+	for (unsigned i = 0; i < CollectiblesList.size(); ++i)
+	{
+		delete CollectiblesList[i];
+	}
+	for (unsigned i = 0; i < InteractionList.size(); ++i)
+	{
+		delete InteractionList[i];
+	}
+	for (unsigned i = 0; i < m_checkingList.size(); ++i)
+	{
+		delete m_checkingList[i];
+	}
+	for (unsigned i = 0; i < EnemyList.size(); ++i)
+	{
+		delete EnemyList[i];
+	}
+	for (int count = 0; count < GEOMETRY_TYPE::TOTAL_GEOMETRY; ++count)
+	{
+		delete meshList[count];
+	}
+}
 int GameModel2D::VeryRealRaycasting(double dt)
 {
 	//Tick for reudcing alert level
@@ -396,13 +437,13 @@ int GameModel2D::VeryRealRaycasting(double dt)
 void GameModel2D::LaserCollisionCheck(double dt)
 {
 	//Laser Collision Check
-	for (int i = 0; i < CollectiblesList.size(); i++)
+	for (unsigned i = 0; i < CollectiblesList.size(); i++)
 	{
-		if (CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI && CollectiblesList[i]->active)
+		if ((CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI) && CollectiblesList[i]->active)
 		{
 			Vector3 position = CCharacter_Player::GetInstance()->getPosition();
 			Vector3 velocity = CCharacter_Player::GetInstance()->getVelocity();
-			position.x += velocity.x * dt;
+			position.x += velocity.x * static_cast<float>(dt);
 		
 			if (getTileMap()->getTile(position.x, floor(position.y)) >= LASER_HORI_ID && getTileMap()->getTile(position.x, floor(position.y)) <= LASER_VERTI_ID &&
 				(CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f ||
@@ -422,14 +463,14 @@ void GameModel2D::LaserCollisionCheck(double dt)
 				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
 				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 			}
-			position += velocity * dt;
+			position += velocity * static_cast<float>(dt);
 		}
 	}
 }
 void GameModel2D::KeyCollisionCheck(double dt)
 {
 	//KEY
-	for (int i = 0; i < CollectiblesList.size(); i++)
+	for (unsigned i = 0; i < CollectiblesList.size(); i++)
 	{
 		if ((CollectiblesList[i]->type == GameObject::GO_KEY_ID) && CollectiblesList[i]->active && (CollectiblesList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 		{
@@ -455,7 +496,7 @@ void GameModel2D::LockCollisionCheck(double dt)
 	//YELLOW LOCK
 	if (KEYCOUNT > 0)
 	{
-		for (int i = 0; i < InteractionList.size(); i++)
+		for (unsigned i = 0; i < InteractionList.size(); i++)
 		{
 			if ((InteractionList[i]->type == GameObject::GO_LOCK_KEY_ID) && InteractionList[i]->active && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 			{
@@ -521,7 +562,7 @@ void GameModel2D::ComputerCollisionCheck(double dt)
 	if (CollideWorldObject(PC_ID, GameObject::GO_PC, dt))
 	{
 		//Laser Deactivation
-		for (int i = 0; i < CollectiblesList.size(); i++)
+		for (unsigned i = 0; i < CollectiblesList.size(); i++)
 		{
 			if ((CollectiblesList[i]->type == GameObject::GO_LASER_HORI || CollectiblesList[i]->type == GameObject::GO_LASER_VERTI) && CollectiblesList[i]->active)
 			{
@@ -660,9 +701,9 @@ void GameModel2D::WeaponShooting(double dt)
 void GameModel2D::WeaponReload(double dt)
 {
 	//Weapons firecooldown
-	CPistol::GetInstance()->FireCooldownTick(dt);
-	CShotgun::GetInstance()->FireCooldownTick(dt);
-	CRifle::GetInstance()->FireCooldownTick(dt);
+	CPistol::GetInstance()->FireCooldownTick(static_cast<float>(dt));
+	CShotgun::GetInstance()->FireCooldownTick(static_cast<float>(dt));
+	CRifle::GetInstance()->FireCooldownTick(static_cast<float>(dt));
 
 	//Reload
 	if (commands[RELOAD])
@@ -730,7 +771,7 @@ void GameModel2D::WeaponChanging(double dt)
 		CurrentWeapon = 2;
 		WeaponChangeCooldown = 0.5f;
 	}
-	WeaponChangeCooldown -= dt;
+	WeaponChangeCooldown -= static_cast<float>(dt);
 	CCharacter_Player::GetInstance()->setAmmoType(CurrentWeapon);
 }
 void GameModel2D::Update(double dt)
@@ -746,7 +787,7 @@ void GameModel2D::Update(double dt)
 	WeaponShooting(dt);
 	WeaponReload(dt);
 	WeaponChanging(dt);
-	float fps = (1 / dt);
+	float fps = (1 / static_cast<float>(dt));
 	//countdown timer
 	CDTimerLimit += 1;
 
@@ -797,7 +838,7 @@ void GameModel2D::Update(double dt)
 	}
 
 	//SAVEPROG 
-	for (int i = 0; i < InteractionList.size(); i++)
+	for (unsigned i = 0; i < InteractionList.size(); i++)
 	{
 		if (InteractionList[i]->type == GameObject::GO_SAVE && InteractionList[i]->active)
 		{
@@ -820,7 +861,7 @@ void GameModel2D::Update(double dt)
 	}
 
 	//car 
-	for (int i = 0; i < InteractionList.size(); i++)
+	for (unsigned i = 0; i < InteractionList.size(); i++)
 	{
 		if (InteractionList[i]->type == GameObject::GO_BLUE_CAR && InteractionList[i]->active)
 		{
@@ -1030,7 +1071,7 @@ void GameModel2D::LockPicking(double dt)
 		if (LockPickY <= LockPickBoxTop1 && LockPickY >= LockPickBoxBtm1)
 		{
 			InLockPick1 = false;
-			for (int i = 0; i < InteractionList.size(); i++)
+			for (unsigned i = 0; i < InteractionList.size(); i++)
 			{
 				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_1 && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 				{
@@ -1048,7 +1089,7 @@ void GameModel2D::LockPicking(double dt)
 		if (LockPickY <= LockPickBoxTop2 && LockPickY >= LockPickBoxBtm2)
 		{
 			InLockPick2 = false;
-			for (int i = 0; i < InteractionList.size(); i++)
+			for (unsigned i = 0; i < InteractionList.size(); i++)
 			{
 				if (InteractionList[i]->type == GameObject::GO_LOCKPICK_2 && (InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1.1f)
 				{
@@ -1065,7 +1106,7 @@ void GameModel2D::LockPicking(double dt)
 
 bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE goType, double dt)
 {
-	for (int i = 0; i < InteractionList.size(); i++)
+	for (unsigned i = 0; i < InteractionList.size(); i++)
 	{
 		if (InteractionList[i]->active && InteractionList[i]->type == goType)
 		{
@@ -1116,7 +1157,7 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 			//position += velocity * dt;
 		}
 	}
-	for (int i = 0; i < CollectiblesList.size(); i++)
+	for (unsigned i = 0; i < CollectiblesList.size(); i++)
 	{
 		if (CollectiblesList[i]->active && CollectiblesList[i]->type == goType)
 		{
@@ -1368,7 +1409,7 @@ void GameModel2D::EnemyDecision(double dt)
 					{
 						
 						//Enemy Shooting (EBullet spawning)
-						for (int i = 0; i < EnemyList.size(); i++)
+						for (unsigned i = 0; i < EnemyList.size(); i++)
 						{
 							if (EnemyList[i]->getFirecooldown() <= 0.0f)
 							{
@@ -1419,7 +1460,7 @@ void GameModel2D::EnemyDecision(double dt)
 
 		if (EnemyList[i]->getActive())
 		{
-			EnemyList[i]->FireCooldownTick(dt);
+			EnemyList[i]->FireCooldownTick(static_cast<float>(dt));
 		}
 	}
 	//Enemy AI Flocking
@@ -1458,8 +1499,8 @@ void GameModel2D::cameraZoom(double dt)
 	{
 		if ((playerPos - initialCam).LengthSquared() > 0.1f)
 		{
-			camera.position += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
-			camera.target += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * dt;
+			camera.position += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * static_cast<float>(dt);
+			camera.target += (playerPos - initialCam).Normalized() * (playerPos - initialCam).Length() * 2.0f * static_cast<float>(dt);
 		}
 		else if ( !isZoomed)
 		{
@@ -1517,8 +1558,7 @@ void GameModel2D::BulletUpdate(double dt)
 		GameObject *go = (GameObject *)*it;
 		if ((go->type == GameObject::GO_BULLET || go->type == GameObject::GO_EBULLET) && go->active)
 		{
-			go->pos += go->vel * 20.f * dt;
-			//std::cout << go->pos << std::endl;
+			go->pos += go->vel * 20.f * static_cast<float>(dt);
 		}
 	}
 }
@@ -1538,7 +1578,7 @@ void GameModel2D::SpawnBullet(float WeaponDamage, float Speed, double dt)
 			Vector3 tempVel;
 			tempVel = (getPos() - CCharacter_Player::GetInstance()->getPosition()).Normalized();
 			go->vel = tempVel * Speed;
-			go->WDamage = WeaponDamage -= dt;
+			go->WDamage = WeaponDamage -= static_cast<float>(dt);
 			break;
 		}
 	}
@@ -1561,7 +1601,7 @@ void GameModel2D::SpawnSGBullets(float WeaponDamage, float Speed, double dt)
 			tempVel.x = Math::RandFloatMinMax(tempVel.x - 0.2f, tempVel.x + 0.2f);
 			tempVel.y = Math::RandFloatMinMax(tempVel.y - 0.2f, tempVel.y + 0.2f);
 			go->vel = tempVel * Speed;
-			go->WDamage = WeaponDamage -= dt;
+			go->WDamage = WeaponDamage -= static_cast<float>(dt);
 			break;
 		}
 	}
@@ -1657,6 +1697,18 @@ Mesh* GameModel2D::getMeshTaker(GEOMETRY_TYPE meshToTake)
 		break;
 	case ENEMY_CONE:
 		return meshList[ENEMY_CONE];
+		break;
+	case LV1_LAYOUT:
+		return meshList[LV1_LAYOUT];
+		break;
+	case LV2_LAYOUT:
+		return meshList[LV2_LAYOUT];
+		break;
+	case LV3_LAYOUT:
+		return meshList[LV3_LAYOUT];
+		break;
+	case LV4_LAYOUT:
+		return meshList[LV4_LAYOUT];
 		break;
 	}
 }
@@ -1974,7 +2026,7 @@ bool GameModel2D::checkCollision(Vector3 Pos, Vector3 scale, Vector3 Vel, GameOb
 		{
 			//|(w0-b1).N| < r + h / 2
 			Vector3 w0 = go2->pos;
-			Vector3 b1 = Pos + Vel * dt;
+			Vector3 b1 = Pos + Vel * static_cast<float>(dt);
 			Vector3 N = go2->normal;
 			float r = scale.x;
 			float h = go2->scale.x;
@@ -1997,9 +2049,9 @@ bool GameModel2D::checkCollision(Vector3 Pos, Vector3 scale, Vector3 Vel, GameOb
 
 void GameModel2D::getMapData()
 {
-	for (int ccount = 0; ccount < getTileMap()->getNumOfTilesWidth(); ++ccount)
+	for (unsigned ccount = 0; ccount < getTileMap()->getNumOfTilesWidth(); ++ccount)
 	{
-		for (int rcount = 0; rcount < getTileMap()->getNumOfTilesHeight(); ++rcount)
+		for (unsigned rcount = 0; rcount < getTileMap()->getNumOfTilesHeight(); ++rcount)
 		{
 			Vector3 tempPos;
 			tempPos.Set(ccount,rcount,0.0f);
@@ -2224,9 +2276,9 @@ std::vector<GameObject *> GameModel2D::getFogCheckerList()
 
 void GameModel2D::GhettoFogOfWar(void)
 {
-	for (int ccount = 0; ccount < getTileMap()->getNumOfTilesWidth(); ++ccount)
+	for (unsigned ccount = 0; ccount < getTileMap()->getNumOfTilesWidth(); ++ccount)
 	{
-		for (int rcount = 0; rcount < getTileMap()->getNumOfTilesHeight(); ++rcount)
+		for (unsigned rcount = 0; rcount < getTileMap()->getNumOfTilesHeight(); ++rcount)
 		{
 			Vector3 tempPos;
 			tempPos.Set(ccount,rcount,0.1f);

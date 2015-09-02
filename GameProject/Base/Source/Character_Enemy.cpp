@@ -27,6 +27,7 @@ CCharacter_Enemy::CCharacter_Enemy(void)
 CCharacter_Enemy::~CCharacter_Enemy(void)
 {
 	delete PATHFIND;
+	delete pathfind_tilemap;
 }
 void CCharacter_Enemy::ResetCooldown(void)
 {
@@ -52,7 +53,7 @@ void CCharacter_Enemy::setNewState(EMEY_CURRENT_STATE newState)
 {
 	m_enemyState = newState;
 }
-void CCharacter_Enemy::setEnemyHP(int enemyHealth)
+void CCharacter_Enemy::setEnemyHP(float enemyHealth)
 {
 	m_enemyHP = enemyHealth;
 }
@@ -68,7 +69,7 @@ int CCharacter_Enemy::getState()
 {
 	return m_enemyState;
 }
-int CCharacter_Enemy::getEnemyHP()
+float CCharacter_Enemy::getEnemyHP()
 {
 	return m_enemyHP;
 }

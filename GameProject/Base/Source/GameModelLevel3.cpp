@@ -7,6 +7,10 @@ GameModelLevel3::GameModelLevel3()
 
 GameModelLevel3::~GameModelLevel3()
 {
+	delete m_tileMap;
+	delete m_ReartileMap;
+	delete m_AItilemap;
+	GameModel2D::Exit();
 }
 
 void GameModelLevel3::Init()

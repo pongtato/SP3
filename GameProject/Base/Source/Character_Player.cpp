@@ -12,7 +12,6 @@ CCharacter_Player* CCharacter_Player::GetInstance()
 
 CCharacter_Player::CCharacter_Player(void)
 {
-	new CWeapon;
 	m_weaponChoice = PISTOL;
 	m_playerState = IDLE;
 	walkLimit = 0;
@@ -23,6 +22,7 @@ CCharacter_Player::CCharacter_Player(void)
 
 CCharacter_Player::~CCharacter_Player(void)
 {
+	delete mInstance;
 }
 
 void CCharacter_Player::setMesh(PLAYER_TYPE newMesh)

@@ -7,6 +7,10 @@ GameModelLevel2::GameModelLevel2()
 
 GameModelLevel2::~GameModelLevel2()
 {
+	delete m_tileMap;
+	delete m_ReartileMap;
+	delete m_AItilemap;
+	GameModel2D::Exit();
 }
 
 void GameModelLevel2::Init()

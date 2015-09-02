@@ -92,7 +92,7 @@ public:
 	void setCameraState(CAMERA_SCAN_STATE newState);
 	bool detectPlayer(Vector3 playerPos, TileMap* tileMap);
 	void setGroupID(int newGroupID);
-	void setEnemyHP(int enemyHealth);
+	void setEnemyHP(float enemyHealth);
 
 	int getMesh(void);
 	int getAmmoType(void);
@@ -102,7 +102,7 @@ public:
 	float m_RotationArcMax;
 	float m_RotationArcMin;
 	int getGroupID(void);
-	int getEnemyHP(void);
+	float getEnemyHP(void);
 
 	void Strategy_Chaseplayer(Vector3 playerPos,TileMap* tileMap);
 	void Strategy_Return(void);
@@ -159,7 +159,7 @@ private:
 	float m_CameraDelayReset;
 	bool delayTicking;
 	float m_RotationCompare;
-	int m_enemyHP;
+	float m_enemyHP;
 
 	//Weapon
 	float AttackSpeed;
