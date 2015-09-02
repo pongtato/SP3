@@ -329,10 +329,10 @@ void View::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float s
 	//glEnable(GL_DEPTH_TEST);
 }
 
-void View::RenderImageOnScreen(Mesh* mesh, float size, float x, float y)
+void View::RenderImageOnScreen(Mesh* mesh, float sizeX, float sizeY, float x, float y)
 {
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, 800, 0, 600, -10, 10);
+	ortho.SetToOrtho(0, 1024, 0, 800, -10, 10);
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -340,7 +340,7 @@ void View::RenderImageOnScreen(Mesh* mesh, float size, float x, float y)
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
-	modelStack.Scale(size, size, 1);
+	modelStack.Scale(sizeX, sizeY, 1);
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();

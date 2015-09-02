@@ -1441,10 +1441,6 @@ void GameModel2D::EnemyDecision(double dt)
 					{
 						go2->setNewState(go2->CHECKING);
 					}
-					if (go2->SCANNING)
-					{
-						go->setNewState(go->SCANNING);
-					}
 				}
 			}
 		}

@@ -79,15 +79,18 @@ void GameView2D::Render()
 			RenderPrompt();
 		}
 		RenderCrosshair();
-		glEnable(GL_DEPTH_TEST);
+		
 		RenderPlayerCharacter();
 		//Gameobjects
 
 		if (model->m_resultScreen)
 		{
+			
 			RenderOverlay();
 			RenderTotalScore();
+
 		}
+		glEnable(GL_DEPTH_TEST);
 	}
 	modelStack.PopMatrix();
 }
@@ -541,7 +544,7 @@ void GameView2D::RenderTotalScore()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
 	ss << model->getTotalScore();
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, windowWidth * 0.6, 505);
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 60, windowWidth * 0.355, windowHeight * 0.55);
 }
 
 void GameView2D::RenderHighScore()
@@ -569,7 +572,7 @@ void GameView2D::RenderCountDownTimerIcon()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 
 	modelStack.PushMatrix();
-	RenderImageOnScreen(model->getCountDownTimerIcon(), 40, windowWidth * 0.05, 100);
+	RenderImageOnScreen(model->getCountDownTimerIcon(), 40, 40, windowWidth * 0.05, 125);
 
 	modelStack.PopMatrix();
 }
@@ -601,7 +604,7 @@ void GameView2D::RenderPlayerFace()
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
-	RenderImageOnScreen(model->getPlayerFace(), 40, windowWidth * 0.05, 150);
+	RenderImageOnScreen(model->getPlayerFace(), 40, 40, windowWidth * 0.05, 175);
 	modelStack.PopMatrix();
 }
 
@@ -628,7 +631,7 @@ void GameView2D::RenderKeysIcon()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 
 	modelStack.PushMatrix();
-	RenderImageOnScreen(model->getKeys(), 40, windowWidth * 0.06, windowHeight * 0.515);
+	RenderImageOnScreen(model->getKeys(), 40, 40, windowWidth * 0.06, windowHeight * 0.68);
 	modelStack.PopMatrix();
 }
 
@@ -1153,11 +1156,13 @@ void GameView2D::RenderOverlay()
 		modelStack.Scale(windowWidth, windowHeight, 1);
 		if ( !model->m_GameLost )
 		{
-			Render2DMesh(model->getMeshTaker(model->WIN), false);
+			//Render2DMesh(model->getMeshTaker(model->WIN), false);
+			RenderImageOnScreen(model->getMeshTaker(model->WIN), windowWidth, windowHeight, windowWidth * 0.5, windowHeight * 0.5);
 		}
 		else
 		{
-			Render2DMesh(model->getMeshTaker(model->LOSE), false);
+			//Render2DMesh(model->getMeshTaker(model->LOSE), false);
+			RenderImageOnScreen(model->getMeshTaker(model->LOSE), windowWidth, windowHeight, windowWidth * 0.5, windowHeight * 0.5);
 		}
 	}
 	modelStack.PopMatrix();
