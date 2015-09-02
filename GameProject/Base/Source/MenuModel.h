@@ -5,6 +5,14 @@
 #include "SoundManager.h"
 #include "GameView2D.h"
 
+struct ReadPos
+{
+	Vector3 Position;
+	int Level;
+	int timer;
+	int score;
+};
+
 class MenuModel : public Model
 {
 public:
@@ -62,8 +70,13 @@ public:
 	int getArrowPosition();
 	bool getIsSelectingLevels();
 	bool m_credits;
+	float Readx;
+	float Ready;
+	float Readz;
 
 	CSoundManager Sound;
+
+	vector<ReadPos>my_list;
 };
 
 #endif

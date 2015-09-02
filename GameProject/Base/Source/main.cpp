@@ -24,7 +24,6 @@
 #include "GameController2D.h"
 
 int levelsCount = 0;
-bool loop = true;
 void RunGame(int gameLevel);
 
 
@@ -52,10 +51,11 @@ void main( void )
 		levelsCount = state;
 	}
 
-	while ( loop )
+	while ( levelsCount >= 0 )
 	{
 		if (controller->gameExit())
 		{
+			levelsCount = -1;
 			break;
 		}
 
@@ -73,12 +73,21 @@ void main( void )
 		case 3:
 			model = new GameModelLevel4();
 			break;
+		case 4:
+			model = new MenuModel();
+			view = new MenuView(model);
+			controller = new MenuController(model, view);
+			break;
 		default:
 			//loop = false;
 			break;
 		}
-		view = new GameView2D(model);
-		controller = new GameController2D(model, view);
+
+		if ( levelsCount < 4 )
+		{
+			view = new GameView2D(model);
+			controller = new GameController2D(model, view);
+		}
 
 		// Initialize GLFW
 		if (!glfwInit()) exit(EXIT_FAILURE);

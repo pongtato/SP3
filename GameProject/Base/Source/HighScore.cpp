@@ -33,7 +33,7 @@ void CHighScore::writeHighScore(int score)
 
 	if (myFile.is_open())
 	{
-		myFile >> tempName >> tempScore;
+		myFile >> tempScore;
 		myFile.close();
 	}
 	else

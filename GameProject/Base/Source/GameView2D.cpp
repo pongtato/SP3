@@ -80,12 +80,8 @@ void GameView2D::Render()
 			RenderPrompt();
 		}
 		RenderCrosshair();
-		
 		RenderPlayerCharacter();
-		//Gameobjects
-			
-			RenderOverlay();
-
+		RenderOverlay();
 		if (model->m_resultScreen)
 		{
 			RenderTotalScore();
@@ -544,7 +540,7 @@ void GameView2D::RenderTotalScore()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
 	ss << model->getTotalScore();
-	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 60, windowWidth * 0.355, windowHeight * 0.55);
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 60, windowWidth * 0.4, windowHeight * 0.55);
 }
 void GameView2D::RenderCountDownTimer()
 {
@@ -1101,7 +1097,7 @@ void GameView2D::RenderSACount()
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
-	ss << " x" << (CShotgun::GetInstance()->GetAmmo()) / 7;
+	ss << " x" << (CShotgun::GetInstance()->GetAmmo());
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.91f, windowHeight / 12.0f);
 }
 
@@ -1131,7 +1127,7 @@ void GameView2D::RenderSAStored()
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	std::ostringstream ss;
-	ss << " Stored:" << (CShotgun::GetInstance()->GetAmmoStored()) / 7;
+	ss << " Stored:" << (CShotgun::GetInstance()->GetAmmoStored());
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 25, windowWidth * 0.76f, windowHeight / 22.0f);
 }
 

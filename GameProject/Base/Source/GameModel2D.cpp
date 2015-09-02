@@ -293,10 +293,6 @@ void GameModel2D::Init()
 
 	isZoomed = false;
 
-	ammoInPistol = 6;
-	ammoInRifle = 15;
-	ammoInShotgun = 49;
-
 	for ( unsigned i = 0; i < 1000; ++i)
 	{
 		GameObject * go = new GameObject(GameObject::GO_NONE);
@@ -308,8 +304,8 @@ void GameModel2D::Init()
 	{
 		GameObject * fog = new GameObject(GameObject::GO_NONE);
 		m_fogList.push_back(fog);
-		//GameObject * fogcheck = new GameObject(GameObject::GO_NONE);
-		m_fogCheckerList.push_back(fog);
+		GameObject * fogcheck = new GameObject(GameObject::GO_NONE);
+		m_fogCheckerList.push_back(fogcheck);
 	}
 	for ( unsigned i = 0; i < 100; ++i)
 	{
@@ -322,6 +318,11 @@ void GameModel2D::Init()
 		CCharacter_Enemy * enemy = new CCharacter_Enemy();
 		EnemyList.push_back(enemy);
 	}
+
+	CCharacter_Player::GetInstance()->ManipulateDetectionLevel(-99);
+	CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::UNDETECTED);
+	CCharacter_Player::GetInstance()->SetDetected(false);
+
 }
 void GameModel2D::Exit()
 {
@@ -518,7 +519,7 @@ void GameModel2D::ExitCollisionCheck(double dt)
 	{
 		if (totalScoreUpdate == false)
 		{
-			totalScore = totalScore + score;
+			totalScore += score;
 			totalScoreUpdate = true;
 		}
 		
@@ -526,6 +527,14 @@ void GameModel2D::ExitCollisionCheck(double dt)
 
 		if ( commands[ENTER] )
 		{
+			CPistol::GetInstance()->SetAmmo(1);
+			CPistol::GetInstance()->SetAmmoStored(6);
+			CRifle::GetInstance()->SetAmmo(15);
+			CRifle::GetInstance()->SetAmmoStored(15);
+			CShotgun::GetInstance()->SetAmmo(1);
+			CShotgun::GetInstance()->SetAmmoStored(7);
+			CCharacter_Player::GetInstance()->LoadingGame = false;
+
 			totalScoreUpdate = false;
 			highscoreData.writeHighScore(totalScore); //testing write highscore
 			switch (m_CurrentLevel)
@@ -550,6 +559,12 @@ void GameModel2D::ExitCollisionCheck(double dt)
 			case 3:
 				Sound.engine->stopAllSounds();
 				m_CurrentLevel = 4;
+				throw m_CurrentLevel - 1;
+				break;
+			case 4:
+				Sound.engine->stopAllSounds();
+				m_CurrentLevel = 5;
+				totalScore = 0;
 				throw m_CurrentLevel - 1;
 				break;
 			}
@@ -583,6 +598,12 @@ void GameModel2D::ComputerCollisionCheck(double dt)
 
 void GameModel2D::GameEnd()
 {
+	if ( CDTimer <= 0.0f )
+	{
+		m_GameLost = true;
+		m_resultScreen = true;
+	}
+
 	if ( CCharacter_Player::GetInstance()->getHP() <= 0.0f )
 	{
 		m_GameLost = true;
@@ -593,6 +614,21 @@ void GameModel2D::GameEnd()
 	{
 		m_GameLost = true;
 		m_resultScreen = true;
+	}
+
+	if ( m_GameLost )
+	{
+		if ( commands[ENTER] )
+		{
+			CPistol::GetInstance()->SetAmmo(1);
+			CPistol::GetInstance()->SetAmmoStored(6);
+			CRifle::GetInstance()->SetAmmo(15);
+			CRifle::GetInstance()->SetAmmoStored(15);
+			CShotgun::GetInstance()->SetAmmo(1);
+			CShotgun::GetInstance()->SetAmmoStored(7);
+			Sound.engine->stopAllSounds();
+			throw m_CurrentLevel - 1;
+		}
 	}
 }
 
@@ -673,7 +709,7 @@ void GameModel2D::WeaponShooting(double dt)
 		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() > 0 && CShotgun::GetInstance()->GetFireCooldown() <= 0.0f)
 			{
-				bulletUsed += 7;
+				bulletUsed ++;
 				//Shotgun fire sound
 				Sound.shotgunShot();
 				//Spawn Bullet
@@ -684,7 +720,7 @@ void GameModel2D::WeaponShooting(double dt)
 				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
 				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 				//Ammo decrease
-				CShotgun::GetInstance()->UseAmmo(7);
+				CShotgun::GetInstance()->UseAmmo(1);
 				CShotgun::GetInstance()->ResetCooldown();
 
 			}
@@ -714,11 +750,10 @@ void GameModel2D::WeaponReload(double dt)
 		case 0:
 			if (CPistol::GetInstance()->GetAmmo() == 0)
 			{
-				if (ammoInPistol != 0)
+				if (CPistol::GetInstance()->GetAmmoStored() > 0)
 				{
 					Sound.reloadSound();
 					CPistol::GetInstance()->SetAmmo(1);
-					ammoInPistol--;
 					CPistol::GetInstance()->UseableAmmoLeft(1);
 				}
 			}
@@ -726,11 +761,10 @@ void GameModel2D::WeaponReload(double dt)
 		case 1:
 			if (CRifle::GetInstance()->GetAmmo() == 0)
 			{
-				if (ammoInRifle != 0)
+				if (CRifle::GetInstance()->GetAmmoStored() > 0)
 				{
 					Sound.reloadSound();
 					CRifle::GetInstance()->SetAmmo(15);
-					ammoInRifle -= 15;
 					CRifle::GetInstance()->UseableAmmoLeft(15);
 				}
 			}
@@ -739,12 +773,11 @@ void GameModel2D::WeaponReload(double dt)
 		case 2:
 			if (CShotgun::GetInstance()->GetAmmo() == 0)
 			{
-				if (ammoInShotgun != 0)
+				if (CShotgun::GetInstance()->GetAmmoStored() > 0)
 				{
 					Sound.reloadSound();
-					CShotgun::GetInstance()->SetAmmo(7);
-					ammoInShotgun -= 7;
-					CShotgun::GetInstance()->UseableAmmoLeft(7);
+					CShotgun::GetInstance()->SetAmmo(1);
+					CShotgun::GetInstance()->UseableAmmoLeft(1);
 				}
 			}
 			break;
@@ -791,7 +824,7 @@ void GameModel2D::Update(double dt)
 	//countdown timer
 	CDTimerLimit += 1;
 
-	if (CDTimerLimit > fps)
+	if (CDTimerLimit > fps && isZoomed)
 	{
 		CDTimerLimit = 0;
 		CDTimer -= 1;
@@ -814,7 +847,7 @@ void GameModel2D::Update(double dt)
 		CCharacter_Player::GetInstance()->Update(dt, getTileMap());
 	}
 	//calculate score
-	score = (CDTimer * 100- (10 * bulletUsed));
+	score = (CDTimer * 10 - (10 * bulletUsed));
 	//walking sound
 	if (CCharacter_Player::GetInstance()->getState() == CCharacter_Player::RUNNING) //set sound if player is walking
 	{
@@ -848,11 +881,12 @@ void GameModel2D::Update(double dt)
 				if (playerData.is_open())
 				{
 					//playerPos << CCharacter_Player::GetInstance()->getPosition().Length();
-					playerData << getNewPlayerPos().x << " ";
-					playerData << getNewPlayerPos().y << " ";
-					playerData << getNewPlayerPos().z << " ";
-					playerData << getCDTimer() << " ";
-					playerData << getScore();
+					playerData << CCharacter_Player::GetInstance()->getPosition().x << ',';
+					playerData << CCharacter_Player::GetInstance()->getPosition().y << ',';
+					playerData << CCharacter_Player::GetInstance()->getPosition().z << ',';
+					playerData << getCDTimer() << ',';
+					playerData << getScore() << ',';
+					playerData << m_CurrentLevel - 1;
 					playerData.close();
 				}
 				break;
@@ -1179,7 +1213,6 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x + (velocity.x < -0.0f ? 1 : -1), position.y, position.z);
 				CCharacter_Player::GetInstance()->setVelocity(0, CCharacter_Player::GetInstance()->getVelocity().y, 0);
-				std::cout << "COLLIDING" << std::endl;
 				return true;
 			}
 
@@ -1198,7 +1231,6 @@ bool GameModel2D::CollideWorldObject(TILE_IDS id, GameObject::GAMEOBJECT_TYPE go
 			{
 				CCharacter_Player::GetInstance()->setPosition(position.x, position.y + (velocity.y < -0.0f ? 1 : -1), position.z);
 				CCharacter_Player::GetInstance()->setVelocity(CCharacter_Player::GetInstance()->getVelocity().x, 0, 0);
-				std::cout << "COLLIDING" << std::endl;
 				return true;
 			}
 			//position += velocity * dt;
@@ -1840,7 +1872,7 @@ Vector3 GameModel2D::getNewExitPos()
 
 void GameModel2D::setNewPlayerPos(float x, float y, float z)
 {
-	if ( !newLevel )
+	if ( !newLevel)
 	{
 		newPlayerPos.Set(x,y,z);
 		SpawnReady = true;
@@ -2064,7 +2096,16 @@ void GameModel2D::getMapData()
 			{
 			case GameModel2D::SPAWN_ID:
 				{
-					setNewPlayerPos(ccount, rcount,0.0f);
+					Vector3 tempCopy = CCharacter_Player::GetInstance()->LoadedPosition;
+					if ( CCharacter_Player::GetInstance()->LoadingGame )
+					{
+						CCharacter_Player::GetInstance()->setPosition(tempCopy.x,tempCopy.y,tempCopy.z);
+						CDTimer = CCharacter_Player::GetInstance()->LoadedTime;
+					}
+					else
+					{
+						setNewPlayerPos(ccount, rcount,0.0f);
+					}
 				}
 				break;
 			case GameModel2D::EXIT_ID:

@@ -46,6 +46,7 @@ void MenuModel::Init()
 	Text = MeshBuilder::GenerateText("text", 16, 16);
 	Text->textureID[0] = LoadTGA("Image//Font.tga");
 	arrowPosition = 0;
+
 	menuTimer = false;
 	SelectingLevels = false;
 	m_credits = false;
@@ -53,6 +54,10 @@ void MenuModel::Init()
 	commands = new bool[NUM_COMMANDS];
 	for (int count = 0; count < NUM_COMMANDS; ++count)
 		commands[count] = false;
+
+	Readx = 0;
+	Ready = 0;
+	Readz = 0;
 
 }
 
@@ -114,7 +119,37 @@ void MenuModel::Update(double dt)
 			else if (arrowPosition == 1 && !SelectingLevels)
 			{
 				//load last save
+				string line;
+				ifstream playerPos("savepoint.txt");
 
+				if (playerPos.is_open())
+				{
+					string aLineOfText = "";
+					string token = "";
+
+					vector<string> data;
+					data.clear();
+
+					getline( playerPos, aLineOfText );
+					//aLineOfText.erase(aLineOfText.find(' '),1);
+					istringstream iss( aLineOfText );
+
+					while ( getline( iss, token, ',' ) || getline( iss, token, '/' ))
+						data.push_back( token );
+
+					if ( data[0] != "" )
+					{ 
+						CCharacter_Player::GetInstance()->LoadedPosition.Set(stof(data[0].c_str()), stof(data[1].c_str()), stof(data[2].c_str()));
+						CCharacter_Player::GetInstance()->LoadingGame = true;
+						CCharacter_Player::GetInstance()->LoadedTime = atoi(data[3].c_str());
+						CCharacter_Player::GetInstance()->LoadedHighScore = atoi(data[4].c_str());
+						throw atoi(data[5].c_str());
+					}
+				}
+				else
+				{
+					cout << "unable to open file";
+				}
 			}
 			else if ( arrowPosition == 2 && !SelectingLevels && !m_credits)
 			{

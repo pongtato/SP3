@@ -57,7 +57,7 @@ void MenuView::Render()
 			glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 			std::ostringstream ss;
 			ss << getHighScore();
-			RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 60, windowWidth * 0.65, windowHeight * 0.3);
+			RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 40, windowWidth * 0.65, windowHeight * 0.35);
 			modelStack.PopMatrix();
 		}
 	}
@@ -93,7 +93,7 @@ void MenuView::Render()
 		glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 		std::ostringstream ss;
 		ss << getHighScore();
-		RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 60, windowWidth * 0.65, windowHeight * 0.3);
+		RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 40, windowWidth * 0.65, windowHeight * 0.35);
 		modelStack.PopMatrix();
 	}
 }

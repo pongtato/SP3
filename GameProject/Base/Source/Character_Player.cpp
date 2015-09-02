@@ -17,6 +17,8 @@ CCharacter_Player::CCharacter_Player(void)
 	walkLimit = 0;
 	m_HasBeenDetected = false;
 	m_AlertState = UNDETECTED;
+	setPosition(0,0,0);
+	LoadingGame = false;
 }
 
 

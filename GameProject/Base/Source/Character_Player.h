@@ -76,6 +76,11 @@ public:
 	float getDetectionFadeTimer(void);
 
 	Vector3 TrackedPosition;
+	Vector3 LoadedPosition;
+	float LoadedHighScore;
+	float LoadedTime;
+
+	bool LoadingGame;
 private:
 
 	PLAYER_TYPE m_playerMesh;
