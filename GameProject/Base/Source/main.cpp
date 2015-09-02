@@ -1,3 +1,8 @@
+//DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 #include <stdio.h> //Include the standard C++ headers
 #include <stdlib.h>
 
@@ -101,6 +106,10 @@ void main( void )
 	if (model != NULL) delete model;
 	if (view != NULL) delete view;
 	if (controller != NULL) delete controller;
+	_CrtDumpMemoryLeaks();
+	_CrtMemState s1;
+	_CrtMemCheckpoint(&s1);
+	_CrtMemDumpStatistics(&s1);
 }
 
 void RunGame(int gameLevel)

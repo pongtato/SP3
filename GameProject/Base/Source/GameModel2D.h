@@ -202,6 +202,7 @@ protected:
 	Model levelSet;
 
 public:
+	
 	//Collision
 	void LaserCollisionCheck(double dt);
 	void KeyCollisionCheck(double dt);
@@ -319,6 +320,7 @@ public:
 	CSoundManager Sound;
 	virtual void Init();
 	virtual void Update(double dt);
+	void Exit();
 	void setCommands(int command);
 	void getOffset(float& mapOffset_x, float& mapOffset_y);
 	void cameraZoom(double dt);

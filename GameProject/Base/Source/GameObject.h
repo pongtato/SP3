@@ -45,7 +45,7 @@ struct GameObject
 	float mass;
 	float angleOrientation;
 	int ID;
-	int WDamage;
+	float WDamage;
 	int SpriteRow;
 	int SpriteColumn;
 	float timer;

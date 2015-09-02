@@ -7,6 +7,10 @@ GameModelLevel4::GameModelLevel4()
 
 GameModelLevel4::~GameModelLevel4()
 {
+	delete m_tileMap;
+	delete m_ReartileMap;
+	delete m_AItilemap;
+	GameModel2D::Exit();
 }
 
 void GameModelLevel4::Init()

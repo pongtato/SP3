@@ -84,7 +84,7 @@ void Controller::Update()
 {
 	model->Update(m_dElapsedTime);
 	glfwGetCursorPos(view->getWindow(), &xpos, &ypos);
-	model->setPos(Vector3(xpos, ypos, 0));
+	model->setPos(Vector3(static_cast<float>(xpos), static_cast<float>(ypos), 0));
 }
 
 bool Controller::gameExit()
