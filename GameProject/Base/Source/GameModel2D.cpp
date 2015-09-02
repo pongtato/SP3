@@ -37,7 +37,7 @@ void GameModel2D::Init()
 	meshList[KEY]->textureID[0] = LoadTGA("Image\\Key.tga");
 	meshList[TIMER_ICON] = MeshBuilder::GenerateQuad("Timer", Color());
 	meshList[TIMER_ICON]->textureID[0] = LoadTGA("Image\\Timer.tga");
-	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0, 0),10,10,1.0f);
+	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0.5, 0),10,10,1.0f);
 	meshList[EBULLET] = MeshBuilder::GenerateSphere("EnemyBullet", Color(0, 0, 1), 10, 10, 1.0f);
 	meshList[CUBE] = MeshBuilder::GenerateCube("Bullet", Color(1, 0, 0),1.0f);
 	meshList[FOG] = MeshBuilder::GenerateSpriteAnimation("FOG", 1, 1);
@@ -93,6 +93,10 @@ void GameModel2D::Init()
 
 	meshList[CAUTION] = MeshBuilder::GenerateSpriteAnimation("CAUTION", 1, 1);
 	meshList[CAUTION]->textureID[0] = LoadTGA("Image\\Enemy\\CAUTION.tga");
+
+	meshList[ENEMY_CONE] = MeshBuilder::GenerateQuad("ENEMY_CONE", 1, 1);
+	meshList[ENEMY_CONE]->textureID[0] = LoadTGA("Image\\CONE.tga");
+
 	//Text Prompts
 	meshList[TEXT_PROMPT] = MeshBuilder::GenerateQuad("TEXT_PROMPT", 1, 20);
 	meshList[TEXT_PROMPT]->textureID[0] = LoadTGA("Image\\DialogueBoxTemp.tga");
@@ -151,9 +155,8 @@ void GameModel2D::Init()
 	meshList[LOSE]->textureID[0] = LoadTGA("Image\\Menu\\LOSE.tga");
 
 
-	meshList[LOCKPICKBAR] = MeshBuilder::GenerateQuad("LPBAR", Color(0, 0, 1), 1.0f);
-
-	meshList[LOCKPICKBALL] = MeshBuilder::GenerateSphere("LPBALL", Color(1, 0, 0), 20, 20, 1.0f);
+	meshList[LOCKPICKBAR] = MeshBuilder::GenerateQuad("LPBAR", Color(0.2, 0.5, 1.0), 1.0f);
+	meshList[LOCKPICKBALL] = MeshBuilder::GenerateSphere("LPBALL", Color(1, 0.5, 0), 20, 20, 1.0f);
 
 
 	//Animation Init
@@ -779,7 +782,6 @@ void GameModel2D::Update(double dt)
 		{
 			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
 			{
-				cout << "player position saved! " << endl;
 				ofstream playerData("savepoint.txt");
 				if (playerData.is_open())
 				{
@@ -1618,6 +1620,9 @@ Mesh* GameModel2D::getMeshTaker(GEOMETRY_TYPE meshToTake)
 		break;
 	case LOSE:
 		return meshList[LOSE];
+		break;
+	case ENEMY_CONE:
+		return meshList[ENEMY_CONE];
 		break;
 	}
 }
