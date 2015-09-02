@@ -22,11 +22,11 @@ void GameView2D::Render()
 		//RenderBackground();
 		glDisable(GL_DEPTH_TEST);
 		RenderRearTileMap();
-		RenderScene();
 		RenderMobsDetection();
+		RenderScene();
 		RenderTileMap();
 		RenderMobs();
-		//RenderFog();
+		RenderFog();
 		if (model->isZoomed)
 		{
 			RenderPlayerRadius();
@@ -64,15 +64,15 @@ void GameView2D::Render()
 		}
 		if (model->getLockPick1())
 		{
-			RenderLockBall();
-			RenderLockBarRed();
 			RenderLockPick();
+			RenderLockBarRed();
+			RenderLockBall();
 		}
 		if (model->getLockPick2())
 		{
-			RenderLockBall();
-			RenderLockBarBlue();
 			RenderLockPick();
+			RenderLockBarBlue();
+			RenderLockBall();
 		}
 		if (model->getNearLock())
 		{
@@ -86,6 +86,7 @@ void GameView2D::Render()
 		if (model->m_resultScreen)
 		{
 			RenderOverlay();
+			RenderTotalScore();
 		}
 	}
 	modelStack.PopMatrix();
@@ -96,7 +97,7 @@ void GameView2D::RenderPlayerRadius()
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	modelStack.PushMatrix(); 
 	modelStack.Translate(CCharacter_Player::GetInstance()->getPosition().x, CCharacter_Player::GetInstance()->getPosition().y, 0);
-	modelStack.Scale(30,30,0);
+	modelStack.Scale(40,40,0);
 	RenderMesh(model->getPlayerRadius(), false);
 	modelStack.PopMatrix();
 }
@@ -323,13 +324,24 @@ void GameView2D::RenderMobsDetection()
 	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
 	{
 		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->getPosition().x ,go->getPosition().y,0.0f);
+		modelStack.Rotate(go->getRotation() + 90,0,0,1);
+		modelStack.Scale(CCharacter_Enemy::FOVdistance * 0.75f,CCharacter_Enemy::FOVdistance * 2.1f,1);
+		if (go->getActive() && go->m_Render)
+		{
+			RenderMesh(model->getMeshTaker(model->ENEMY_CONE), false);
+		}
+		modelStack.PopMatrix();
+
 		modelStack.PushMatrix();
 		modelStack.Translate(go->DetectionCornerL.x,go->DetectionCornerL.y,0.0f);
 		modelStack.Rotate(go->m_RotationArcMin,0,0,1);
 		modelStack.Scale(CCharacter_Enemy::FOVdistance,0.05,0.05);
-		if (go->getActive())
+		if (go->getActive() && go->m_Render)
 		{
-			RenderMesh(model->getWallMesh(), false);
+			//RenderMesh(model->getWallMesh(), false);
 		}
 		modelStack.PopMatrix();
 
@@ -337,9 +349,9 @@ void GameView2D::RenderMobsDetection()
 		modelStack.Translate(go->DetectionCornerR.x,go->DetectionCornerR.y,0.0f);
 		modelStack.Rotate(go->m_RotationArcMax,0,0,1);
 		modelStack.Scale(CCharacter_Enemy::FOVdistance,0.05,0.05);
-		if (go->getActive())
+		if (go->getActive() && go->m_Render)
 		{
-			RenderMesh(model->getWallMesh(), false);
+			//RenderMesh(model->getWallMesh(), false);
 		}
 		modelStack.PopMatrix();
 
@@ -348,9 +360,9 @@ void GameView2D::RenderMobsDetection()
 		modelStack.Rotate(go->getRotation() + 90.f,0,0,1);
 		float tempCalc = (float)CCharacter_Enemy::FOVArc/30.f * (float)CCharacter_Enemy::FOVdistance;
 		modelStack.Scale(tempCalc,0.05,0.05);
-		if (go->getActive())
+		if (go->getActive() && go->m_Render)
 		{
-			RenderMesh(model->getWallMesh(), false);
+			//RenderMesh(model->getWallMesh(), false);
 		}
 		modelStack.PopMatrix();
 	}
@@ -366,7 +378,7 @@ void GameView2D::RenderMobs()
 		modelStack.PushMatrix();
 		modelStack.Translate(go->getPosition().x,go->getPosition().y,0.0f);
 		modelStack.Rotate(go->getRotation(),0,0,1);
-		if (go->getActive())
+		if (go->getActive() && go->m_Render)
 		{
 			switch ( go->getState())
 			{
@@ -522,6 +534,16 @@ void GameView2D::RenderScore()
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 40, windowWidth * 0.1, 50);
 }
 
+void GameView2D::RenderTotalScore()
+{
+	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+	std::ostringstream ss;
+	ss << model->getTotalScore();
+	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 50, windowWidth * 0.6, 505);
+}
+
 void GameView2D::RenderHighScore()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
@@ -547,12 +569,8 @@ void GameView2D::RenderCountDownTimerIcon()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 
 	modelStack.PushMatrix();
-	{
-		modelStack.Translate(windowWidth * -.425, windowHeight * -0.325, 0);
-		modelStack.Scale(50, 50, 1);
-		Render2DMesh(model->getCountDownTimerIcon(), false);
+	RenderImageOnScreen(model->getCountDownTimerIcon(), 40, windowWidth * 0.05, 100);
 
-	}
 	modelStack.PopMatrix();
 }
 
@@ -583,11 +601,7 @@ void GameView2D::RenderPlayerFace()
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
-	{
-		modelStack.Translate(windowWidth * -0.425, -200, 0);
-		modelStack.Scale(50, 50, 1);
-		Render2DMesh(model->getPlayerFace(), false);
-	}
+	RenderImageOnScreen(model->getPlayerFace(), 40, windowWidth * 0.05, 150);
 	modelStack.PopMatrix();
 }
 
@@ -614,12 +628,7 @@ void GameView2D::RenderKeysIcon()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 
 	modelStack.PushMatrix();
-	{
-		modelStack.Translate(windowWidth * -.425, windowHeight / 5, 0);
-		modelStack.Scale(50, 50, 1);
-		Render2DMesh(model->getKeys(), false);
-	
-	}
+	RenderImageOnScreen(model->getKeys(), 40, windowWidth * 0.06, windowHeight * 0.515);
 	modelStack.PopMatrix();
 }
 
@@ -953,8 +962,8 @@ void GameView2D::RenderLockBarRed()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Scale(windowWidth / 32, windowHeight / 32, 1);
-		modelStack.Translate(4.8f, 0, 0);
+		modelStack.Scale(windowWidth / 42, windowHeight / 32, 1);
+		modelStack.Translate(6.15f, 0, 0);
 		Render2DMesh(model->getLockPickBar(), false);
 	}
 	modelStack.PopMatrix();
@@ -967,8 +976,8 @@ void GameView2D::RenderLockBarBlue()
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 	modelStack.PushMatrix();
 	{
-		modelStack.Scale(windowWidth / 32, windowHeight / 64, 1);
-		modelStack.Translate(4.8f, 0, 0);
+		modelStack.Scale(windowWidth / 42, windowHeight / 64, 1);
+		modelStack.Translate(6.15f, 0, 0);
 		Render2DMesh(model->getLockPickBar(), false);
 	}
 	modelStack.PopMatrix();
@@ -982,7 +991,7 @@ void GameView2D::RenderLockBall()
 	modelStack.PushMatrix();
 	{
 		modelStack.Scale(windowWidth / 128, windowHeight / 100, 1);
-		modelStack.Translate(19, model->getLockPickY(), 0);
+		modelStack.Translate(18.4, model->getLockPickY(), 0);
 		Render2DMesh(model->getLockPickBall(), false);
 	}
 	modelStack.PopMatrix();

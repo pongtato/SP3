@@ -24,6 +24,7 @@ public:
 	void RenderMobs();
 	void RenderMobsDetection();
 	void RenderScore();
+	void RenderTotalScore();
 	void RenderCountDownTimer();
 	void RenderCountDownTimerIcon();
 	void RenderPlayerDetectStatus();

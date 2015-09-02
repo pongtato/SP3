@@ -109,6 +109,11 @@ void MenuModel::Update(double dt)
 				SelectingLevels = true;
 				menuTimer = true;
 			}
+			else if (arrowPosition == 1 && !SelectingLevels)
+			{
+				//load last save
+
+			}
 			else if ( arrowPosition == 2 && !SelectingLevels && !m_credits)
 			{
 				m_credits = true;

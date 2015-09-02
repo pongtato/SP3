@@ -97,6 +97,7 @@ public:
 		CAR_BLUE,
 		CAR_YELLOW,
 		CAR_GREEN,
+		ENEMY_CONE,
 
 		//Lock Pick
 		LOCKPICKBG,
@@ -198,6 +199,10 @@ protected:
 	//limit walking
 	int walkingSoundLimit;
 
+	//limit totalscore update
+	bool totalScoreUpdate;
+	//limit alert sound
+	int alertSoundLimit;
 	Model levelSet;
 
 public:
@@ -308,6 +313,7 @@ public:
 	Vector3 getNewPlayerPos();
 	Vector3 getNewExitPos();
 	int getScore();
+	int getTotalScore();
 	int getCDTimer();
 	int getKeyCount();
 	float getFPS();

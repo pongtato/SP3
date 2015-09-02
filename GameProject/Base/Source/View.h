@@ -81,7 +81,7 @@ public:
 	void RenderMeshSprite(Mesh *mesh, bool lightEnabled, unsigned offset, unsigned count);
 	void Render2DMesh(Mesh *mesh, bool lightEnabled, unsigned offset = 0, unsigned count = 0);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-
+	void RenderImageOnScreen(Mesh* mesh, float size, float x, float y);
 	Vector3 GetCursorPos();
 };
 
