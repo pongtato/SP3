@@ -20,6 +20,7 @@ CCharacter_Enemy::CCharacter_Enemy(void)
 
 	TrackTimer = 0.0f;
 	TrackTimerReset = 3.0f;
+	m_Render = true;
 }
 
 
@@ -214,7 +215,7 @@ void CCharacter_Enemy::setRotateDirection(Vector3 playerPos)
 	m_MedianRotation = getRotation();
 }
 
-bool CCharacter_Enemy::Strategy_Pathfind(Vector3 playerPos,TileMap* tileMap)
+bool CCharacter_Enemy::Strategy_Pathfind(Vector3 playerPos,TileMap* tileMap,double dt)
 {
 	if (TargetPosition != playerPos )
 	{
@@ -230,16 +231,47 @@ bool CCharacter_Enemy::Strategy_Pathfind(Vector3 playerPos,TileMap* tileMap)
 		{
 			Vector3 temp = (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Normalized() * MoveSpeed * PathfindMS_multiplier;
 			setVelocity(temp.x,temp.y,0);
-			setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
+			//setRotation(Math::RadianToDegree(atan2f(temp.y,temp.x)));
 
-			if ( getRotation() < 0 )
+			float AccurateRot = Math::RadianToDegree(atan2f(temp.y,temp.x));
+
+			//Cannon inertia
+			if (  AccurateRot != getRotation())
 			{
-				setRotation(getRotation() + 360);
+				int IsNeg = 0;
+				float tempCalc = getRotation() - AccurateRot;
+				if ( tempCalc < 0 )
+				{
+					IsNeg = 1;
+				}
+				else
+				{
+					IsNeg = -1;
+				}
+
+				if ( abs(tempCalc) > 180 )
+				{
+					IsNeg = 0 - IsNeg;
+					if ( getRotation() < -180 )
+					{
+						setRotation(getRotation() + 360);
+					}
+					else if ( getRotation() > 0 )
+					{
+						setRotation(getRotation() - 360);
+					}
+				}
+				setRotation(getRotation() + IsNeg * ScanSpeed * (float)dt);
 			}
-			if ( getRotation() > 360 )
-			{
-				setRotation(getRotation() - 360);
-			}
+
+			//if ( getRotation() < 0 )
+			//{
+			//	setRotation(getRotation() + 360);
+			//}
+			//if ( getRotation() > 360 )
+			//{
+			//	setRotation(getRotation() - 360);
+			//}
 
 			if ( (PathFound[m_CurrentNode]->m_WorldPosition - getPosition()).Length() < 0.05f )
 			{
@@ -329,6 +361,37 @@ void CCharacter_Enemy::Strategy_Patrol(double dt)
 			break;
 		}
 	}
+
+		//float AccurateRot = Math::RadianToDegree(atan2f(getVelocity().y,getVelocity().x));
+
+		////Cannon inertia
+		//if (  AccurateRot != getRotation())
+		//{
+		//	int IsNeg = 0;
+		//	float tempCalc = getRotation() - AccurateRot;
+		//	if ( tempCalc < 0 )
+		//	{
+		//		IsNeg = 1;
+		//	}
+		//	else
+		//	{
+		//		IsNeg = -1;
+		//	}
+
+		//	if ( abs(tempCalc) > 180 )
+		//	{
+		//		IsNeg = 0 - IsNeg;
+		//		if ( getRotation() < -180 )
+		//		{
+		//			setRotation(getRotation() + 360);
+		//		}
+		//		else if ( getRotation() > 0 )
+		//		{
+		//			setRotation(getRotation() - 360);
+		//		}
+		//	}
+		//	setRotation(getRotation() + IsNeg * ScanSpeed * (float)dt);
+		//}
 
 	setRotation(Math::RadianToDegree(atan2f(getVelocity().y,getVelocity().x)));
 

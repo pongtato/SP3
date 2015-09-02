@@ -97,6 +97,7 @@ public:
 		CAR_BLUE,
 		CAR_YELLOW,
 		CAR_GREEN,
+		ENEMY_CONE,
 
 		//Lock Pick
 		LOCKPICKBG,

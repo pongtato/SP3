@@ -37,7 +37,7 @@ void GameModel2D::Init()
 	meshList[KEY]->textureID[0] = LoadTGA("Image\\Key.tga");
 	meshList[TIMER_ICON] = MeshBuilder::GenerateQuad("Timer", Color());
 	meshList[TIMER_ICON]->textureID[0] = LoadTGA("Image\\Timer.tga");
-	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0, 0),10,10,1.0f);
+	meshList[BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 0.5, 0),10,10,1.0f);
 	meshList[EBULLET] = MeshBuilder::GenerateSphere("EnemyBullet", Color(0, 0, 1), 10, 10, 1.0f);
 	meshList[CUBE] = MeshBuilder::GenerateCube("Bullet", Color(1, 0, 0),1.0f);
 	meshList[FOG] = MeshBuilder::GenerateSpriteAnimation("FOG", 1, 1);
@@ -93,6 +93,10 @@ void GameModel2D::Init()
 
 	meshList[CAUTION] = MeshBuilder::GenerateSpriteAnimation("CAUTION", 1, 1);
 	meshList[CAUTION]->textureID[0] = LoadTGA("Image\\Enemy\\CAUTION.tga");
+
+	meshList[ENEMY_CONE] = MeshBuilder::GenerateQuad("ENEMY_CONE", 1, 1);
+	meshList[ENEMY_CONE]->textureID[0] = LoadTGA("Image\\CONE.tga");
+
 	//Text Prompts
 	meshList[TEXT_PROMPT] = MeshBuilder::GenerateQuad("TEXT_PROMPT", 1, 20);
 	meshList[TEXT_PROMPT]->textureID[0] = LoadTGA("Image\\DialogueBoxTemp.tga");
@@ -151,9 +155,8 @@ void GameModel2D::Init()
 	meshList[LOSE]->textureID[0] = LoadTGA("Image\\Menu\\LOSE.tga");
 
 
-	meshList[LOCKPICKBAR] = MeshBuilder::GenerateQuad("LPBAR", Color(0, 0, 1), 1.0f);
-
-	meshList[LOCKPICKBALL] = MeshBuilder::GenerateSphere("LPBALL", Color(1, 0, 0), 20, 20, 1.0f);
+	meshList[LOCKPICKBAR] = MeshBuilder::GenerateQuad("LPBAR", Color(0.2, 0.5, 1.0), 1.0f);
+	meshList[LOCKPICKBALL] = MeshBuilder::GenerateSphere("LPBALL", Color(1, 0.5, 0), 20, 20, 1.0f);
 
 
 	//Animation Init
@@ -779,7 +782,6 @@ void GameModel2D::Update(double dt)
 		{
 			if ((InteractionList[i]->pos - CCharacter_Player::GetInstance()->getPosition()).Length() < 1)
 			{
-				cout << "player position saved! " << endl;
 				ofstream playerData("savepoint.txt");
 				if (playerData.is_open())
 				{
@@ -1311,7 +1313,7 @@ void GameModel2D::EnemyDecision(double dt)
 				}
 			case CCharacter_Enemy::RUNNING:
 				{
-					if ( go->Strategy_Pathfind(go->getInitPosition(),getAITileMap()) )
+					if ( go->Strategy_Pathfind(go->getInitPosition(),getAITileMap(),dt) )
 					{
 						go->setRotation(go->getRotation() + 180.f);
 						if ( go->getRotation() < 0 )
@@ -1376,7 +1378,7 @@ void GameModel2D::EnemyDecision(double dt)
 				}
 			case CCharacter_Enemy::CHECKING:
 				{
-					if ( go->Strategy_Pathfind(CCharacter_Player::GetInstance()->TrackedPosition,getAITileMap()) )
+					if ( go->Strategy_Pathfind(CCharacter_Player::GetInstance()->TrackedPosition,getAITileMap(),dt) )
 					{
 						go->resetTimer();
 						go->setRotateDirection(CCharacter_Player::GetInstance()->getPosition());
@@ -1634,6 +1636,9 @@ Mesh* GameModel2D::getMeshTaker(GEOMETRY_TYPE meshToTake)
 		break;
 	case LOSE:
 		return meshList[LOSE];
+		break;
+	case ENEMY_CONE:
+		return meshList[ENEMY_CONE];
 		break;
 	}
 }
@@ -2267,7 +2272,7 @@ void GameModel2D::FogUpdate(double dt)
 		{
 			if ( go->active )
 			{
-				go->pos += (go->vel.Normalized() * float(dt) * 20.f);
+				go->pos += (go->vel.Normalized() * float(dt) * 10.f);
 
 				if ( (CCharacter_Player::GetInstance()->getPosition() - go->pos).Length() < 1.f )
 				{
@@ -2291,7 +2296,7 @@ void GameModel2D::FogUpdate(double dt)
 				float tempY = go->pos.y + 0.5f;
 
 
-				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 || (CCharacter_Player::GetInstance()->getPosition() - go->pos).LengthSquared() >= 20 )
+				if (getTileMap()->getTile(tempX, floor(tempY)) >= 0 && getTileMap()->getTile(tempX, floor(tempY)) <= 15 || (CCharacter_Player::GetInstance()->getPosition() - go->pos).LengthSquared() >= 75 )
 				{
 					go->active = false;
 					for (std::vector<GameObject *>::iterator it = m_fogList.begin(); it != m_fogList.end(); ++it)
@@ -2304,6 +2309,30 @@ void GameModel2D::FogUpdate(double dt)
 							{
 								go2->active = true;
 							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	for (std::vector<CCharacter_Enemy *>::iterator it2 = EnemyList.begin(); it2 != EnemyList.end(); ++it2)
+	{
+		CCharacter_Enemy *go2 = (CCharacter_Enemy *)*it2;
+		{
+			for (std::vector<GameObject *>::iterator it = m_fogList.begin(); it != m_fogList.end(); ++it)
+			{
+				GameObject *go = (GameObject *)*it;
+				{
+					if ( (go->pos - go2->getPosition()).Length() < 1.f )
+					{
+						if ( go->active )
+						{
+							go2->m_Render = false;
+						}
+						else if ( !go->active )		
+						{
+							go2->m_Render = true;
 						}
 					}
 				}
