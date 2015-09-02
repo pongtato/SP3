@@ -29,7 +29,7 @@ void GameView2D::Render()
 		RenderFog();
 		if (model->isZoomed)
 		{
-			//RenderPlayerRadius();
+			RenderPlayerRadius();
 		}
 		//RenderHealth();
 		RenderKeysIcon();
@@ -82,13 +82,12 @@ void GameView2D::Render()
 		
 		RenderPlayerCharacter();
 		//Gameobjects
+			
+			RenderOverlay();
 
 		if (model->m_resultScreen)
 		{
-			
-			RenderOverlay();
 			RenderTotalScore();
-
 		}
 		glEnable(GL_DEPTH_TEST);
 	}
@@ -1149,20 +1148,62 @@ void GameView2D::RenderOverlay()
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+
+	if (model->m_resultScreen)
+	{
+		modelStack.PushMatrix();
+		{
+			//modelStack.Translate(windowWidth / 2, windowHeight / 2, 0);
+			//modelStack.Scale(windowWidth / 550, windowHeight / 465, 1);
+			modelStack.Scale(windowWidth, windowHeight, 1);
+			if ( !model->m_GameLost )
+			{
+				//Render2DMesh(model->getMeshTaker(model->WIN), false);
+				RenderImageOnScreen(model->getMeshTaker(model->WIN), windowWidth, windowHeight, windowWidth * 0.5, windowHeight * 0.5);
+			}
+			else
+			{
+				//Render2DMesh(model->getMeshTaker(model->LOSE), false);
+				RenderImageOnScreen(model->getMeshTaker(model->LOSE), windowWidth, windowHeight, windowWidth * 0.5, windowHeight * 0.5);
+			}
+		}
+		modelStack.PopMatrix();
+	}
+
 	modelStack.PushMatrix();
 	{
 		//modelStack.Translate(windowWidth / 2, windowHeight / 2, 0);
 		//modelStack.Scale(windowWidth / 550, windowHeight / 465, 1);
 		modelStack.Scale(windowWidth, windowHeight, 1);
-		if ( !model->m_GameLost )
+		if ( !model->isZoomed )
 		{
-			//Render2DMesh(model->getMeshTaker(model->WIN), false);
-			RenderImageOnScreen(model->getMeshTaker(model->WIN), windowWidth, windowHeight, windowWidth * 0.5, windowHeight * 0.5);
-		}
-		else
-		{
-			//Render2DMesh(model->getMeshTaker(model->LOSE), false);
-			RenderImageOnScreen(model->getMeshTaker(model->LOSE), windowWidth, windowHeight, windowWidth * 0.5, windowHeight * 0.5);
+			switch ( model->m_CurrentLevel )
+			{
+			case 1:
+				{
+				//Render2DMesh(model->getMeshTaker(model->WIN), false);
+					RenderImageOnScreen(model->getMeshTaker(model->LV1_LAYOUT), windowWidth, windowHeight, windowWidth * 0.5, windowHeight * 0.5);
+				}
+				break;
+			case 2:
+				{
+				//Render2DMesh(model->getMeshTaker(model->WIN), false);
+					RenderImageOnScreen(model->getMeshTaker(model->LV2_LAYOUT), windowWidth, windowHeight, windowWidth * 0.5, windowHeight * 0.5);
+				}
+				break;
+			case 3:
+				{
+				//Render2DMesh(model->getMeshTaker(model->WIN), false);
+					RenderImageOnScreen(model->getMeshTaker(model->LV3_LAYOUT), windowWidth, windowHeight, windowWidth * 0.5, windowHeight * 0.5);
+				}
+				break;
+			case 4:
+				{
+				//Render2DMesh(model->getMeshTaker(model->WIN), false);
+					RenderImageOnScreen(model->getMeshTaker(model->LV4_LAYOUT), windowWidth, windowHeight, windowWidth * 0.5, windowHeight * 0.5);
+				}
+				break;
+			}
 		}
 	}
 	modelStack.PopMatrix();
