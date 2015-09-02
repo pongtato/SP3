@@ -3,10 +3,11 @@
 
 #include "View.h"
 #include "MenuModel.h"
-
+#include "HighScore.h"
 class MenuView : public View
 {
 private:
+
 
 public:
 	MenuView(Model* model = NULL);
@@ -14,7 +15,7 @@ public:
 
 	void Render();
 	void RenderMenu();
-
+	string getHighScore();
 };
 
 #endif

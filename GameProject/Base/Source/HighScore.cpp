@@ -25,22 +25,34 @@ void CHighScore::readHighScore()
 	else std::cout << "cannot open file";
 }
 
-void CHighScore::writeHighScore(string name[], int score[])
+void CHighScore::writeHighScore(int score)
 {
-
-	std::ofstream HighScorefile("HighScore.txt");
-
-	int tempInt;
+	ifstream myFile("HighScore.txt");
+	int tempScore;
 	string tempName;
 
-	cout << "working" << endl;
-	readHighScore();
-
-	if(HighScorefile.is_open())
+	if (myFile.is_open())
 	{
-		HighScorefile << name << " ";
-		HighScorefile << score << std::endl;
-		HighScorefile.close();
+		myFile >> tempName >> tempScore;
+		myFile.close();
 	}
-	else std::cout << "unable to open file";
+	else
+		cout << "unable to open file.";
+
+	if (score < tempScore)
+	{
+		score = tempScore;
+		//name = tempName;
+	}
+
+	ofstream myFileWrite("HighScore.txt");
+
+	if (myFileWrite.is_open())
+	{
+		//myFileWrite << name << " ";
+		myFileWrite << score;
+		myFileWrite.close();
+	}
+	else
+		cout << "unable to open file";
 }

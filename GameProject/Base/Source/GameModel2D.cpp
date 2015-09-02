@@ -486,7 +486,7 @@ void GameModel2D::ExitCollisionCheck(double dt)
 		if ( commands[ENTER] )
 		{
 			totalScoreUpdate = false;
-
+			highscoreData.writeHighScore(totalScore); //testing write highscore
 			switch (m_CurrentLevel)
 			{
 			case 1:
@@ -792,7 +792,7 @@ void GameModel2D::Update(double dt)
 		if (alertSoundLimit > 100)
 		{
 			alertSoundLimit = 0;
-			Sound.guardAlert();
+			//Sound.guardAlert();
 		}
 	}
 
@@ -1765,6 +1765,7 @@ int GameModel2D::getTotalScore()
 {
 	return totalScore;
 }
+
 int GameModel2D::getCDTimer()
 {
 	return CDTimer;

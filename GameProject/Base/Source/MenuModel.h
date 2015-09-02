@@ -3,6 +3,7 @@
 
 #include "Model.h"
 #include "SoundManager.h"
+#include "GameView2D.h"
 
 class MenuModel : public Model
 {
@@ -15,6 +16,7 @@ public:
 	};
 
 private:
+	Mesh *Text;
 	Mesh *menuScreen;
 	Mesh *arrow;
 	Mesh *choice;
@@ -54,6 +56,9 @@ public:
 	Mesh* getLv2();
 	Mesh* getLv3();
 	Mesh* getLv4();
+
+	Mesh* getTextMesh();
+
 	int getArrowPosition();
 	bool getIsSelectingLevels();
 	bool m_credits;

@@ -7,6 +7,7 @@
 #include <ctime>
 #include "SoundManager.h"
 #include "TileMap.h"
+#include "HighScore.h"
 #include "Character_Player.h"
 #include "Character_Enemy.h"
 
@@ -203,6 +204,8 @@ protected:
 	bool totalScoreUpdate;
 	//limit alert sound
 	int alertSoundLimit;
+	//highscore
+	CHighScore highscoreData;
 	Model levelSet;
 
 public:
@@ -334,7 +337,6 @@ public:
 	void LockPicking(double dt);
 	void BulletHandle(double dt);
 	void GameEnd();
-
 
 };
 

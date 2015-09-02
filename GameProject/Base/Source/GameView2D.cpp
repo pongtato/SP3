@@ -17,6 +17,7 @@ void GameView2D::Render()
 
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
 
+
 	modelStack.PushMatrix();
 	{
 		//RenderBackground();
@@ -546,15 +547,6 @@ void GameView2D::RenderTotalScore()
 	ss << model->getTotalScore();
 	RenderTextOnScreen(model->getTextMesh(), ss.str(), Color(1, 1, 1), 60, windowWidth * 0.355, windowHeight * 0.55);
 }
-
-void GameView2D::RenderHighScore()
-{
-	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
-
-}
-
 void GameView2D::RenderCountDownTimer()
 {
 	GameModel2D* model = dynamic_cast<GameModel2D *>(m_model);

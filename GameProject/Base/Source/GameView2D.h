@@ -4,7 +4,6 @@
 
 #include "View.h"
 #include "GameModel2D.h"
-#include "HighScore.h"
 #include "TileMap.h"
 
 class GameView2D : public View
@@ -15,7 +14,7 @@ private:
 
 public:
 	GameView2D(Model* model = NULL);
-
+	
 	void Render();
 	void RenderBackground();
 	void RenderTileMap();
@@ -59,7 +58,6 @@ public:
 	void RenderRAStored();
 	void RenderSAStored();
 	void RenderPlayerRadius();
-	void RenderHighScore();
 	void RenderOverlay();
 };
 

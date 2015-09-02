@@ -43,7 +43,8 @@ void MenuModel::Init()
 	Lv3->textureID[0] = LoadTGA("Image//Menu//lv3.tga");
 	Lv4 = MeshBuilder::GenerateQuad("Lv4", Color());
 	Lv4->textureID[0] = LoadTGA("Image//Menu//lv4.tga");
-
+	Text = MeshBuilder::GenerateText("text", 16, 16);
+	Text->textureID[0] = LoadTGA("Image//Font.tga");
 	arrowPosition = 0;
 	menuTimer = false;
 	SelectingLevels = false;
@@ -58,6 +59,7 @@ void MenuModel::Init()
 void MenuModel::Update(double dt)
 {
 	Model::Update(dt);
+
 	if (!menuTimer)
 	{
 		if (commands[MOVE_UP])
@@ -221,6 +223,11 @@ void MenuModel::setCommands(int command)
 {
 	if (command >= 0 && command < NUM_COMMANDS)
 		commands[command] = true;
+}
+
+Mesh* MenuModel::getTextMesh()
+{
+	return Text;
 }
 
 Mesh* MenuModel::getMenuMesh()
