@@ -598,7 +598,7 @@ void GameModel2D::WeaponShooting(double dt)
 				//Pistol fire sound
 				Sound.pistolShot();
 				//Spawn Bullet
-				SpawnBullet(CPistol::GetInstance()->GetDamage(), 0.5f);
+				SpawnBullet(CPistol::GetInstance()->GetDamage(), 0.5f, dt);
 				//Ammo decrease
 				CPistol::GetInstance()->UseAmmo(1);
 				CPistol::GetInstance()->ResetCooldown();
@@ -616,7 +616,7 @@ void GameModel2D::WeaponShooting(double dt)
 				//rifle fire sound
 				Sound.rifleShot();
 				//Spawn Bullet
-				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f);
+				SpawnBullet(CRifle::GetInstance()->GetDamage(), 1.2f, dt);
 				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
 				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
 				//Ammo decrease
@@ -638,7 +638,7 @@ void GameModel2D::WeaponShooting(double dt)
 				//Spawn Bullet
 				for (int i = 0; i < 7; i++)
 				{
-					SpawnSGBullets(CShotgun::GetInstance()->GetDamage(), 1.0f);
+					SpawnSGBullets(CShotgun::GetInstance()->GetDamage(), 1.0f, dt);
 				}
 				CCharacter_Player::GetInstance()->setNewAlertState(CCharacter_Player::DETECTED);
 				CCharacter_Player::GetInstance()->ManipulateDetectionLevel(99);
@@ -1413,22 +1413,38 @@ void GameModel2D::EnemyDecision(double dt)
 			go->Update(dt,getTileMap());
 		}
 	}
-
-	//Enemy AI Flocking
+	//Enemy weapon fire rate
 	for (unsigned i = 0; i < EnemyList.size(); ++i)
 	{
+
 		if (EnemyList[i]->getActive())
 		{
 			EnemyList[i]->FireCooldownTick(dt);
-			for (unsigned j = i; j < EnemyList.size() - j; j++)
+		}
+	}
+	//Enemy AI Flocking
+	for (std::vector<CCharacter_Enemy *>::iterator it = EnemyList.begin(); it != EnemyList.end(); ++it)
+	{
+		CCharacter_Enemy *go = (CCharacter_Enemy *)*it;
+		for (std::vector<CCharacter_Enemy *>::iterator it2 = it + 1; it2 != EnemyList.end(); ++it2)
+		{
+			CCharacter_Enemy *go2 = (CCharacter_Enemy *)*it2;
+			if (go->getActive() && go2->getActive() && go->CHECKING && go2->getAmmoType() != go2->CAMERA && go->getAmmoType() != go->CAMERA)
 			{
-				if (EnemyList[j]->getPosition().x < EnemyList[j + 1]->getPosition().x + 0.5f &&
-					EnemyList[j]->getPosition().x > EnemyList[j + 1]->getPosition().x - 0.5f &&
-					EnemyList[j]->getPosition().y < EnemyList[j + 1]->getPosition().y + 0.5f &&
-					EnemyList[j]->getPosition().y > EnemyList[j + 1]->getPosition().y - 0.5f)
+				if ((go->getPosition() - go2->getPosition()).Length() < 1.0f)
 				{
-					//EnemyList[j]->setPosition(EnemyList[j]->getPosition().x + 0.1f, EnemyList[j]->getPosition().y + 0.1f, 0);
-					//EnemyList[j + 1]->setPosition(EnemyList[j + 1]->getPosition().x - 0.1f, EnemyList[j + 1]->getPosition().y - 0.1f, 0);
+					if (go2->CHECKING)
+					{
+						go2->setNewState(go2->SCANNING);
+					}
+					else
+					{
+						go2->setNewState(go2->CHECKING);
+					}
+					if (go2->SCANNING)
+					{
+						go->setNewState(go->SCANNING);
+					}
 				}
 			}
 		}
@@ -1512,7 +1528,7 @@ void GameModel2D::BulletUpdate(double dt)
 }
 
 
-void GameModel2D::SpawnBullet(int WeaponDamage, float Speed)
+void GameModel2D::SpawnBullet(float WeaponDamage, float Speed, double dt)
 {
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
@@ -1526,13 +1542,13 @@ void GameModel2D::SpawnBullet(int WeaponDamage, float Speed)
 			Vector3 tempVel;
 			tempVel = (getPos() - CCharacter_Player::GetInstance()->getPosition()).Normalized();
 			go->vel = tempVel * Speed;
-			go->WDamage = WeaponDamage;
+			go->WDamage = WeaponDamage -= dt;
 			break;
 		}
 	}
 }
 
-void GameModel2D::SpawnSGBullets(int WeaponDamage, float Speed)
+void GameModel2D::SpawnSGBullets(float WeaponDamage, float Speed, double dt)
 {
 	//float ANGLE = Math::RadianToDegree(atan2(getPos().y - CCharacter_Player::GetInstance()->getPosition().y, getPos().x - CCharacter_Player::GetInstance()->getPosition().x));
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -1549,7 +1565,7 @@ void GameModel2D::SpawnSGBullets(int WeaponDamage, float Speed)
 			tempVel.x = Math::RandFloatMinMax(tempVel.x - 0.2f, tempVel.x + 0.2f);
 			tempVel.y = Math::RandFloatMinMax(tempVel.y - 0.2f, tempVel.y + 0.2f);
 			go->vel = tempVel * Speed;
-			go->WDamage = WeaponDamage;
+			go->WDamage = WeaponDamage -= dt;
 			break;
 		}
 	}

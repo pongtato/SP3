@@ -59,6 +59,7 @@ public:
 		SCANNING,
 		TRACKING,
 		CHECKING,
+		FLOCKING,
 		STATE_TOTAL,
 	};
 
