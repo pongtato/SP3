@@ -1,272 +1,258 @@
-﻿Build started 27/8/2015 5:15:04 PM.
-     1>Project "D:\SP3\GameProject\Base\Base.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ID:\SP3\GameProject\/irrKlang/include /ID:\SP3\GameProject\/Common/Source /ID:\SP3\GameProject\/glew/include /ID:\SP3\GameProject\/glfw/include /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Source\Camera.cpp Source\Camera3.cpp Source\Character.cpp Source\Character_Enemy.cpp Source\Character_Player.cpp Source\Controller.cpp Source\EnemyPistol.cpp Source\GameController2D.cpp Source\GameModel2D.cpp Source\GameModelLevel1.cpp Source\GameModelLevel2.cpp Source\GameModelLevel3.cpp Source\GameModelLevel4.cpp Source\GameObject.cpp Source\GameView2D.cpp Source\LoadHmap.cpp Source\LoadOBJ.cpp Source\LoadTGA.cpp Source\main.cpp Source\MenuController.cpp Source\MenuModel.cpp Source\MenuView.cpp Source\Mesh.cpp Source\MeshBuilder.cpp Source\Model.cpp Source\Pathfinding.cpp Source\Pathfinding_Grid.cpp Source\Pathfinding_Node.cpp Source\Pistol.cpp Source\Rifle.cpp Source\shader.cpp Source\Shotgun.cpp Source\SoundManager.cpp Source\SpriteAnimation.cpp Source\TileMap.cpp Source\Utility.cpp Source\View.cpp Source\Weapon.cpp
-         Weapon.cpp
-         View.cpp
-     1>d:\sp3\gameproject\base\source\view.cpp(228): warning C4258: 'count' : definition from the for loop is ignored; the definition from the enclosing scope is used
-                 d:\sp3\gameproject\base\source\view.cpp(213) : definition of 'count' ignored
-                 d:\sp3\gameproject\base\source\view.cpp(189) : definition of 'count' used
-         Utility.cpp
-         TileMap.cpp
-     1>d:\sp3\gameproject\base\source\tilemap.cpp(25): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\tilemap.cpp(37): warning C4018: '>=' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\tilemap.cpp(49): warning C4018: '>' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\tilemap.cpp(53): warning C4018: '>' : signed/unsigned mismatch
-         SpriteAnimation.cpp
-     1>d:\sp3\gameproject\base\source\spriteanimation.cpp(26): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-         SoundManager.cpp
-         Shotgun.cpp
-         shader.cpp
-         Rifle.cpp
-         Pistol.cpp
-         Pathfinding_Node.cpp
-         Pathfinding_Grid.cpp
-     1>d:\sp3\gameproject\base\source\pathfinding_grid.cpp(33): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\pathfinding_grid.cpp(33): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\pathfinding_grid.cpp(45): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\pathfinding_grid.cpp(45): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\pathfinding_grid.cpp(85): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\pathfinding_grid.cpp(85): warning C4018: '<' : signed/unsigned mismatch
-         Pathfinding.cpp
-     1>d:\sp3\gameproject\base\source\pathfinding.cpp(34): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\pathfinding.cpp(54): warning C4018: '<' : signed/unsigned mismatch
-         Model.cpp
-     1>d:\sp3\gameproject\base\source\model.cpp(17): warning C4305: '+=' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\model.cpp(18): warning C4305: '-=' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\model.cpp(19): warning C4305: '-=' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\model.cpp(20): warning C4305: '+=' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\model.cpp(30): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\model.cpp(30): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-         MeshBuilder.cpp
-         Mesh.cpp
-         MenuView.cpp
-     1>d:\sp3\gameproject\base\source\menuview.cpp(21): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\menuview.cpp(21): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-         MenuModel.cpp
-         MenuController.cpp
-     1>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\windef.h(126): warning C4005: 'APIENTRY' : macro redefinition
-                 d:\sp3\gameproject\glfw\include\glfw\glfw3.h(92) : see previous definition of 'APIENTRY'
-     1>d:\sp3\gameproject\base\source\menucontroller.cpp(13): warning C4482: nonstandard extension used: enum 'MenuModel::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\menucontroller.cpp(14): warning C4482: nonstandard extension used: enum 'MenuModel::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\menucontroller.cpp(15): warning C4482: nonstandard extension used: enum 'MenuModel::COMMANDS' used in qualified name
+﻿Build started 2/9/2015 4:03:08 PM.
+     1>Project "C:\Users\User\Desktop\SP3\GameProject\Base\Base.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\Base.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         d:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IC:\Users\User\Desktop\SP3\GameProject\/irrKlang/include /IC:\Users\User\Desktop\SP3\GameProject\/Common/Source /IC:\Users\User\Desktop\SP3\GameProject\/glew/include /IC:\Users\User\Desktop\SP3\GameProject\/glfw/include /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Source\GameController2D.cpp Source\GameModel2D.cpp Source\GameModelLevel1.cpp Source\GameModelLevel2.cpp Source\GameModelLevel3.cpp Source\GameModelLevel4.cpp Source\GameView2D.cpp Source\main.cpp
+         GameModel2D.cpp
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(17): warning C4482: nonstandard extension used: enum 'GameModel2D::GEOMETRY_TYPE' used in qualified name
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(158): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(263): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(265): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(346): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(346): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(346): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(363): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(363): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(363): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(363): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(397): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(403): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(405): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(405): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(405): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(405): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(407): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(407): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(407): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(407): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(415): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(415): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(415): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(415): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(417): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(417): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(417): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(417): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(423): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(430): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(456): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(515): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(654): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(655): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(656): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(724): warning C4244: '-=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(740): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(779): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(801): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(958): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(958): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(958): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(958): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(979): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(979): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(979): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(979): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1011): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1029): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1046): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1061): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1061): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1061): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1061): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1063): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1063): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1063): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1063): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1082): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1082): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1082): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1082): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1084): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1084): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1084): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1084): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1097): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1112): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1112): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1112): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1112): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1114): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1114): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1114): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1114): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1131): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1131): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1131): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1131): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1133): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1133): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1133): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1133): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1224): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1224): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1224): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1224): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1234): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1234): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1240): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1250): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1260): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1270): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1283): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1283): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1349): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1400): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1427): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1428): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1486): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1502): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1502): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1502): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1523): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1523): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1523): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1545): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1545): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1545): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1950): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1973): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1975): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1978): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1978): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1988): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1988): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2001): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2001): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2007): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2007): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2012): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2012): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2200): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2202): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2205): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2205): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2251): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2295): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2295): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2295): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(2295): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+         Generating Code...
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(390): warning C4715: 'GameModel2D::VeryRealRaycasting' : not all control paths return a value
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1640): warning C4715: 'GameModel2D::getMeshTaker' : not all control paths return a value
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1674): warning C4715: 'GameModel2D::getPlayerMesh' : not all control paths return a value
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1696): warning C4715: 'GameModel2D::getEnemyMesh' : not all control paths return a value
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1715): warning C4715: 'GameModel2D::getCarMesh' : not all control paths return a value
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1809): warning C4715: 'GameModel2D::getPlayerFace' : not all control paths return a value
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gamemodel2d.cpp(1969): warning C4715: 'GameModel2D::checkCollision' : not all control paths return a value
+         Compiling...
          main.cpp
      1>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\windef.h(126): warning C4005: 'APIENTRY' : macro redefinition
-                 d:\sp3\gameproject\glfw\include\glfw\glfw3.h(92) : see previous definition of 'APIENTRY'
-         Generating Code...
-     1>d:\sp3\gameproject\base\source\pathfinding.cpp(76): warning C4715: 'CPathfinding::FindPath' : not all control paths return a value
-         Compiling...
-         LoadTGA.cpp
-         LoadOBJ.cpp
-         LoadHmap.cpp
-     1>d:\sp3\gameproject\base\source\loadhmap.cpp(32): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>d:\sp3\gameproject\base\source\loadhmap.cpp(34): warning C4244: 'initializing' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\loadhmap.cpp(35): warning C4244: 'initializing' : conversion from 'float' to 'unsigned int', possible loss of data
+                 c:\users\user\desktop\sp3\gameproject\glfw\include\glfw\glfw3.h(92) : see previous definition of 'APIENTRY'
          GameView2D.cpp
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(133): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(135): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(138): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(138): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(140): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(140): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(162): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(164): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(167): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(167): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(245): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(245): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(255): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(255): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(266): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(266): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(379): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(418): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(418): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(570): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(570): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(584): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(584): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(599): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gameview2d.cpp(599): warning C4305: 'argument' : truncation from 'double' to 'float'
-         GameObject.cpp
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(203): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(205): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(208): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(208): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(210): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(210): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(232): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(234): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(237): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(237): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(340): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(340): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(350): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(350): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(361): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(361): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(502): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(533): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(551): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(562): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(562): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(588): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(598): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(613): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(613): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(629): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(629): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(645): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(645): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(887): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(887): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(888): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(888): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(901): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(901): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(902): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(902): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(915): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(915): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(916): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(916): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(929): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(929): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(930): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(930): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(943): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(943): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(953): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(953): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(967): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(967): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(981): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(981): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(995): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(995): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(996): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1009): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1009): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1010): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1010): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1023): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1023): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1024): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1024): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1037): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1037): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1038): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1038): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1051): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1051): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1052): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1052): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1065): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1065): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1066): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1066): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1079): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1079): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1080): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1080): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1093): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1093): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1103): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1103): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1113): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1113): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1123): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1123): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1133): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1133): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1143): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1143): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1155): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\desktop\sp3\gameproject\base\source\gameview2d.cpp(1155): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
          GameModelLevel4.cpp
          GameModelLevel3.cpp
          GameModelLevel2.cpp
          GameModelLevel1.cpp
-         GameModel2D.cpp
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(17): warning C4482: nonstandard extension used: enum 'GameModel2D::GEOMETRY_TYPE' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(186): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(247): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(247): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(247): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(278): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(278): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(278): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(278): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(306): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(337): warning C4244: '-=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(342): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(343): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(344): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(345): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(420): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(435): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(442): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(447): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(447): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(447): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(447): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(449): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(449): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(449): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(449): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(456): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(461): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(461): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(461): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(461): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(463): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(463): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(463): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(463): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(469): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(484): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(489): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(489): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(489): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(489): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(491): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(491): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(491): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(491): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(512): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(517): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(517): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(517): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(517): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(519): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(519): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(519): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(519): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(525): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(549): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(556): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(561): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(561): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(561): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(561): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(563): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(563): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(563): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(563): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(570): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(575): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(575): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(575): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(575): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(577): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(577): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(577): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(577): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(583): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(592): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(604): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(611): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(616): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(616): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(616): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(616): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(618): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(618): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(618): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(618): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(629): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(634): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(634): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(634): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(634): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(636): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(636): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(636): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(636): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(646): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(671): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(713): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(713): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(713): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(713): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(729): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(729): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(729): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(729): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(736): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(918): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(919): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(973): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(989): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(989): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(989): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1010): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1010): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1010): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1032): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1032): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1032): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1312): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1335): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1337): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1340): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1340): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1350): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1350): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1363): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1363): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1369): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1369): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1461): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1463): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1466): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1466): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-         GameController2D.cpp
-     1>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\windef.h(126): warning C4005: 'APIENTRY' : macro redefinition
-                 d:\sp3\gameproject\glfw\include\glfw\glfw3.h(92) : see previous definition of 'APIENTRY'
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(14): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(16): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(18): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(20): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(22): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(24): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(26): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(29): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(31): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(33): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(35): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-     1>d:\sp3\gameproject\base\source\gamecontroller2d.cpp(39): warning C4482: nonstandard extension used: enum 'GameModel2D::COMMANDS' used in qualified name
-         EnemyPistol.cpp
-         Controller.cpp
-     1>c:\program files (x86)\microsoft sdks\windows\v7.0a\include\windef.h(126): warning C4005: 'APIENTRY' : macro redefinition
-                 d:\sp3\gameproject\glfw\include\glfw\glfw3.h(92) : see previous definition of 'APIENTRY'
-     1>d:\sp3\gameproject\base\source\controller.cpp(87): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\controller.cpp(87): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-         Character_Player.cpp
-         Character_Enemy.cpp
-     1>d:\sp3\gameproject\base\source\character_enemy.cpp(241): warning C4018: '<' : signed/unsigned mismatch
-         Character.cpp
-     1>d:\sp3\gameproject\base\source\character.cpp(53): warning C4244: '*=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\character.cpp(59): warning C4244: '*=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\character.cpp(63): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\character.cpp(79): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\character.cpp(95): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>d:\sp3\gameproject\base\source\character.cpp(111): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-         Camera3.cpp
-         Camera.cpp
          Generating Code...
-     1>d:\sp3\gameproject\base\source\controller.cpp(96): warning C4715: 'Controller::gameExit' : not all control paths return a value
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1133): warning C4715: 'GameModel2D::getPlayerMesh' : not all control paths return a value
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1152): warning C4715: 'GameModel2D::getEnemyMesh' : not all control paths return a value
-     1>d:\sp3\gameproject\base\source\gamemodel2d.cpp(1331): warning C4715: 'GameModel2D::checkCollision' : not all control paths return a value
+         Skipping... (no relevant changes detected)
+         GameController2D.cpp
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\SP3\GameProject\Debug\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:D:\SP3\GameProject\Debug /LIBPATH:"D:\SP3\GameProject\/glfw/lib-msvc100" /LIBPATH:D:\SP3\GameProject\/glew/lib /LIBPATH:\irrKlang\lib /LIBPATH:D:\SP3\GameProject\/irrKlang/lib Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib irrKlang.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Base.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\SP3\GameProject\Debug\Base.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\SP3\GameProject\Debug\Base.lib" /MACHINE:X86 Debug\Camera.obj
+         d:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\User\Desktop\SP3\GameProject\Debug\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\User\Desktop\SP3\GameProject\Debug /LIBPATH:"C:\Users\User\Desktop\SP3\GameProject\/glfw/lib-msvc100" /LIBPATH:C:\Users\User\Desktop\SP3\GameProject\/glew/lib /LIBPATH:\irrKlang\lib /LIBPATH:C:\Users\User\Desktop\SP3\GameProject\/irrKlang/lib Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib irrKlang.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Base.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\User\Desktop\SP3\GameProject\Debug\Base.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\User\Desktop\SP3\GameProject\Debug\Base.lib" /MACHINE:X86 Debug\Camera.obj
          Debug\Camera3.obj
          Debug\Character.obj
          Debug\Character_Enemy.obj
@@ -281,6 +267,7 @@
          Debug\GameModelLevel4.obj
          Debug\GameObject.obj
          Debug\GameView2D.obj
+         Debug\HighScore.obj
          Debug\LoadHmap.obj
          Debug\LoadOBJ.obj
          Debug\LoadTGA.obj
@@ -305,23 +292,15 @@
          Debug\View.obj
          Debug\Weapon.obj
      1>Camera.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
-     1>Common.lib(Vector3.obj) : error LNK2038: mismatch detected for '_MSC_VER': value '1800' doesn't match value '1600' in Camera.obj
-     1>Common.lib(MatrixStack.obj) : error LNK2038: mismatch detected for '_MSC_VER': value '1800' doesn't match value '1600' in Camera.obj
-     1>Common.lib(Mtx44.obj) : error LNK2038: mismatch detected for '_MSC_VER': value '1800' doesn't match value '1600' in Camera.obj
      1>LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-     1>Common.lib(Vector3.obj) : error LNK2019: unresolved external symbol "__declspec(dllimport) void __cdecl std::_Xbad_alloc(void)" (__imp_?_Xbad_alloc@std@@YAXXZ) referenced in function "char * __cdecl std::_Allocate<char>(unsigned int,char *)" (??$_Allocate@D@std@@YAPADIPAD@Z)
-     1>Common.lib(MatrixStack.obj) : error LNK2001: unresolved external symbol "__declspec(dllimport) void __cdecl std::_Xbad_alloc(void)" (__imp_?_Xbad_alloc@std@@YAXXZ)
-     1>Common.lib(Mtx44.obj) : error LNK2001: unresolved external symbol "__declspec(dllimport) void __cdecl std::_Xbad_alloc(void)" (__imp_?_Xbad_alloc@std@@YAXXZ)
-     1>Common.lib(Vector3.obj) : error LNK2019: unresolved external symbol "__declspec(dllimport) char const * __cdecl std::_Syserror_map(int)" (__imp_?_Syserror_map@std@@YAPBDH@Z) referenced in function "public: virtual class std::error_condition __thiscall std::_System_error_category::default_error_condition(int)const " (?default_error_condition@_System_error_category@std@@UBE?AVerror_condition@2@H@Z)
-     1>Common.lib(MatrixStack.obj) : error LNK2001: unresolved external symbol "__declspec(dllimport) char const * __cdecl std::_Syserror_map(int)" (__imp_?_Syserror_map@std@@YAPBDH@Z)
-     1>Common.lib(Mtx44.obj) : error LNK2001: unresolved external symbol "__declspec(dllimport) char const * __cdecl std::_Syserror_map(int)" (__imp_?_Syserror_map@std@@YAPBDH@Z)
-     1>Common.lib(Vector3.obj) : error LNK2019: unresolved external symbol "__declspec(dllimport) char const * __cdecl std::_Winerror_map(int)" (__imp_?_Winerror_map@std@@YAPBDH@Z) referenced in function "public: virtual class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __thiscall std::_System_error_category::message(int)const " (?message@_System_error_category@std@@UBE?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@H@Z)
-     1>Common.lib(MatrixStack.obj) : error LNK2001: unresolved external symbol "__declspec(dllimport) char const * __cdecl std::_Winerror_map(int)" (__imp_?_Winerror_map@std@@YAPBDH@Z)
-     1>Common.lib(Mtx44.obj) : error LNK2001: unresolved external symbol "__declspec(dllimport) char const * __cdecl std::_Winerror_map(int)" (__imp_?_Winerror_map@std@@YAPBDH@Z)
-     1>Common.lib(timer.obj) : error LNK2019: unresolved external symbol __ltod3 referenced in function "private: double __thiscall StopWatch::LIToSecs(union _LARGE_INTEGER &)" (?LIToSecs@StopWatch@@AAENAAT_LARGE_INTEGER@@@Z)
-     1>D:\SP3\GameProject\Debug\Base.exe : fatal error LNK1120: 4 unresolved externals
-     1>Done Building Project "D:\SP3\GameProject\Base\Base.vcxproj" (Build target(s)) -- FAILED.
+         Base.vcxproj -> C:\Users\User\Desktop\SP3\GameProject\Debug\Base.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\User\Desktop\SP3\GameProject\Debug\Base.exe;#1" /manifest Debug\Base.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Debug\Base.unsuccessfulbuild".
+         Touching "Debug\Base.lastbuildstate".
+     1>Done Building Project "C:\Users\User\Desktop\SP3\GameProject\Base\Base.vcxproj" (build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:28.84
+Time Elapsed 00:00:03.95

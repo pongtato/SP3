@@ -154,6 +154,17 @@ void GameModel2D::Init()
 	meshList[LOSE] = MeshBuilder::GenerateQuad("LOSE", 0, 1.0f);
 	meshList[LOSE]->textureID[0] = LoadTGA("Image\\Menu\\LOSE.tga");
 
+	meshList[LV1_LAYOUT] = MeshBuilder::GenerateQuad("LV1_LAYOUT", 0, 1.0f);
+	meshList[LV1_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV1.tga");
+
+	meshList[LV2_LAYOUT] = MeshBuilder::GenerateQuad("LV2_LAYOUT", 0, 1.0f);
+	meshList[LV2_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV2.tga");
+
+	meshList[LV3_LAYOUT] = MeshBuilder::GenerateQuad("LV3_LAYOUT", 0, 1.0f);
+	meshList[LV3_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV3.tga");
+
+	meshList[LV4_LAYOUT] = MeshBuilder::GenerateQuad("LV4_LAYOUT", 0, 1.0f);
+	meshList[LV4_LAYOUT]->textureID[0] = LoadTGA("Image\\Maps\\LV4.tga");
 
 	meshList[LOCKPICKBAR] = MeshBuilder::GenerateQuad("LPBAR", Color(0.2, 0.5, 1.0), 1.0f);
 	meshList[LOCKPICKBALL] = MeshBuilder::GenerateSphere("LPBALL", Color(1, 0.5, 0), 20, 20, 1.0f);
@@ -1623,6 +1634,18 @@ Mesh* GameModel2D::getMeshTaker(GEOMETRY_TYPE meshToTake)
 		break;
 	case ENEMY_CONE:
 		return meshList[ENEMY_CONE];
+		break;
+	case LV1_LAYOUT:
+		return meshList[LV1_LAYOUT];
+		break;
+	case LV2_LAYOUT:
+		return meshList[LV2_LAYOUT];
+		break;
+	case LV3_LAYOUT:
+		return meshList[LV3_LAYOUT];
+		break;
+	case LV4_LAYOUT:
+		return meshList[LV4_LAYOUT];
 		break;
 	}
 }
